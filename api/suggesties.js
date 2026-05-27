@@ -3,17 +3,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { ingredienten, tijd, personen, energie, doel, profiel, verfijn } = req.body;
+  const { ingredienten, ingredientLijst, tijd, personen, moeite, doel, boodschappen, profiel, verfijn } = req.body;
 
-  if (!ingredienten || !tijd || !personen || !energie || !doel) {
+  if (!ingredienten || !tijd || !personen || !moeite || !doel) {
     return res.status(400).json({ error: 'Verplichte velden ontbreken' });
   }
 
-  // Minimale ingrediëntencheck
-  const ingredientLijst = ingredienten.split(/[,\n]+/).map(s => s.trim()).filter(s => s.length > 1);
-  if (ingredientLijst.length < 3) {
+  const ingLijst = ingredientLijst || ingredienten.split(/[,\n]+/).map(s => s.trim()).filter(s => s.length > 1);
+  if (ingLijst.length < 2) {
     return res.status(400).json({
-      error: `Te weinig ingrediënten voor 3 goede suggesties. Voeg nog ${3 - ingredientLijst.length + 1} of meer producten toe, of kies een recept met boodschappen.`,
+      error: `Te weinig ingrediënten voor goede suggesties. Voeg nog ${Math.max(1, 3 - ingLijst.length)} of meer producten toe.`,
       teLite: true
     });
   }
@@ -22,90 +21,100 @@ export default async function handler(req, res) {
   const allergienen = profiel?.allergienen || [];
   const nooitGebruiken = profiel?.nooitGebruiken || '';
   const kookniveau = profiel?.kookniveau || 'gemiddeld';
-  const verfijnInstructie = verfijn ? `\nVERFIJNING GEVRAAGD: ${verfijn}. Pas alle recepten hierop aan.` : '';
+  const verfijnInstructie = verfijn ? `\nVERFIJNING: ${verfijn}` : '';
 
-  const systeemPrompt = `Je bent een Nederlandse kookassistent die concrete, kookklare maaltijdsuggesties geeft.
+  // Boodschappenregel bepalen
+  const boodschappenRegel = boodschappen === 'nee' ? 'Geen ontbrekende hoofdingrediënten toegestaan. Alleen basisvoorraad.' :
+    boodschappen === 'een' ? 'Maximaal 1 ontbrekend ingrediënt per recept.' :
+    'Meerdere ontbrekende ingrediënten toegestaan maar duidelijk tonen.';
 
-WATERREGEL - ABSOLUUT:
-- Water is NOOIT een ingrediënt onder inHuis, basisvoorraad, nogNodig of optioneel.
-- Als water nodig is, vermeld het ALLEEN in de bereidingsstap: "Voeg 300 ml water toe."
+  // Max stappen op basis van moeite
+  const maxStappen = moeite === 'bijna niks' ? 4 : moeite === 'normaal' ? 6 : 8;
 
-INGREDIËNTENCATEGORIEËN:
-1. "inHuis": alleen ingrediënten die letterlijk in de gebruikersinvoer staan
-2. "basisvoorraad": ALLEEN olijfolie/olie, zout, peper
-3. "nogNodig": ingrediënten die niet in de invoer staan en geen basisvoorraad zijn (GEEN water)
-4. "optioneel": leuke toevoegingen die niet noodzakelijk zijn
-- "allesinHuis" is true als nogNodig leeg is
+  const systeemPrompt = `Je bent Vanavond, een slimme Nederlandse kookassistent. Je helpt gebruikers bepalen wat ze vanavond kunnen eten op basis van hun voorraad, tijd en energie. Je bent GEEN receptenapp — je bent een slimme assistent.
 
-FOOD SAFETY - altijd toepassen waar relevant:
-- Kip: voeg toe aan bereiding: "Controleer of de kip volledig gaar is: snijd het dikste stuk open — het mag vanbinnen niet meer roze zijn."
-- Gehakt: voeg toe: "Bak het gehakt volledig bruin en gaar, er mag geen roze meer zichtbaar zijn."
-- Vis: voeg toe: "De vis is gaar als hij makkelijk uit elkaar valt als je er met een vork in prikt."
+KERNREGEL: Water NOOIT tonen als ingrediënt. Alleen in bereidingsstappen vermelden als "Voeg X ml water toe."
 
-VARIATIE - verplicht vijf totaal verschillende gerechten:
-- Gerecht 1 (hoofd, rol: "Snelste keuze"): klaar binnen de opgegeven tijd, zo min mogelijk stappen
-- Gerecht 2 (hoofd, rol: "Gezondste keuze"): meest gebalanceerd, veel groente/eiwitten
-- Gerecht 3 (hoofd, rol: "Meest vullend"): comfort of meest bevredigend
-- Gerecht 4 (extra): vegetarisch/restjesgericht/budgetvriendelijk alternatief
-- Gerecht 5 (extra): high protein/minder afwas/ander type
-- "isExtra": false voor 1-3, "isExtra": true voor 4-5
+BASISVOORRAAD: Alleen olijfolie/olie, zout, peper mogen automatisch aangenomen worden.
+
+BOODSCHAPPENREGEL: ${boodschappenRegel}
+
+ALLERGIEËN EN DIEET (ABSOLUUT):
+${allergienen.length > 0 ? allergienen.join(', ') : 'geen beperkingen'}
+- vegetarisch: geen vlees/vis
+- veganistisch: geen dierlijke producten
+- halal: geen varken/alcohol
+- glutenvrij: geen pasta/brood/bloem
+- lactosevrij: geen melk/room/kaas/boter/yoghurt
+- notenallergie: geen noten/pinda's
+- soja-allergie: geen sojasaus/tofu/edamame
+- schaaldierenallergie: geen garnalen/kreeft/krab
+- ei-allergie: geen eieren
+
+NOOIT GEBRUIKEN (ook niet optioneel, ook niet als upgrade): ${nooitGebruiken || 'niets'}
+
+APPARATUUR BESCHIKBAAR: ${apparatuur.join(', ')}
+- Geen ovenrecept tenzij "oven" in lijst
+- Geen airfryerrecept tenzij "airfryer" in lijst
+- Geen kookplaatrecept tenzij "kookplaat" in lijst
+- Magnetron-only recepten als alleen "magnetron" geselecteerd
+
+TEGENSTRIJDIGE INVOER: Als gebruiker een ingredient ingeeft dat botst met dieet, negeer het en meld dit in "negeerMeldingen".
+
+GEBRUIK EERST OP: Prioriteer verse groente, vlees, vis, geopende zuivel, sla, kruiden. Formuleer voorzichtig: "waarschijnlijk handig eerst te gebruiken", niet "verloopt morgen".
+
+MATCHSCORE (0-100):
+- ingrediënten in huis: max 40pt
+- past binnen tijd: max 20pt
+- past bij doel: max 15pt
+- weinig afwas: max 10pt
+- gebruikt verse/bederfelijke items: max 15pt
+Als score < 70: label "Redelijke match". Geen suggesties onder 50 tenzij voorraad erg beperkt.
+
+MOEITE ${moeite}: max ${maxStappen} stappen
+STAPPEN: altijd vuurstand + minuten + gaarheidcheck. Geen vage termen.
+FOOD SAFETY: kip→"geen roze meer zichtbaar", gehakt→"volledig bruin", vis→"valt makkelijk uit elkaar", ei→"volledig gestold indien nodig"
+
+HOEVEELHEDEN/persoon: pasta/rijst droog 75-100g, vlees/vis 150-180g, groente 150-250g, peulvruchten uitgelekt 100-150g
+EENHEDEN: g, ml, stuks, eetlepel (el), theelepel (tl)
+
+VARIATIE - vijf totaal verschillende gerechten:
+1. hoofd rol "Snelste keuze" isExtra:false
+2. hoofd rol "Gezondste keuze" isExtra:false
+3. hoofd rol "Meest vullend" isExtra:false
+4. extra isExtra:true - vegetarisch/budget/restjes
+5. extra isExtra:true - high protein/minder afwas/anders
 ${verfijnInstructie}
 
-APPARATUUR - strikt:
-- Geen ovenrecept als "oven" niet in apparatuur staat
-- "afwasNiveau" moet EXACT kloppen:
-  * 1 pan: "1 pan"
-  * Pasta + saus apart: "2 pannen"
-  * Oven: "Oven + bakplaat"
-  * Salade: "0 pannen"
-  * Airfryer: "Airfryer + 1 kom"
+VOEDINGSWAARDEN: realistisch, consistent. per100g = (perPortie waarde / portieGewicht) * 100. Afronden.
+SMAAKUPGRADES: max 3, respecteer ALLES (allergieën, nooit gebruiken, dieet).
+VERVANGINGEN: max 3, logisch, respecteer dieet.
+RESTJES: bewaar max X dagen realistisch (kip/vis max 2 dagen, groente max 3 dagen).
 
-ALLERGIE EN DIEET:
-- vegetarisch: geen vlees of vis
-- veganistisch: geen vlees, vis, ei, zuivel, honing
-- halal: geen varkensvlees, geen alcohol
-- glutenvrij: geen gewone pasta, brood of bloem
-- lactosevrij: geen melk, room, kaas, boter, yoghurt
-- notenallergie: geen noten of pinda's
-- nooit gebruiken: ${nooitGebruiken || 'niets'}
-
-ENERGIENIVEAU:
-- "uitgeput": max 5 stappen, max 1 pan, geen complexe technieken
-- "gaat wel": normaal recept, max 7 stappen
-- "zin om te koken": mag creatiever
-
-HOEVEELHEDEN per persoon:
-- Pasta/rijst droog: 75-100g — Vlees/vis: 150-180g — Groente: 150-250g — Peulvruchten: 100-150g
-
-STAPPEN - concrete mensentaal, geen vakjargon:
-WEL: "Bak de ui 3 minuten op middelhoog vuur totdat hij zacht en glazig is."
-
-VOEDINGSWAARDEN: bereken realistisch totaalgewicht en portiegewicht, geef macro's per portie EN per 100g.
-
-SMAAKUPGRADES - max 3, respecteer allergieën.
-VERVANGINGEN - alleen als nuttig, 1-2 per recept.
-WAAROM DIT SLIM IS - persoonlijk en specifiek, nooit generiek.
-
-Apparatuur: ${apparatuur.join(', ')}
-Allergieën: ${allergienen.join(', ') || 'geen'}
-Kookniveau: ${kookniveau}
-
-Geef precies 5 suggesties als JSON array. GEEN tekst buiten de JSON.
+Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
 
 Format:
-{
+[{
   "naam": "string",
   "rol": "Snelste keuze|Gezondste keuze|Meest vullend",
-  "type": "string",
   "isExtra": false,
   "korteBeschrijving": "string",
+  "matchScore": 87,
+  "matchLabel": "Sterke match",
+  "matchUitleg": "Sterke match omdat je 7 van 8 ingrediënten al hebt en het binnen 30 min klaar is.",
+  "matchRedenen": ["7 van 8 ingrediënten in huis", "klaar binnen 30 min"],
+  "gebruikEerstOp": false,
+  "gebruiktSlimOp": ["kipfilet", "paprika"],
+  "negeerMeldingen": [],
   "inHuis": [{"naam": "string", "hoeveelheid": "string"}],
-  "basisvoorraad": [{"naam": "string", "hoeveelheid": "string"}],
+  "basisvoorraad": [{"naam": "olijfolie", "hoeveelheid": "1 el"}],
   "nogNodig": [],
   "optioneel": [{"naam": "string", "hoeveelheid": "string"}],
   "allesinHuis": true,
-  "bereidingstijd": "string",
-  "afwasNiveau": "string",
+  "bereidingstijd": "25 minuten",
+  "actieveKooktijd": "15 minuten",
+  "afwasNiveau": "1 pan",
+  "apparatuurGebruikt": ["kookplaat"],
   "porties": 2,
   "voeding": {
     "totaalGewicht": 700,
@@ -113,31 +122,23 @@ Format:
     "perPortie": {"kcal": 480, "proteinen": 42, "koolhydraten": 22, "vetten": 18},
     "per100g": {"kcal": 137, "proteinen": 12, "koolhydraten": 6.3, "vetten": 5.1}
   },
-  "stappen": ["string"],
-  "smaakUpgrades": ["string"],
-  "vervangingen": ["string"],
-  "waaromSlim": ["string"],
-  "gebruikEerstOp": false,
-  "badge": "gezond|comfort|high protein|snel|voedzaam",
-  "extraBadges": ["1 pan", "Geen oven nodig", "Minste afwas", "Goedkoopste keuze", "Beste restjes voor morgen"],
-  "restjes": {
-    "idee": "Maak er morgen een wrap van.",
-    "bewaren": "Maximaal 2 dagen afgedekt in de koelkast.",
-    "invriezen": true
-  }
-}`;
+  "stappen": ["Stap 1 concreet met tijd en gaarheidcheck."],
+  "smaakUpgrades": ["scheutje citroensap voor frisheid"],
+  "vervangingen": ["Geen kipfilet? Gebruik tonijn of kikkererwten."],
+  "waaromSlim": ["Gebruikt kipfilet en paprika die je al in huis hebt"],
+  "restjes": {"idee": "Morgen lekker als lunchwrap.", "bewaren": "Maximaal 2 dagen koelkast.", "invriezen": false},
+  "badge": "gezond|comfort|high protein|snel|voedzaam|budget",
+  "extraBadges": ["1 pan"]
+}]`;
 
-  const gebruikersBericht = `In huis: ${ingredienten}
-Tijd: ${tijd} minuten
-Personen: ${personen}
-Energieniveau: ${energie}
-Voorkeur: ${doel}
+  const gebruikersBericht = `Voorraad: ${ingredienten}
+Tijd: ${tijd} min | Personen: ${personen} | Moeite: ${moeite} | Doel: ${doel}
+Boodschappen: ${boodschappen || 'paar dingen oké'}
 Allergieën: ${allergienen.join(', ') || 'geen'}
+Nooit: ${nooitGebruiken || 'niets'}
 Kookniveau: ${kookniveau}
 Apparatuur: ${apparatuur.join(', ')}
-${verfijn ? `Verfijning: ${verfijn}` : ''}
-
-Geef 5 totaal verschillende suggesties. Water NOOIT als ingrediënt.`;
+${verfijn ? `Verfijning: ${verfijn}` : ''}`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -149,7 +150,7 @@ Geef 5 totaal verschillende suggesties. Water NOOIT als ingrediënt.`;
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
-        max_tokens: 6000,
+        max_tokens: 8000,
         system: systeemPrompt,
         messages: [{ role: 'user', content: gebruikersBericht }]
       })
