@@ -62,7 +62,7 @@ Geef 3 passende maaltijdsuggesties als JSON array.`;
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-3-5-haiku-20241022',
+        model: 'claude-haiku-4-5',
         max_tokens: 2000,
         system: systeemPrompt,
         messages: [{ role: 'user', content: gebruikersBericht }]
@@ -70,7 +70,8 @@ Geef 3 passende maaltijdsuggesties als JSON array.`;
     });
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      const errBody = await response.text();
+      throw new Error(`API error: ${response.status} - ${errBody}`);
     }
 
     const data = await response.json();
