@@ -249,7 +249,7 @@
     <div class="app-header">
       <div class="app-name">Vanavond</div>
       <div class="app-tagline">Jij opent de koelkast. Wij bedenken de rest.</div>
-      <div class="app-sub">Binnen 30 seconden ideeën voor je avondeten.</div>
+      <div class="app-sub">Binnen 30 seconden ideeën voor vanavond.</div>
     </div>
 
     <div class="form-group">
@@ -266,7 +266,7 @@
     <div class="form-group">
       <div class="section-label">Wat heb je in huis?</div>
       <textarea id="ingredienten-input" class="input-field" rows="3" placeholder="Bijv. kipfilet, paprika, rijst, tomaten, eieren, kaas…" oninput="verwerkInvoer()"></textarea>
-      <div class="helper-text">Typ gewoon wat je hebt. Wij halen de ingrediënten eruit.</div>
+      <div class="helper-text">Typ wat je in huis hebt. Wij doen de rest.</div>
       <div id="chips-container" class="chips-container"></div>
     </div>
 
@@ -346,7 +346,7 @@
         <div class="form-group">
           <div class="section-label">Nooit gebruiken</div>
           <input type="text" id="nooitGebruiken" class="input-field" placeholder="bijv. koriander, champignons, tonijn…">
-          <div class="helper-text">Deze ingrediënten komen nergens terug, ook niet als alternatief.</div>
+          <div class="helper-text">Deze ingrediënten gebruiken we nergens, ook niet als vervanging.</div>
         </div>
 
         <div class="form-group">
@@ -358,7 +358,7 @@
           </div>
         </div>
 
-        <div class="privacy-text">Je voorraad en voorkeuren worden alleen gebruikt om betere recepten te maken.</div>
+        <div class="privacy-text">Je gegevens worden alleen gebruikt om recepten voor te stellen.</div>
       </div>
     </div>
 
@@ -390,13 +390,13 @@
     <div id="beperkt-nood-container"></div>
 
     <div style="margin-bottom:24px;">
-      <div class="section-label" style="margin-bottom:14px;">Met 1 extra ingrediënt wordt het direct beter</div>
+      <div class="section-label" style="margin-bottom:14px;">Met 1 extra ingrediënt wordt het al een stuk beter</div>
       <div id="beperkt-extra-container"></div>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
-      <button class="btn-primary" onclick="beperktDoorgaan()">Maak toch iets simpels</button>
-      <button class="opnieuw-btn" onclick="toonScherm('screen-invoer')" style="margin-top:0;">✏️ Ik voeg meer ingrediënten toe</button>
+      <button class="btn-primary" onclick="beperktDoorgaan()">Maak iets simpels met wat ik heb</button>
+      <button class="opnieuw-btn" onclick="toonScherm('screen-invoer')" style="margin-top:0;">✏️ Ik voeg meer toe</button>
     </div>
   </div>
 
@@ -404,14 +404,14 @@
   <div id="screen-resultaten" class="screen">
     <div class="results-header">
       <div class="results-title">Vanavond</div>
-      <div class="results-sub">3 ideeën voor vanavond, op basis van je voorraad, tijd en voorkeuren.</div>
+      <div class="results-sub">Op basis van je voorraad, tijd en voorkeuren.</div>
     </div>
     <div class="verfijn-row">
-      <button class="verfijn-btn" onclick="verfijn('Maak alle recepten sneller, minder stappen')">⚡ Sneller</button>
-      <button class="verfijn-btn" onclick="verfijn('Maak alle recepten gezonder, meer groente')">🥗 Gezonder</button>
-      <button class="verfijn-btn" onclick="verfijn('Minimaliseer afwas, zo min mogelijk pannen')">🍳 Minder afwas</button>
-      <button class="verfijn-btn" onclick="verfijn('Budget: goedkoopste opties met wat er is')">💶 Goedkoper</button>
-      <button class="verfijn-btn" onclick="verfijn('Geef compleet andere recepten, andere stijlen')">🔄 Andere opties</button>
+      <button class="verfijn-btn" onclick="verfijn('Maak het sneller, minder stappen')">⚡ Sneller</button>
+      <button class="verfijn-btn" onclick="verfijn('Maak het gezonder, meer groente')">🥗 Gezonder</button>
+      <button class="verfijn-btn" onclick="verfijn('Zo min mogelijk afwas')">🍳 Minder afwas</button>
+      <button class="verfijn-btn" onclick="verfijn('Goedkoopste opties met wat ik heb')">💶 Goedkoper</button>
+      <button class="verfijn-btn" onclick="verfijn('Geef andere opties')">🔄 Andere opties</button>
     </div>
     <div id="suggesties-container"></div>
     <button class="opnieuw-btn" onclick="toonScherm('screen-invoer')">↺ Opnieuw zoeken</button>
@@ -435,34 +435,34 @@
     // KOOKTIPS
     const kookTips = [
       {label:'Kooktip',tekst:'Laat vlees even rusten na het bakken. Zo blijven de sappen erin en wordt het malser.'},
-      {label:'Kooktip',tekst:'Pasta kookt beter in goed gezouten water. Het water mag lekker zout zijn.'},
+      {label:'Kooktip',tekst:'Pasta kookt beter als het water goed gezouten is. Geef gerust een flinke snuf zout mee.'},
       {label:'Wist je dat',tekst:'Knoflook wordt milder van smaak als je het langer op laag vuur bakt.'},
-      {label:'Kooktip',tekst:'Een snufje suiker in tomatensaus neutraliseert de zuurheid van tomaten.'},
+      {label:'Kooktip',tekst:'Een snufje suiker in tomatensaus haalt de zuurheid van tomaten weg.'},
       {label:'Wist je dat',tekst:'Je pan is heet genoeg als een druppel water direct verdampt bij aanraking.'},
-      {label:'Kooktip',tekst:'Bewaar kruiden in een glas water in de koelkast, zoals bloemen. Ze blijven zo veel langer vers.'},
-      {label:'Wist je dat',tekst:'Eieren kook je beter door ze in koud water op te zetten , dan voorkom je barsten.'},
-      {label:'Kooktip',tekst:'Citroensap vlak voor het serveren maakt elk gerecht frisser en levendiger van smaak.'},
-      {label:'Kooktip',tekst:'Ui snipperen gaat makkelijker als je het mes nat maakt. Minder tranen, beter resultaat.'},
+      {label:'Kooktip',tekst:'Bewaar verse kruiden in een glas water in de koelkast, net zoals je bloemen zou bewaren. Ze blijven zo veel langer vers.'},
+      {label:'Wist je dat',tekst:'Eieren kook je beter door ze in koud water op te zetten. Zo voorkom je barsten.'},
+      {label:'Kooktip',tekst:'Een scheutje citroensap vlak voor het serveren maakt bijna elk gerecht direct frisser.'},
+      {label:'Kooktip',tekst:'Ui snipperen gaat makkelijker als je het mes nat maakt. Je hebt minder last van tranen.'},
       {label:'Wist je dat',tekst:'Rijst spoelen voor het koken verwijdert zetmeel en geeft lossere, minder plakkerige korrels.'},
-      {label:'Kooktip',tekst:'Voeg zout pas toe aan het einde als je groente roerbakt , anders trekt het vocht eruit.'},
+      {label:'Kooktip',tekst:'Voeg zout pas toe aan het einde als je groente roerbakt. Anders trekt het vocht eruit.'},
       {label:'Wist je dat',tekst:'Olijfolie is niet ideaal voor heel hoge temperaturen. Gebruik dan zonnebloemolie.'},
       {label:'Kooktip',tekst:'Snij vlees altijd dwars op de draad. Zo wordt het malser en makkelijker te kauwen.'},
       {label:'Wist je dat',tekst:'Een houten lepel op een pan kokend water voorkomt overkoken. Echt waar.'},
-      {label:'Kooktip',tekst:'Groenten gaar roosteren in de oven? 200°C, beetje olie, en geduld , minstens 20 minuten.'},
+      {label:'Kooktip',tekst:'Groenten gaar roosteren in de oven? Zet hem op 200°C, doe er een scheutje olie bij en wacht minstens 20 minuten.'},
       {label:'Wist je dat',tekst:'Kaas rasp je makkelijker als hij koud is. Warme kaas plakt samen en smelt op de rasp.'},
       {label:'Kooktip',tekst:'Prik je pasta met je vinger: als hij meebuigt maar licht weerstand biedt, is hij al dente.'},
-      {label:'Wist je dat',tekst:'Gedroogde kruiden zijn drie keer zo sterk als verse. Gebruik dus minder als je switcht.'},
-      {label:'Kooktip',tekst:'Kip is gaar als het sap helder is als je erin prikt , niet roze en niet troebel.'},
+      {label:'Wist je dat',tekst:'Gedroogde kruiden zijn drie keer zo sterk als verse. Gebruik er dus minder van als je wisselt van vers naar gedroogd.'},
+      {label:'Kooktip',tekst:'Kip is gaar als het sap helder is als je erin prikt. Niet roze, niet troebel.'},
       {label:'Wist je dat',tekst:'Restjes pasta bewaar je beter los van de saus. Samen bewaard wordt de pasta papperig.'},
-      {label:'Kooktip',tekst:'Voeg een scheutje pastawater toe aan je saus , dat bindt alles samen.'},
-      {label:'Wist je dat',tekst:'Ei op kamertemperatuur klopt makkelijker op tot schuim dan koude eieren.'},
+      {label:'Kooktip',tekst:'Voeg een scheutje pastawater toe aan je saus. Dat bindt alles samen.'},
+      {label:'Wist je dat',tekst:'Eieren op kamertemperatuur kloppen beter op tot schuim dan koude eieren.'},
       {label:'Kooktip',tekst:'Brood wordt knapperiger als je het even opwarmt in de oven op 160°C voor 5 minuten.'},
       {label:'Wist je dat',tekst:'De meeste gerechten smaken de volgende dag beter. Soep, stoofpot en curry zeker.'},
-      {label:'Kooktip',tekst:'Tomaten bewaar je beter buiten de koelkast , want kou tast de smaak aan.'},
-      {label:'Wist je dat',tekst:'Banaan en avocado rijpen sneller als je ze naast appels legt. Ethyleengas doet zijn werk.'},
-      {label:'Kooktip',tekst:'Roer sauzen met zetmeel altijd door terwijl je ze verhit, anders klontert het.'},
-      {label:'Wist je dat',tekst:'Kikkererwten uit blik zijn prima , spoel ze af en ze zijn klaar voor gebruik.'},
-      {label:'Kooktip',tekst:'Een eetlepel azijn in het kookwater houdt gepocheerde eieren bij elkaar.'},
+      {label:'Kooktip',tekst:'Tomaten bewaar je beter buiten de koelkast. Kou tast de smaak aan.'},
+      {label:'Wist je dat',tekst:'Banaan en avocado rijpen sneller als je ze naast appels legt. Appels geven een stofje af dat het rijpingsproces versnelt.'},
+      {label:'Kooktip',tekst:'Roer sauzen met zetmeel altijd door terwijl je ze verhit. Anders klontert het.'},
+      {label:'Wist je dat',tekst:'Kikkererwten uit blik zijn prima. Spoel ze af en ze zijn meteen klaar voor gebruik.'},
+      {label:'Kooktip',tekst:'Een scheutje azijn in het kookwater helpt gepocheerde eieren bij elkaar te houden.'},
       {label:'Wist je dat',tekst:'Verse peper malen vlak voor gebruik geeft veel meer smaak dan voorgemalen peper.'},
     ];
     const tips = [...kookTips].sort(() => Math.random() - 0.5);
@@ -561,10 +561,10 @@
       errorEl.style.display = 'none'; errorEl.className = 'error-box';
 
       if (!ingredienten && state.ingredientChips.length === 0) { errorEl.textContent = 'Vul in wat je in huis hebt.'; errorEl.style.display = 'block'; return; }
-      if (!state.tijd) { errorEl.textContent = 'Kies hoeveel tijd je hebt.'; errorEl.style.display = 'block'; return; }
-      if (!state.personen) { errorEl.textContent = 'Kies voor hoeveel personen.'; errorEl.style.display = 'block'; return; }
-      if (!state.moeite) { errorEl.textContent = 'Kies hoeveel moeite je wil doen.'; errorEl.style.display = 'block'; return; }
-      if (!state.doel) { errorEl.textContent = 'Kies wat je vanavond wil.'; errorEl.style.display = 'block'; return; }
+      if (!state.tijd) { errorEl.textContent = 'Geef aan hoeveel tijd je hebt.'; errorEl.style.display = 'block'; return; }
+      if (!state.personen) { errorEl.textContent = 'Geef aan voor hoeveel personen je kookt.'; errorEl.style.display = 'block'; return; }
+      if (!state.moeite) { errorEl.textContent = 'Kies hoeveel moeite je wilt doen.'; errorEl.style.display = 'block'; return; }
+      if (!state.doel) { errorEl.textContent = 'Kies wat je vanavond wilt eten.'; errorEl.style.display = 'block'; return; }
 
       resetLoadingSteps(); toonScherm('screen-laden');
       const interval = animeerLoadingSteps();
@@ -594,7 +594,7 @@
         if (!response.ok) {
           toonScherm('screen-invoer');
           if (data.teLite) { errorEl.className = 'warn-box'; errorEl.textContent = data.error; errorEl.style.display = 'block'; }
-          else { errorEl.textContent = data.error || 'Onbekende fout'; errorEl.style.display = 'block'; }
+          else { errorEl.textContent = data.error || 'Er is iets misgegaan. Probeer het opnieuw.'; errorEl.style.display = 'block'; }
           return;
         }
         state.suggesties = data.suggesties;
@@ -619,7 +619,7 @@
 
     function toonBeperktVoorraad(data) {
       beperktData = data;
-      document.getElementById('beperkt-uitleg').textContent = data.uitleg || 'Met wat je nu hebt kunnen we iets simpels maken, maar het wordt geen volwaardige maaltijd.';
+      document.getElementById('beperkt-uitleg').textContent = data.uitleg || 'Met wat je nu hebt kunnen we iets eenvoudigs maken. Een volledige maaltijd wordt het niet, maar het is een begin.';
 
       // Noodoptie
       const noodContainer = document.getElementById('beperkt-nood-container');
@@ -717,10 +717,10 @@
       if (extra.length > 0) {
         const wrapper = document.createElement('div');
         const btn = document.createElement('button');
-        btn.className = 'extra-btn'; btn.textContent = '+ Toon 2 extra opties';
+        btn.className = 'extra-btn'; btn.textContent = 'Toon nog 2 opties';
         btn.onclick = () => { btn.style.display = 'none'; kaarten.style.display = 'block'; };
         const kaarten = document.createElement('div'); kaarten.style.display = 'none';
-        const lbl = document.createElement('div'); lbl.className = 'extra-label'; lbl.textContent = 'Extra opties';
+        const lbl = document.createElement('div'); lbl.className = 'extra-label'; lbl.textContent = 'Nog meer ideeën';
         kaarten.appendChild(lbl);
         extra.forEach(s => kaarten.appendChild(maakKaart(s, state.suggesties.indexOf(s), false)));
         wrapper.appendChild(btn); wrapper.appendChild(kaarten); container.appendChild(wrapper);
