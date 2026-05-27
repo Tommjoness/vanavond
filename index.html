@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f0f0f">
+  <title>Vanavond</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --bg2: #1a1a1a;
+      --bg3: #242424;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.15);
+      --text: #f0f0f0;
+      --text2: #888;
+      --text3: #555;
+      --accent: #e8c170;
+      --accent2: #c49a3c;
+      --green: #4caf7d;
+      --amber: #e8a838;
+      --red: #e05555;
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding-bottom: 40px;
+    }
+
+    .screen { display: none; padding: 24px 20px; animation: fadeIn 0.2s ease; }
+    .screen.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .app-header { padding: 52px 20px 8px; }
+    .app-name { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+    .app-tagline { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
+
+    .input-field {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+      resize: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    .input-field:focus { border-color: var(--border2); }
+    .input-field::placeholder { color: var(--text3); }
+
+    .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 9px 16px;
+      font-size: 14px;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .pill:active { transform: scale(0.96); }
+    .pill.selected { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
+
+    .form-group { margin-bottom: 24px; }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: var(--radius);
+      padding: 17px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: -0.2px;
+    }
+    .btn-primary:active { transform: scale(0.98); background: var(--accent2); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .btn-secondary {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 13px 20px;
+      color: var(--text2);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-secondary:active { transform: scale(0.97); }
+
+    .loading-state { text-align: center; padding: 60px 20px; }
+    .loader { width: 36px; height: 36px; border: 2.5px solid var(--bg3); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { color: var(--text2); font-size: 14px; }
+
+    .result-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .result-card:active { transform: scale(0.99); border-color: var(--border2); }
+    .result-card.gebruik-eerst { border-color: var(--amber); }
+
+    .result-naam { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+    .result-waarom { font-size: 13px; color: var(--text2); margin-bottom: 10px; line-height: 1.5; }
+    .result-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 500;
+      padding: 4px 10px; border-radius: 100px;
+    }
+    .tag-green { background: rgba(76,175,125,0.15); color: var(--green); }
+    .tag-amber { background: rgba(232,168,56,0.15); color: var(--amber); }
+    .tag-gray { background: var(--bg3); color: var(--text2); }
+
+    .detail-header { margin-bottom: 20px; }
+    .detail-naam { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; line-height: 1.2; }
+    .detail-waarom { font-size: 14px; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
+    .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+
+    .detail-section { margin-bottom: 24px; }
+    .detail-section-title { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
+
+    .ingredient-list { list-style: none; }
+    .ingredient-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .ingredient-item:last-child { border-bottom: none; }
+    .ing-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .ing-dot.in-huis { background: var(--green); }
+    .ing-dot.nog-nodig { background: var(--amber); }
+
+    .stap-list { list-style: none; counter-reset: stap; }
+    .stap-item {
+      display: flex; gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.6;
+      counter-increment: stap;
+    }
+    .stap-item:last-child { border-bottom: none; }
+    .stap-num {
+      width: 24px; height: 24px;
+      background: var(--bg3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: var(--text2);
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--accent); font-size: 14px; font-weight: 500;
+      background: none; border: none; cursor: pointer; padding: 0;
+      margin-bottom: 20px;
+    }
+
+    .profiel-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .profiel-toggle-label { font-size: 14px; color: var(--text2); }
+    .profiel-toggle-icon { color: var(--accent); font-size: 18px; transition: transform 0.2s; }
+    .profiel-toggle-icon.open { transform: rotate(180deg); }
+    .profiel-content { display: none; }
+    .profiel-content.open { display: block; }
+
+    .error-box {
+      background: rgba(224,85,85,0.1);
+      border: 1px solid rgba(224,85,85,0.3);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      color: var(--red);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .gebruik-eerst-badge {
+      display: inline-flex; align-items: center; gap-4px;
+      font-size: 11px; font-weight: 600;
+      padding: 3px 8px; border-radius: 100px;
+      background: rgba(232,168,56,0.15); color: var(--amber);
+      margin-bottom: 8px;
+    }
+
+    .results-header { margin-bottom: 20px; }
+    .results-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .results-sub { font-size: 13px; color: var(--text2); }
+
+    .opnieuw-btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px;
+      color: var(--text2); font-size: 14px; cursor: pointer;
+      margin-top: 16px; transition: all 0.15s;
+    }
+    .opnieuw-btn:active { transform: scale(0.98); }
+  </style>
+</head>
+<body>
+
+  <!-- SCHERM 1: INVOER -->
+  <div id="screen-invoer" class="screen active">
+    <div class="app-header" style="padding-left:0; padding-right:0;">
+      <div class="app-name">Vanavond</div>
+      <div class="app-tagline">Jij opent de koelkast. Wij bedenken de rest.</div>
+    </div>
+
+    <div style="height: 28px;"></div>
+
+    <div class="form-group">
+      <div class="section-label">Wat heb je in huis?</div>
+      <textarea id="ingredienten" class="input-field" rows="3" placeholder="pasta, tonijn, eieren, knoflook, olijfolie..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <div class="section-label">Hoeveel tijd?</div>
+      <div class="pill-grid" id="tijd-grid">
+        <div class="pill" data-group="tijd" data-value="15">15 min</div>
+        <div class="pill" data-group="tijd" data-value="30">30 min</div>
+        <div class="pill" data-group="tijd" data-value="45">45 min</div>
+        <div class="pill" data-group="tijd" data-value="60">60+ min</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="section-label">Voor hoeveel personen?</div>
+      <div class="pill-grid">
+        <div class="pill" data-group="personen" data-value="1">1 persoon</div>
+        <div class="pill" data-group="personen" data-value="2">2 personen</div>
+        <div class="pill" data-group="personen" data-value="3-4">3-4 personen</div>
+        <div class="pill" data-group="personen" data-value="5+">5+</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="section-label">Hoe moe ben je?</div>
+      <div class="pill-grid">
+        <div class="pill" data-group="energie" data-value="uitgeput">Uitgeput</div>
+        <div class="pill" data-group="energie" data-value="gaat wel">Gaat wel</div>
+        <div class="pill" data-group="energie" data-value="zin om te koken">Zin om te koken</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="section-label">Wat wil je vanavond?</div>
+      <div class="pill-grid">
+        <div class="pill" data-group="doel" data-value="maakt niet uit">Maakt niet uit</div>
+        <div class="pill" data-group="doel" data-value="gezond">Gezond</div>
+        <div class="pill" data-group="doel" data-value="comfort">Comfort</div>
+        <div class="pill" data-group="doel" data-value="high protein">High protein</div>
+      </div>
+    </div>
+
+    <!-- Optioneel profiel -->
+    <div class="form-group">
+      <div class="profiel-toggle" onclick="toggleProfiel()">
+        <span class="profiel-toggle-label">Voorkeuren instellen (optioneel)</span>
+        <span class="profiel-toggle-icon" id="profiel-icon">›</span>
+      </div>
+      <div class="profiel-content" id="profiel-content">
+        <div class="form-group">
+          <div class="section-label">Kookapparatuur</div>
+          <div class="pill-grid">
+            <div class="pill" data-group="apparatuur" data-value="kookplaat" data-multi="true">Kookplaat / gas</div>
+            <div class="pill" data-group="apparatuur" data-value="oven" data-multi="true">Oven</div>
+            <div class="pill" data-group="apparatuur" data-value="airfryer" data-multi="true">Airfryer</div>
+            <div class="pill" data-group="apparatuur" data-value="bbq" data-multi="true">BBQ</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="section-label">Dieet / allergieën</div>
+          <div class="pill-grid">
+            <div class="pill" data-group="allergienen" data-value="vegetarisch" data-multi="true">Vegetarisch</div>
+            <div class="pill" data-group="allergienen" data-value="veganistisch" data-multi="true">Veganistisch</div>
+            <div class="pill" data-group="allergienen" data-value="halal" data-multi="true">Halal</div>
+            <div class="pill" data-group="allergienen" data-value="glutenvrij" data-multi="true">Glutenvrij</div>
+            <div class="pill" data-group="allergienen" data-value="lactosevrij" data-multi="true">Lactosevrij</div>
+            <div class="pill" data-group="allergienen" data-value="notenallergie" data-multi="true">Noten</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="section-label">Kookniveau</div>
+          <div class="pill-grid">
+            <div class="pill" data-group="kookniveau" data-value="beginner">Beginner</div>
+            <div class="pill" data-group="kookniveau" data-value="gemiddeld">Gemiddeld</div>
+            <div class="pill" data-group="kookniveau" data-value="gevorderd">Gevorderd</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="section-label">Nooit gebruiken</div>
+          <input type="text" id="nooitGebruiken" class="input-field" placeholder="bijv. koriander, ansjovis...">
+        </div>
+      </div>
+    </div>
+
+    <div id="error-invoer" class="error-box" style="display:none;"></div>
+    <button class="btn-primary" id="btn-suggesties" onclick="haalSuggesties()">Geef suggesties →</button>
+  </div>
+
+  <!-- SCHERM 2: LADEN -->
+  <div id="screen-laden" class="screen">
+    <div class="loading-state">
+      <div class="loader"></div>
+      <div class="loading-text">Even kijken wat je kunt maken...</div>
+    </div>
+  </div>
+
+  <!-- SCHERM 3: RESULTATEN -->
+  <div id="screen-resultaten" class="screen">
+    <div class="results-header">
+      <div class="results-title">Vanavond</div>
+      <div class="results-sub" id="resultaten-sub">3 ideeën op basis van wat je in huis hebt</div>
+    </div>
+    <div id="suggesties-container"></div>
+    <button class="opnieuw-btn" onclick="toonScherm('screen-invoer')">↺ Opnieuw zoeken</button>
+  </div>
+
+  <!-- SCHERM 4: DETAIL -->
+  <div id="screen-detail" class="screen">
+    <button class="back-btn" onclick="toonScherm('screen-resultaten')">‹ Terug</button>
+    <div id="detail-container"></div>
+  </div>
+
+  <script>
+    const state = {
+      tijd: null,
+      personen: null,
+      energie: null,
+      doel: null,
+      apparatuur: [],
+      allergienen: [],
+      kookniveau: null,
+      suggesties: []
+    };
+
+    function toonScherm(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function toggleProfiel() {
+      const content = document.getElementById('profiel-content');
+      const icon = document.getElementById('profiel-icon');
+      content.classList.toggle('open');
+      icon.classList.toggle('open');
+      icon.textContent = content.classList.contains('open') ? '›' : '›';
+    }
+
+    document.querySelectorAll('.pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const group = pill.dataset.group;
+        const value = pill.dataset.value;
+        const isMulti = pill.dataset.multi === 'true';
+
+        if (isMulti) {
+          pill.classList.toggle('selected');
+          if (pill.classList.contains('selected')) {
+            if (!state[group]) state[group] = [];
+            if (!state[group].includes(value)) state[group].push(value);
+          } else {
+            state[group] = state[group].filter(v => v !== value);
+          }
+        } else {
+          document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('selected'));
+          pill.classList.add('selected');
+          state[group] = value;
+        }
+      });
+    });
+
+    async function haalSuggesties() {
+      const ingredienten = document.getElementById('ingredienten').value.trim();
+      const errorEl = document.getElementById('error-invoer');
+
+      errorEl.style.display = 'none';
+
+      if (!ingredienten) { errorEl.textContent = 'Vul in wat je in huis hebt.'; errorEl.style.display = 'block'; return; }
+      if (!state.tijd) { errorEl.textContent = 'Kies hoeveel tijd je hebt.'; errorEl.style.display = 'block'; return; }
+      if (!state.personen) { errorEl.textContent = 'Kies voor hoeveel personen.'; errorEl.style.display = 'block'; return; }
+      if (!state.energie) { errorEl.textContent = 'Kies je energieniveau.'; errorEl.style.display = 'block'; return; }
+      if (!state.doel) { errorEl.textContent = 'Kies wat je vanavond wil.'; errorEl.style.display = 'block'; return; }
+
+      toonScherm('screen-laden');
+
+      try {
+        const response = await fetch('/api/suggesties', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ingredienten,
+            tijd: state.tijd,
+            personen: state.personen,
+            energie: state.energie,
+            doel: state.doel,
+            profiel: {
+              apparatuur: state.apparatuur,
+              allergienen: state.allergienen,
+              kookniveau: state.kookniveau || 'gemiddeld',
+              nooitGebruiken: document.getElementById('nooitGebruiken').value.trim()
+            }
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Onbekende fout');
+
+        state.suggesties = data.suggesties;
+        toonResultaten();
+
+      } catch (err) {
+        toonScherm('screen-invoer');
+        errorEl.textContent = err.message || 'Er ging iets mis. Probeer het opnieuw.';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    function toonResultaten() {
+      const container = document.getElementById('suggesties-container');
+      container.innerHTML = '';
+
+      state.suggesties.forEach((s, i) => {
+        const card = document.createElement('div');
+        card.className = 'result-card' + (s.gebruikEerstOp ? ' gebruik-eerst' : '');
+        card.onclick = () => toonDetail(i);
+
+        const nogNodigTekst = s.nogNodig && s.nogNodig.length > 0
+          ? `<span class="tag tag-amber">+ ${s.nogNodig.join(', ')}</span>`
+          : '<span class="tag tag-green">Alles in huis</span>';
+
+        card.innerHTML = `
+          ${s.gebruikEerstOp ? '<div class="gebruik-eerst-badge">Gebruik eerst op</div>' : ''}
+          <div class="result-naam">${s.naam}</div>
+          <div class="result-waarom">${s.waarom}</div>
+          <div class="result-meta">
+            <span class="tag tag-gray">⏱ ${s.bereidingstijd}</span>
+            <span class="tag tag-gray">🍳 ${s.afwas}</span>
+            ${nogNodigTekst}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      toonScherm('screen-resultaten');
+    }
+
+    function toonDetail(index) {
+      const s = state.suggesties[index];
+      const container = document.getElementById('detail-container');
+
+      const inHuisHtml = s.inHuis.map(ing =>
+        `<li class="ingredient-item"><span class="ing-dot in-huis"></span>${ing}</li>`
+      ).join('');
+
+      const nogNodigHtml = s.nogNodig && s.nogNodig.length > 0
+        ? `<div class="detail-section">
+            <div class="detail-section-title">Nog nodig</div>
+            <ul class="ingredient-list">
+              ${s.nogNodig.map(ing => `<li class="ingredient-item"><span class="ing-dot nog-nodig"></span>${ing}</li>`).join('')}
+            </ul>
+           </div>`
+        : '';
+
+      const stappenHtml = s.stappen.map((stap, i) =>
+        `<li class="stap-item"><div class="stap-num">${i + 1}</div><div>${stap}</div></li>`
+      ).join('');
+
+      container.innerHTML = `
+        <div class="detail-header">
+          ${s.gebruikEerstOp ? '<div class="gebruik-eerst-badge" style="margin-bottom:8px;">Gebruik eerst op</div>' : ''}
+          <div class="detail-naam">${s.naam}</div>
+          <div class="detail-waarom">${s.waarom}</div>
+          <div class="detail-tags">
+            <span class="tag tag-gray">⏱ ${s.bereidingstijd}</span>
+            <span class="tag tag-gray">🍳 ${s.afwas}</span>
+            ${s.nogNodig && s.nogNodig.length === 0 ? '<span class="tag tag-green">Alles in huis</span>' : ''}
+          </div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">In huis</div>
+          <ul class="ingredient-list">${inHuisHtml}</ul>
+        </div>
+        ${nogNodigHtml}
+        <div class="detail-section">
+          <div class="detail-section-title">Bereiding</div>
+          <ol class="stap-list">${stappenHtml}</ol>
+        </div>
+      `;
+
+      toonScherm('screen-detail');
+    }
+  </script>
+</body>
+</html>
