@@ -16,13 +16,14 @@
       --radius:14px;--radius-sm:8px;
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    html{background:var(--bg);}
     body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;max-width:540px;margin:0 auto;padding-bottom:80px;}
     .screen{display:none;padding:0 20px 24px;animation:fadeIn 0.2s ease;}
     .screen.active{display:block;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
     /* BASIS */
-    .app-header{padding:52px 0 20px;}
+    .app-header{padding:52px 0 20px;text-align:center;}
     .app-name{font-size:30px;font-weight:700;letter-spacing:-0.5px;color:var(--accent);}
     .app-tagline{font-size:14px;color:var(--text2);margin-top:4px;line-height:1.5;}
     .app-sub{font-size:12px;color:var(--text3);margin-top:6px;}
@@ -62,7 +63,7 @@
     .profiel-content.open{display:block;}
 
     /* LOADING */
-    .loading-state{text-align:center;padding:80px 20px;}
+    .loading-state{text-align:center;padding:80px 20px;display:flex;flex-direction:column;align-items:center;min-height:60vh;justify-content:center;}
     .loader{width:36px;height:36px;border:2.5px solid var(--bg3);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px;}
     @keyframes spin{to{transform:rotate(360deg)}}
     .loading-text{color:var(--text);font-size:16px;font-weight:500;margin-bottom:20px;}
@@ -222,6 +223,19 @@
     .detail-acties{display:flex;gap:10px;margin-top:8px;margin-bottom:24px;}
     .divider{height:1px;background:var(--border);margin:4px 0 24px;}
 
+    /* BEPERKTE VOORRAAD */
+    .nood-kaart{background:var(--bg2);border:1px solid rgba(232,168,56,0.3);border-radius:var(--radius);padding:18px 20px;margin-bottom:20px;}
+    .nood-kaart-label{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;background:rgba(224,85,85,0.15);color:var(--red);margin-bottom:8px;}
+    .nood-kaart-naam{font-size:17px;font-weight:600;margin-bottom:6px;}
+    .nood-kaart-score{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px;}
+    .nood-kaart-waarschuwing{font-size:13px;color:var(--amber);line-height:1.5;background:rgba(232,168,56,0.08);border-radius:var(--radius-sm);padding:10px 12px;margin-top:8px;}
+    .extra-ing-kaart{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px;}
+    .extra-ing-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+    .extra-ing-inhoud{flex:1;}
+    .extra-ing-naam{font-size:14px;font-weight:600;color:var(--accent);margin-bottom:2px;}
+    .extra-ing-gerecht{font-size:13px;color:var(--text);margin-bottom:2px;}
+    .extra-ing-reden{font-size:12px;color:var(--text2);}
+
     /* ERRORS */
     .error-box{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--red);font-size:14px;margin-bottom:16px;line-height:1.5;}
     .warn-box{background:rgba(232,168,56,0.1);border:1px solid rgba(232,168,56,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--amber);font-size:14px;margin-bottom:16px;line-height:1.5;}
@@ -353,7 +367,7 @@
   </div>
 
   <!-- LADEN -->
-  <div id="screen-laden" class="screen">
+  <div id="screen-laden" class="screen" style="padding:0;">
     <div class="loading-state">
       <div class="loader"></div>
       <div class="loading-text">We kijken wat je kunt maken…</div>
@@ -366,11 +380,31 @@
     </div>
   </div>
 
+  <!-- BEPERKTE VOORRAAD -->
+  <div id="screen-beperkt" class="screen">
+    <div class="results-header">
+      <div class="results-title" style="color:var(--amber);">Je voorraad is beperkt</div>
+      <div class="results-sub" id="beperkt-uitleg"></div>
+    </div>
+
+    <div id="beperkt-nood-container"></div>
+
+    <div style="margin-bottom:24px;">
+      <div class="section-label" style="margin-bottom:14px;">Met 1 extra ingrediënt wordt het direct beter</div>
+      <div id="beperkt-extra-container"></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+      <button class="btn-primary" onclick="beperktDoorgaan()">Maak toch iets simpels</button>
+      <button class="opnieuw-btn" onclick="toonScherm('screen-invoer')" style="margin-top:0;">✏️ Ik voeg meer ingrediënten toe</button>
+    </div>
+  </div>
+
   <!-- RESULTATEN -->
   <div id="screen-resultaten" class="screen">
     <div class="results-header">
       <div class="results-title">Vanavond</div>
-      <div class="results-sub">3 ideeën voor vanavond — op basis van je voorraad, tijd en voorkeuren.</div>
+      <div class="results-sub">3 ideeën voor vanavond, op basis van je voorraad, tijd en voorkeuren.</div>
     </div>
     <div class="verfijn-row">
       <button class="verfijn-btn" onclick="verfijn('Maak alle recepten sneller, minder stappen')">⚡ Sneller</button>
@@ -401,33 +435,33 @@
     // KOOKTIPS
     const kookTips = [
       {label:'Kooktip',tekst:'Laat vlees even rusten na het bakken. Zo blijven de sappen erin en wordt het malser.'},
-      {label:'Kooktip',tekst:'Pasta kookt beter in goed gezouten water — het water moet zouten als de zee smaken.'},
+      {label:'Kooktip',tekst:'Pasta kookt beter in goed gezouten water. Het water mag lekker zout zijn.'},
       {label:'Wist je dat',tekst:'Knoflook wordt milder van smaak als je het langer op laag vuur bakt.'},
       {label:'Kooktip',tekst:'Een snufje suiker in tomatensaus neutraliseert de zuurheid van tomaten.'},
       {label:'Wist je dat',tekst:'Je pan is heet genoeg als een druppel water direct verdampt bij aanraking.'},
       {label:'Kooktip',tekst:'Bewaar kruiden in een glas water in de koelkast, zoals bloemen. Ze blijven zo veel langer vers.'},
-      {label:'Wist je dat',tekst:'Eieren kook je beter door ze in koud water op te zetten — zo voorkom je barsten.'},
+      {label:'Wist je dat',tekst:'Eieren kook je beter door ze in koud water op te zetten , dan voorkom je barsten.'},
       {label:'Kooktip',tekst:'Citroensap vlak voor het serveren maakt elk gerecht frisser en levendiger van smaak.'},
       {label:'Kooktip',tekst:'Ui snipperen gaat makkelijker als je het mes nat maakt. Minder tranen, beter resultaat.'},
       {label:'Wist je dat',tekst:'Rijst spoelen voor het koken verwijdert zetmeel en geeft lossere, minder plakkerige korrels.'},
-      {label:'Kooktip',tekst:'Voeg zout pas toe aan het einde als je groente roerbakt — anders trekt het vocht eruit.'},
+      {label:'Kooktip',tekst:'Voeg zout pas toe aan het einde als je groente roerbakt , anders trekt het vocht eruit.'},
       {label:'Wist je dat',tekst:'Olijfolie is niet ideaal voor heel hoge temperaturen. Gebruik dan zonnebloemolie.'},
       {label:'Kooktip',tekst:'Snij vlees altijd dwars op de draad. Zo wordt het malser en makkelijker te kauwen.'},
       {label:'Wist je dat',tekst:'Een houten lepel op een pan kokend water voorkomt overkoken. Echt waar.'},
-      {label:'Kooktip',tekst:'Groenten gaar roosteren in de oven? 200°C, beetje olie, en geduld — minstens 20 minuten.'},
+      {label:'Kooktip',tekst:'Groenten gaar roosteren in de oven? 200°C, beetje olie, en geduld , minstens 20 minuten.'},
       {label:'Wist je dat',tekst:'Kaas rasp je makkelijker als hij koud is. Warme kaas plakt samen en smelt op de rasp.'},
       {label:'Kooktip',tekst:'Prik je pasta met je vinger: als hij meebuigt maar licht weerstand biedt, is hij al dente.'},
       {label:'Wist je dat',tekst:'Gedroogde kruiden zijn drie keer zo sterk als verse. Gebruik dus minder als je switcht.'},
-      {label:'Kooktip',tekst:'Kip is gaar als het sap helder is als je erin prikt — niet roze of troebel.'},
+      {label:'Kooktip',tekst:'Kip is gaar als het sap helder is als je erin prikt , niet roze en niet troebel.'},
       {label:'Wist je dat',tekst:'Restjes pasta bewaar je beter los van de saus. Samen bewaard wordt de pasta papperig.'},
-      {label:'Kooktip',tekst:'Voeg een scheutje pastawater toe aan je saus — het zetmeel bindt alles samen.'},
+      {label:'Kooktip',tekst:'Voeg een scheutje pastawater toe aan je saus , dat bindt alles samen.'},
       {label:'Wist je dat',tekst:'Ei op kamertemperatuur klopt makkelijker op tot schuim dan koude eieren.'},
       {label:'Kooktip',tekst:'Brood wordt knapperiger als je het even opwarmt in de oven op 160°C voor 5 minuten.'},
       {label:'Wist je dat',tekst:'De meeste gerechten smaken de volgende dag beter. Soep, stoofpot en curry zeker.'},
-      {label:'Kooktip',tekst:'Tomaten bewaar je beter buiten de koelkast — koude temperatuur tast de smaak aan.'},
+      {label:'Kooktip',tekst:'Tomaten bewaar je beter buiten de koelkast , want kou tast de smaak aan.'},
       {label:'Wist je dat',tekst:'Banaan en avocado rijpen sneller als je ze naast appels legt. Ethyleengas doet zijn werk.'},
       {label:'Kooktip',tekst:'Roer sauzen met zetmeel altijd door terwijl je ze verhit, anders klontert het.'},
-      {label:'Wist je dat',tekst:'Kikkererwten uit blik zijn prima — spoel ze af en ze zijn direct te gebruiken.'},
+      {label:'Wist je dat',tekst:'Kikkererwten uit blik zijn prima , spoel ze af en ze zijn klaar voor gebruik.'},
       {label:'Kooktip',tekst:'Een eetlepel azijn in het kookwater houdt gepocheerde eieren bij elkaar.'},
       {label:'Wist je dat',tekst:'Verse peper malen vlak voor gebruik geeft veel meer smaak dan voorgemalen peper.'},
     ];
@@ -502,7 +536,7 @@
         tipEl.style.display = 'block'; tipIndex++;
       }
       setTimeout(toonTip, 1200);
-      window._tipInterval = setInterval(toonTip, 2800);
+      window._tipInterval = setInterval(toonTip, 5000);
       const interval = setInterval(() => {
         if (i > 0) document.getElementById(steps[i - 1]).classList.replace('active', 'done');
         if (i < steps.length) { document.getElementById(steps[i]).classList.add('active'); i++; }
@@ -564,6 +598,13 @@
           return;
         }
         state.suggesties = data.suggesties;
+
+        // Beperkte voorraad flow
+        if (data.beperktVoorraad) {
+          toonBeperktVoorraad(data);
+          return;
+        }
+
         toonResultaten();
       } catch (err) {
         clearInterval(interval);
@@ -572,6 +613,48 @@
         errorEl.textContent = err.message || 'Er ging iets mis. Probeer het opnieuw.';
         errorEl.style.display = 'block';
       }
+    }
+
+    let beperktData = null;
+
+    function toonBeperktVoorraad(data) {
+      beperktData = data;
+      document.getElementById('beperkt-uitleg').textContent = data.uitleg || 'Met wat je nu hebt kunnen we iets simpels maken, maar het wordt geen volwaardige maaltijd.';
+
+      // Noodoptie
+      const noodContainer = document.getElementById('beperkt-nood-container');
+      if (data.noodOptie) {
+        const n = data.noodOptie;
+        noodContainer.innerHTML = `
+          <div class="nood-kaart">
+            <div class="nood-kaart-label">Noodoptie</div>
+            <div class="nood-kaart-naam">${n.naam}</div>
+            <div class="nood-kaart-score" style="color:var(--red);">Match ${n.matchScore}%</div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6;">${n.korteBeschrijving}</div>
+            ${n.waarschuwing ? `<div class="nood-kaart-waarschuwing">⚠️ ${n.waarschuwing}</div>` : ''}
+          </div>`;
+      }
+
+      // Extra ingrediënten
+      const extraContainer = document.getElementById('beperkt-extra-container');
+      if (Array.isArray(data.extraVoorstellenIngredient)) {
+        extraContainer.innerHTML = data.extraVoorstellenIngredient.map(e => `
+          <div class="extra-ing-kaart">
+            <div class="extra-ing-icon">🛒</div>
+            <div class="extra-ing-inhoud">
+              <div class="extra-ing-naam">Koop: ${e.ingredient}</div>
+              <div class="extra-ing-gerecht">${e.gerecht}</div>
+              <div class="extra-ing-reden">${e.reden}</div>
+            </div>
+          </div>`).join('');
+      }
+
+      toonScherm('screen-beperkt');
+    }
+
+    function beperktDoorgaan() {
+      // Genereer normale suggesties maar met een verfijninstructie dat beperkte voorraad ok is
+      haalSuggesties('Beperkte voorraad. Genereer toch recepten maar wees eerlijk over beperkingen. Matchscore mag niet hoger dan 55% als er geen groente of eiwit is.');
     }
 
     function verfijn(instructie) { if (state.lastRequest) haalSuggesties(instructie); }
@@ -667,10 +750,10 @@
 
       const macroHtml = (data) => `
         <div class="macro-grid">
-          <div class="macro-card"><div class="macro-waarde">${data.kcal || '—'}</div><div class="macro-label">kcal</div></div>
-          <div class="macro-card"><div class="macro-waarde">${data.proteinen || '—'}g</div><div class="macro-label">eiwit</div></div>
-          <div class="macro-card"><div class="macro-waarde">${data.koolhydraten || '—'}g</div><div class="macro-label">koolh.</div></div>
-          <div class="macro-card"><div class="macro-waarde">${data.vetten || '—'}g</div><div class="macro-label">vet</div></div>
+          <div class="macro-card"><div class="macro-waarde">${data.kcal || '.'}</div><div class="macro-label">kcal</div></div>
+          <div class="macro-card"><div class="macro-waarde">${data.proteinen || '.'}g</div><div class="macro-label">eiwit</div></div>
+          <div class="macro-card"><div class="macro-waarde">${data.koolhydraten || '.'}g</div><div class="macro-label">koolh.</div></div>
+          <div class="macro-card"><div class="macro-waarde">${data.vetten || '.'}g</div><div class="macro-label">vet</div></div>
         </div>`;
 
       const negeerHtml = Array.isArray(s.negeerMeldingen) && s.negeerMeldingen.length > 0
@@ -717,10 +800,10 @@
         <!-- OVERZICHT GRID -->
         <div class="overzicht-grid">
           <div class="overzicht-item"><div class="overzicht-label">Totale tijd</div><div class="overzicht-waarde">${s.bereidingstijd}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Actieve tijd</div><div class="overzicht-waarde">${s.actieveKooktijd || '—'}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Porties</div><div class="overzicht-waarde">${s.porties || '—'}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">±${v.portieGewicht || '—'}g</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) ? s.apparatuurGebruikt.join(', ') : '—'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Actieve tijd</div><div class="overzicht-waarde">${s.actieveKooktijd || 'onbekend'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Porties</div><div class="overzicht-waarde">${s.porties || state.personen}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">±${v.portieGewicht || '?'}g</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) ? s.apparatuurGebruikt.join(', ') : 'zie bereiding'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${s.afwasNiveau}</div></div>
         </div>
 
@@ -758,7 +841,7 @@
           <div class="voeding-info">
             <div class="voeding-info-item">Totaal: <span>±${v.totaalGewicht}g</span></div>
             <div class="voeding-info-item">Per portie: <span>±${v.portieGewicht}g</span></div>
-            <div class="voeding-info-item">Porties: <span>${s.porties || '—'}</span></div>
+            <div class="voeding-info-item">Porties: <span>${s.porties || state.personen}</span></div>
           </div>` : ''}
           <div class="voeding-tabs">
             <div class="voeding-tab active" onclick="wisselVoeding(${index}, 'portie', event)">Per portie</div>
