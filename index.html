@@ -16,34 +16,45 @@
       --radius:14px;--radius-sm:8px;
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;max-width:520px;margin:0 auto;padding-bottom:48px;}
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;max-width:540px;margin:0 auto;padding-bottom:80px;}
     .screen{display:none;padding:0 20px 24px;animation:fadeIn 0.2s ease;}
     .screen.active{display:block;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-    .app-header{padding:52px 0 24px;}
+    /* BASIS */
+    .app-header{padding:52px 0 20px;}
     .app-name{font-size:30px;font-weight:700;letter-spacing:-0.5px;color:var(--accent);}
     .app-tagline{font-size:14px;color:var(--text2);margin-top:4px;line-height:1.5;}
+    .app-sub{font-size:12px;color:var(--text3);margin-top:6px;}
     .section-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
-    .helper-text{font-size:12px;color:var(--text3);margin-top:8px;}
+    .helper-text{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.4;}
     .privacy-text{font-size:11px;color:var(--text3);margin-top:16px;text-align:center;line-height:1.5;}
-    .form-group{margin-bottom:28px;}
+    .form-group{margin-bottom:26px;}
     .input-field{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;color:var(--text);font-size:15px;outline:none;resize:none;font-family:inherit;transition:border-color 0.2s;-webkit-appearance:none;line-height:1.5;}
     .input-field:focus{border-color:var(--border2);}
     .input-field::placeholder{color:var(--text3);}
 
+    /* INGREDIENT CHIPS */
+    .chips-container{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:0;}
+    .chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:100px;padding:5px 10px 5px 12px;font-size:13px;color:var(--text);}
+    .chip-remove{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;line-height:1;padding:0;display:flex;align-items:center;}
+    .chip-remove:hover{color:var(--red);}
+
+    /* PILLS */
     .pill-grid{display:flex;flex-wrap:wrap;gap:8px;}
-    .pill{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:9px 16px;font-size:14px;color:var(--text2);cursor:pointer;transition:all 0.15s;user-select:none;}
+    .pill{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 15px;font-size:13px;color:var(--text2);cursor:pointer;transition:all 0.15s;user-select:none;}
     .pill:active{transform:scale(0.96);}
     .pill.selected{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600;}
 
+    /* BUTTONS */
     .btn-primary{width:100%;background:var(--accent);color:#000;border:none;border-radius:var(--radius);padding:17px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s;}
     .btn-primary:active{transform:scale(0.98);background:var(--accent2);}
     .btn-ghost{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 16px;color:var(--text2);font-size:13px;cursor:pointer;transition:all 0.15s;}
     .btn-ghost:active{background:var(--bg3);}
-    .back-btn{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:500;background:none;border:none;cursor:pointer;padding:0;margin-bottom:24px;}
+    .back-btn{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:500;background:none;border:none;cursor:pointer;padding:0;margin-bottom:20px;}
 
-    .profiel-toggle{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;}
+    /* PROFIEL */
+    .profiel-toggle{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;}
     .profiel-toggle-label{font-size:14px;color:var(--text2);}
     .profiel-icon{color:var(--accent);font-size:18px;transition:transform 0.2s;}
     .profiel-icon.open{transform:rotate(90deg);}
@@ -60,25 +71,37 @@
     .loading-step.active{color:var(--accent);}
     .loading-step.done{color:var(--green);}
     .step-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+    .loading-tip{margin-top:24px;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;color:var(--text2);line-height:1.6;max-width:300px;margin-left:auto;margin-right:auto;animation:fadeIn 0.4s ease;text-align:left;}
+    .loading-tip-label{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
 
     /* RESULTATEN */
-    .results-header{padding:40px 0 16px;}
+    .results-header{padding:36px 0 14px;}
     .results-title{font-size:22px;font-weight:700;color:var(--accent);margin-bottom:4px;}
-    .results-sub{font-size:13px;color:var(--text2);margin-bottom:16px;}
-    .verfijn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
-    .verfijn-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:7px 14px;font-size:12px;color:var(--text2);cursor:pointer;transition:all 0.15s;}
+    .results-sub{font-size:13px;color:var(--text2);margin-bottom:14px;}
+    .verfijn-row{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+    .verfijn-row::-webkit-scrollbar{display:none;}
+    .verfijn-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:7px 14px;font-size:12px;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
     .verfijn-btn:active{background:var(--bg3);}
 
-    .result-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px;}
+    /* KAARTEN */
+    .result-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;transition:border-color 0.15s;}
+    .result-card.top-keuze{border-color:rgba(232,193,112,0.3);}
     .result-card.gebruik-eerst{border-color:var(--amber);}
-    .gebruik-eerst-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;background:rgba(232,168,56,0.15);color:var(--amber);margin-bottom:6px;}
-    .rol-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;background:rgba(155,127,212,0.15);color:var(--purple);margin-bottom:6px;margin-right:6px;}
-    .result-naam{font-size:17px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:6px;}
-    .result-beschrijving{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px;}
+    .result-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+    .result-badges-top{display:flex;gap:5px;flex-wrap:wrap;flex:1;}
+    .gebruik-eerst-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;background:rgba(232,168,56,0.15);color:var(--amber);}
+    .rol-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;background:rgba(155,127,212,0.15);color:var(--purple);}
+    .match-score{font-size:13px;font-weight:700;white-space:nowrap;margin-left:8px;flex-shrink:0;}
+    .result-naam{font-size:17px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:5px;}
+    .result-beschrijving{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px;}
     .result-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-    .result-btn{width:100%;background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px;color:var(--text);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.15s;text-align:center;}
+    .result-btn{width:100%;background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px;color:var(--text);font-size:14px;font-weight:500;cursor:pointer;text-align:center;transition:all 0.15s;}
     .result-btn:active{background:var(--bg3);}
+    .extra-btn{width:100%;background:transparent;border:1px solid var(--border);border-radius:var(--radius);padding:13px;color:var(--text2);font-size:14px;cursor:pointer;margin:4px 0 12px;text-align:center;}
+    .extra-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;margin-top:4px;}
+    .opnieuw-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;color:var(--text2);font-size:14px;cursor:pointer;margin-top:8px;}
 
+    /* TAGS */
     .tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:4px 10px;border-radius:100px;white-space:nowrap;}
     .tag-green{background:rgba(76,175,125,0.15);color:var(--green);}
     .tag-amber{background:rgba(232,168,56,0.15);color:var(--amber);}
@@ -86,21 +109,42 @@
     .tag-blue{background:rgba(91,155,213,0.15);color:var(--blue);}
     .tag-accent{background:rgba(232,193,112,0.15);color:var(--accent);}
     .tag-purple{background:rgba(155,127,212,0.15);color:var(--purple);}
-    .tag-red{background:rgba(224,85,85,0.15);color:var(--red);}
-
-    .extra-btn{width:100%;background:transparent;border:1px solid var(--border);border-radius:var(--radius);padding:13px;color:var(--text2);font-size:14px;cursor:pointer;margin:4px 0 12px;text-align:center;}
-    .extra-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;margin-top:4px;}
-    .opnieuw-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;color:var(--text2);font-size:14px;cursor:pointer;margin-top:8px;}
 
     /* DETAIL */
-    .detail-screen-header{padding:36px 0 4px;}
+    .detail-header-area{padding:36px 0 0;}
     .detail-naam{font-size:24px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2;}
-    .detail-beschrijving{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px;}
-    .detail-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
-    .nog-nodig-alert{background:rgba(232,168,56,0.1);border:1px solid rgba(232,168,56,0.3);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--amber);margin-bottom:20px;line-height:1.5;}
-    .detail-section{margin-bottom:28px;}
-    .detail-section-title{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+    .detail-beschrijving{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:14px;}
+    .detail-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
 
+    /* MATCHSCORE DETAIL */
+    .match-blok{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:20px;}
+    .match-blok-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+    .match-score-groot{font-size:26px;font-weight:700;}
+    .match-label-tekst{font-size:12px;color:var(--text2);line-height:1.4;}
+    .match-uitleg{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:8px;}
+    .match-redenen{display:flex;flex-wrap:wrap;gap:6px;}
+    .match-reden{font-size:11px;color:var(--text3);background:var(--bg3);border-radius:100px;padding:3px 8px;}
+    .gebruik-slim-blok{background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.2);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--amber);line-height:1.5;}
+
+    /* NEGEER MELDINGEN */
+    .negeer-melding{background:rgba(91,155,213,0.08);border:1px solid rgba(91,155,213,0.2);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--blue);line-height:1.5;}
+
+    /* OVERZICHT GRID */
+    .overzicht-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+    .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;}
+    .overzicht-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+    .overzicht-waarde{font-size:15px;font-weight:600;color:var(--text);}
+
+    /* TABS */
+    .tabs{display:flex;gap:2px;background:var(--bg3);border-radius:var(--radius-sm);padding:3px;margin-bottom:24px;position:sticky;top:0;z-index:10;}
+    .tab{flex:1;padding:9px 4px;font-size:12px;font-weight:500;text-align:center;border-radius:6px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+    .tab.active{background:var(--bg2);color:var(--text);}
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+
+    /* INGREDIËNTEN */
+    .ing-section{margin-bottom:20px;}
+    .ing-section-title{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
     .ingredient-list{list-style:none;}
     .ingredient-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;}
     .ingredient-item:last-child{border-bottom:none;}
@@ -111,9 +155,18 @@
     .ing-dot.basis{background:var(--text3);}
     .ing-dot.nog-nodig{background:var(--amber);}
     .ing-dot.optioneel{background:var(--bg4);border:1px solid var(--text3);}
+    .nog-nodig-alert{background:rgba(232,168,56,0.1);border:1px solid rgba(232,168,56,0.3);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--amber);margin-bottom:16px;line-height:1.5;}
+    .boodschappen-btn{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;color:var(--amber);font-size:14px;font-weight:500;cursor:pointer;margin-top:12px;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;}
 
+    /* BEREIDING */
+    .stap-list{list-style:none;}
+    .stap-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.7;color:var(--text2);}
+    .stap-item:last-child{border-bottom:none;}
+    .stap-num{width:26px;height:26px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text2);flex-shrink:0;margin-top:2px;}
+
+    /* VOEDING */
     .voeding-disclaimer{font-size:11px;color:var(--text3);margin-bottom:12px;line-height:1.4;}
-    .voeding-info{display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;}
+    .voeding-info{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;}
     .voeding-info-item{font-size:12px;color:var(--text2);}
     .voeding-info-item span{color:var(--text);font-weight:500;}
     .voeding-tabs{display:flex;gap:2px;background:var(--bg3);border-radius:var(--radius-sm);padding:3px;margin-bottom:14px;}
@@ -124,46 +177,37 @@
     .macro-waarde{font-size:19px;font-weight:700;color:var(--accent);}
     .macro-label{font-size:11px;color:var(--text2);margin-top:3px;}
 
-    .stap-list{list-style:none;}
-    .stap-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.7;color:var(--text2);}
-    .stap-item:last-child{border-bottom:none;}
-    .stap-num{width:26px;height:26px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text2);flex-shrink:0;margin-top:2px;}
-
-    .smaak-blok{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:28px;}
-    .smaak-blok-titel{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:10px;}
-    .smaak-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);padding:4px 0;}
-    .smaak-item::before{content:"✦";font-size:10px;color:var(--accent);flex-shrink:0;}
-
-    .vervanging-blok{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:28px;}
-    .vervanging-blok-titel{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;}
-    .vervanging-item{font-size:13px;color:var(--text2);padding:3px 0;line-height:1.5;}
-
+    /* SLIMME TIPS */
+    .tips-blok{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;}
+    .tips-blok-titel{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:10px;}
+    .tip-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text2);padding:4px 0;line-height:1.5;}
+    .tip-dot{flex-shrink:0;color:var(--accent);font-size:10px;margin-top:3px;}
     .waarom-list{list-style:none;}
     .waarom-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2);padding:5px 0;line-height:1.5;}
     .waarom-item::before{content:"✓";color:var(--green);font-size:12px;margin-top:1px;flex-shrink:0;font-weight:700;}
-
-    .detail-acties{display:flex;gap:10px;margin-top:8px;margin-bottom:28px;}
-    .error-box{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--red);font-size:14px;margin-bottom:16px;line-height:1.5;}
-    .warn-box{background:rgba(232,168,56,0.1);border:1px solid rgba(232,168,56,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--amber);font-size:14px;margin-bottom:16px;line-height:1.5;}
-    .divider{height:1px;background:var(--border);margin:4px 0 28px;}
-
-    .restjes-blok{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:28px;}
+    .restjes-blok{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;}
     .restjes-titel{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;}
     .restjes-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text2);padding:3px 0;line-height:1.5;}
-    .restjes-icon{flex-shrink:0;font-size:13px;}
+    .vervanging-blok{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;}
+    .vervanging-blok-titel{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;}
+    .vervanging-item{font-size:13px;color:var(--text2);padding:3px 0;line-height:1.5;}
 
-    .boodschappen-btn{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;color:var(--amber);font-size:14px;font-weight:500;cursor:pointer;margin-bottom:16px;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;}
-    .boodschappen-btn:active{background:var(--bg3);}
-
-    .feedback-sectie{margin-bottom:28px;}
+    /* FEEDBACK */
+    .feedback-sectie{margin-bottom:24px;}
     .feedback-titel{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
-    .feedback-grid{display:flex;flex-wrap:wrap;gap:8px;}
-    .feedback-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 14px;font-size:12px;color:var(--text2);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
-    .feedback-btn:active{transform:scale(0.96);}
+    .feedback-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+    .feedback-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 14px;font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.15s;}
     .feedback-btn.selected{border-color:var(--accent);color:var(--accent);}
+    .feedback-subfragen{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:none;}
+    .feedback-subfragen.active{display:block;}
+    .feedback-sub-titel{font-size:12px;color:var(--text2);margin-bottom:10px;}
+    .feedback-sub-grid{display:flex;flex-wrap:wrap;gap:6px;}
+    .feedback-sub-btn{background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;}
+    .feedback-sub-btn.selected{border-color:var(--red);color:var(--red);}
 
+    /* BOODSCHAPPEN MODAL */
     .boodschappen-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:flex-end;z-index:100;animation:fadeIn 0.2s ease;}
-    .boodschappen-sheet{background:var(--bg2);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:520px;margin:0 auto;}
+    .boodschappen-sheet{background:var(--bg2);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:540px;margin:0 auto;}
     .boodschappen-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
     .boodschappen-naam{font-size:17px;font-weight:600;}
     .boodschappen-sluit{background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:0;}
@@ -173,14 +217,25 @@
     .boodschappen-check{width:22px;height:22px;border:1.5px solid var(--border2);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
     .boodschappen-check.checked{background:var(--accent);border-color:var(--accent);}
     .boodschappen-hoeveelheid{color:var(--text2);font-size:13px;margin-left:auto;}
+
+    /* DETAIL ACTIES */
+    .detail-acties{display:flex;gap:10px;margin-top:8px;margin-bottom:24px;}
+    .divider{height:1px;background:var(--border);margin:4px 0 24px;}
+
+    /* ERRORS */
+    .error-box{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--red);font-size:14px;margin-bottom:16px;line-height:1.5;}
+    .warn-box{background:rgba(232,168,56,0.1);border:1px solid rgba(232,168,56,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--amber);font-size:14px;margin-bottom:16px;line-height:1.5;}
+    .info-box{background:rgba(91,155,213,0.1);border:1px solid rgba(91,155,213,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--blue);font-size:14px;margin-bottom:16px;line-height:1.5;}
   </style>
 </head>
 <body>
 
+  <!-- INVOER -->
   <div id="screen-invoer" class="screen active">
     <div class="app-header">
       <div class="app-name">Vanavond</div>
       <div class="app-tagline">Jij opent de koelkast. Wij bedenken de rest.</div>
+      <div class="app-sub">Binnen 30 seconden ideeën voor je avondeten.</div>
     </div>
 
     <div class="form-group">
@@ -189,19 +244,22 @@
         <div class="pill selected" data-group="apparatuur" data-value="kookplaat" data-multi="true">Kookplaat</div>
         <div class="pill" data-group="apparatuur" data-value="oven" data-multi="true">Oven</div>
         <div class="pill" data-group="apparatuur" data-value="airfryer" data-multi="true">Airfryer</div>
+        <div class="pill" data-group="apparatuur" data-value="magnetron" data-multi="true">Magnetron</div>
         <div class="pill" data-group="apparatuur" data-value="bbq" data-multi="true">BBQ</div>
       </div>
     </div>
 
     <div class="form-group">
       <div class="section-label">Wat heb je in huis?</div>
-      <textarea id="ingredienten" class="input-field" rows="4" placeholder="Bijv. kipfilet, paprika, rijst, tomaten, eieren, kaas…"></textarea>
+      <textarea id="ingredienten-input" class="input-field" rows="3" placeholder="Bijv. kipfilet, paprika, rijst, tomaten, eieren, kaas…" oninput="verwerkInvoer()"></textarea>
       <div class="helper-text">Typ gewoon wat je hebt. Wij halen de ingrediënten eruit.</div>
+      <div id="chips-container" class="chips-container"></div>
     </div>
 
     <div class="form-group">
       <div class="section-label">Hoeveel tijd?</div>
       <div class="pill-grid">
+        <div class="pill" data-group="tijd" data-value="10">10 min</div>
         <div class="pill" data-group="tijd" data-value="15">15 min</div>
         <div class="pill" data-group="tijd" data-value="30">30 min</div>
         <div class="pill" data-group="tijd" data-value="45">45 min</div>
@@ -220,11 +278,11 @@
     </div>
 
     <div class="form-group">
-      <div class="section-label">Hoe moe ben je?</div>
+      <div class="section-label">Hoeveel moeite wil je doen?</div>
       <div class="pill-grid">
-        <div class="pill" data-group="energie" data-value="uitgeput">Uitgeput</div>
-        <div class="pill" data-group="energie" data-value="gaat wel">Gaat wel</div>
-        <div class="pill" data-group="energie" data-value="zin om te koken">Zin om te koken</div>
+        <div class="pill" data-group="moeite" data-value="bijna niks">Bijna niks</div>
+        <div class="pill" data-group="moeite" data-value="normaal">Normaal</div>
+        <div class="pill" data-group="moeite" data-value="echt koken">Ik wil echt koken</div>
       </div>
     </div>
 
@@ -235,6 +293,8 @@
         <div class="pill" data-group="doel" data-value="gezond">Gezond</div>
         <div class="pill" data-group="doel" data-value="comfort">Comfort</div>
         <div class="pill" data-group="doel" data-value="high protein">High protein</div>
+        <div class="pill" data-group="doel" data-value="budget">Budget</div>
+        <div class="pill" data-group="doel" data-value="restjes opmaken">Restjes opmaken</div>
       </div>
     </div>
 
@@ -244,6 +304,16 @@
         <span class="profiel-icon" id="profiel-icon">›</span>
       </div>
       <div class="profiel-content" id="profiel-content">
+
+        <div class="form-group">
+          <div class="section-label">Boodschappen doen toegestaan?</div>
+          <div class="pill-grid">
+            <div class="pill" data-group="boodschappen" data-value="nee">Nee, alleen wat ik heb</div>
+            <div class="pill" data-group="boodschappen" data-value="een">Max 1 ding kopen</div>
+            <div class="pill selected" data-group="boodschappen" data-value="paar">Paar dingen is oké</div>
+          </div>
+        </div>
+
         <div class="form-group">
           <div class="section-label">Dieet / allergieën</div>
           <div class="pill-grid">
@@ -252,9 +322,19 @@
             <div class="pill" data-group="allergienen" data-value="halal" data-multi="true">Halal</div>
             <div class="pill" data-group="allergienen" data-value="glutenvrij" data-multi="true">Glutenvrij</div>
             <div class="pill" data-group="allergienen" data-value="lactosevrij" data-multi="true">Lactosevrij</div>
-            <div class="pill" data-group="allergienen" data-value="notenallergie" data-multi="true">Noten</div>
+            <div class="pill" data-group="allergienen" data-value="notenallergie" data-multi="true">Notenallergie</div>
+            <div class="pill" data-group="allergienen" data-value="soja-allergie" data-multi="true">Soja-allergie</div>
+            <div class="pill" data-group="allergienen" data-value="schaaldierenallergie" data-multi="true">Schaaldieren</div>
+            <div class="pill" data-group="allergienen" data-value="ei-allergie" data-multi="true">Ei-allergie</div>
           </div>
         </div>
+
+        <div class="form-group">
+          <div class="section-label">Nooit gebruiken</div>
+          <input type="text" id="nooitGebruiken" class="input-field" placeholder="bijv. koriander, champignons, tonijn…">
+          <div class="helper-text">Deze ingrediënten komen nergens terug, ook niet als alternatief.</div>
+        </div>
+
         <div class="form-group">
           <div class="section-label">Kookniveau</div>
           <div class="pill-grid">
@@ -263,10 +343,7 @@
             <div class="pill" data-group="kookniveau" data-value="gevorderd">Gevorderd</div>
           </div>
         </div>
-        <div class="form-group">
-          <div class="section-label">Nooit gebruiken</div>
-          <input type="text" id="nooitGebruiken" class="input-field" placeholder="bijv. koriander, ansjovis…">
-        </div>
+
         <div class="privacy-text">Je voorraad en voorkeuren worden alleen gebruikt om betere recepten te maken.</div>
       </div>
     </div>
@@ -275,6 +352,7 @@
     <button class="btn-primary" onclick="haalSuggesties()">Geef suggesties →</button>
   </div>
 
+  <!-- LADEN -->
   <div id="screen-laden" class="screen">
     <div class="loading-state">
       <div class="loader"></div>
@@ -282,28 +360,32 @@
       <ul class="loading-steps">
         <li class="loading-step" id="step-1"><span class="step-dot"></span>Voorraad lezen</li>
         <li class="loading-step" id="step-2"><span class="step-dot"></span>Voorkeuren checken</li>
-        <li class="loading-step" id="step-3"><span class="step-dot"></span>Recepten maken</li>
+        <li class="loading-step" id="step-3"><span class="step-dot"></span>Slimste opties kiezen</li>
       </ul>
+      <div id="loading-tip" class="loading-tip" style="display:none;"></div>
     </div>
   </div>
 
+  <!-- RESULTATEN -->
   <div id="screen-resultaten" class="screen">
     <div class="results-header">
       <div class="results-title">Vanavond</div>
-      <div class="results-sub">3 ideeën op basis van wat je in huis hebt</div>
+      <div class="results-sub">3 ideeën voor vanavond — op basis van je voorraad, tijd en voorkeuren.</div>
     </div>
     <div class="verfijn-row">
       <button class="verfijn-btn" onclick="verfijn('Maak alle recepten sneller, minder stappen')">⚡ Sneller</button>
-      <button class="verfijn-btn" onclick="verfijn('Maak alle recepten gezonder, meer groente en minder vet')">🥗 Gezonder</button>
-      <button class="verfijn-btn" onclick="verfijn('Minimaliseer afwas, gebruik zo min mogelijk pannen')">🍳 Minder afwas</button>
-      <button class="verfijn-btn" onclick="verfijn('Geef compleet andere recepten, andere keukenstijlen')">🔄 Andere opties</button>
+      <button class="verfijn-btn" onclick="verfijn('Maak alle recepten gezonder, meer groente')">🥗 Gezonder</button>
+      <button class="verfijn-btn" onclick="verfijn('Minimaliseer afwas, zo min mogelijk pannen')">🍳 Minder afwas</button>
+      <button class="verfijn-btn" onclick="verfijn('Budget: goedkoopste opties met wat er is')">💶 Goedkoper</button>
+      <button class="verfijn-btn" onclick="verfijn('Geef compleet andere recepten, andere stijlen')">🔄 Andere opties</button>
     </div>
     <div id="suggesties-container"></div>
     <button class="opnieuw-btn" onclick="toonScherm('screen-invoer')">↺ Opnieuw zoeken</button>
   </div>
 
+  <!-- DETAIL -->
   <div id="screen-detail" class="screen">
-    <div class="detail-screen-header">
+    <div class="detail-header-area">
       <button class="back-btn" onclick="toonScherm('screen-resultaten')">‹ Terug naar suggesties</button>
       <div id="detail-container"></div>
     </div>
@@ -311,135 +393,223 @@
 
   <script>
     const state = {
-      tijd:null,personen:null,energie:null,doel:null,
-      apparatuur:['kookplaat'],allergienen:[],kookniveau:null,
-      suggesties:[],actieveTab:{},lastRequest:null
+      tijd:null, personen:null, moeite:null, doel:null, boodschappen:'paar',
+      apparatuur:['kookplaat'], allergienen:[], kookniveau:null,
+      ingredientChips:[], suggesties:[], lastRequest:null
     };
 
-    function toonScherm(id){
-      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    // KOOKTIPS
+    const kookTips = [
+      {label:'Kooktip',tekst:'Laat vlees even rusten na het bakken. Zo blijven de sappen erin en wordt het malser.'},
+      {label:'Kooktip',tekst:'Pasta kookt beter in goed gezouten water — het water moet zouten als de zee smaken.'},
+      {label:'Wist je dat',tekst:'Knoflook wordt milder van smaak als je het langer op laag vuur bakt.'},
+      {label:'Kooktip',tekst:'Een snufje suiker in tomatensaus neutraliseert de zuurheid van tomaten.'},
+      {label:'Wist je dat',tekst:'Je pan is heet genoeg als een druppel water direct verdampt bij aanraking.'},
+      {label:'Kooktip',tekst:'Bewaar kruiden in een glas water in de koelkast, zoals bloemen. Ze blijven zo veel langer vers.'},
+      {label:'Wist je dat',tekst:'Eieren kook je beter door ze in koud water op te zetten — zo voorkom je barsten.'},
+      {label:'Kooktip',tekst:'Citroensap vlak voor het serveren maakt elk gerecht frisser en levendiger van smaak.'},
+      {label:'Kooktip',tekst:'Ui snipperen gaat makkelijker als je het mes nat maakt. Minder tranen, beter resultaat.'},
+      {label:'Wist je dat',tekst:'Rijst spoelen voor het koken verwijdert zetmeel en geeft lossere, minder plakkerige korrels.'},
+      {label:'Kooktip',tekst:'Voeg zout pas toe aan het einde als je groente roerbakt — anders trekt het vocht eruit.'},
+      {label:'Wist je dat',tekst:'Olijfolie is niet ideaal voor heel hoge temperaturen. Gebruik dan zonnebloemolie.'},
+      {label:'Kooktip',tekst:'Snij vlees altijd dwars op de draad. Zo wordt het malser en makkelijker te kauwen.'},
+      {label:'Wist je dat',tekst:'Een houten lepel op een pan kokend water voorkomt overkoken. Echt waar.'},
+      {label:'Kooktip',tekst:'Groenten gaar roosteren in de oven? 200°C, beetje olie, en geduld — minstens 20 minuten.'},
+      {label:'Wist je dat',tekst:'Kaas rasp je makkelijker als hij koud is. Warme kaas plakt samen en smelt op de rasp.'},
+      {label:'Kooktip',tekst:'Prik je pasta met je vinger: als hij meebuigt maar licht weerstand biedt, is hij al dente.'},
+      {label:'Wist je dat',tekst:'Gedroogde kruiden zijn drie keer zo sterk als verse. Gebruik dus minder als je switcht.'},
+      {label:'Kooktip',tekst:'Kip is gaar als het sap helder is als je erin prikt — niet roze of troebel.'},
+      {label:'Wist je dat',tekst:'Restjes pasta bewaar je beter los van de saus. Samen bewaard wordt de pasta papperig.'},
+      {label:'Kooktip',tekst:'Voeg een scheutje pastawater toe aan je saus — het zetmeel bindt alles samen.'},
+      {label:'Wist je dat',tekst:'Ei op kamertemperatuur klopt makkelijker op tot schuim dan koude eieren.'},
+      {label:'Kooktip',tekst:'Brood wordt knapperiger als je het even opwarmt in de oven op 160°C voor 5 minuten.'},
+      {label:'Wist je dat',tekst:'De meeste gerechten smaken de volgende dag beter. Soep, stoofpot en curry zeker.'},
+      {label:'Kooktip',tekst:'Tomaten bewaar je beter buiten de koelkast — koude temperatuur tast de smaak aan.'},
+      {label:'Wist je dat',tekst:'Banaan en avocado rijpen sneller als je ze naast appels legt. Ethyleengas doet zijn werk.'},
+      {label:'Kooktip',tekst:'Roer sauzen met zetmeel altijd door terwijl je ze verhit, anders klontert het.'},
+      {label:'Wist je dat',tekst:'Kikkererwten uit blik zijn prima — spoel ze af en ze zijn direct te gebruiken.'},
+      {label:'Kooktip',tekst:'Een eetlepel azijn in het kookwater houdt gepocheerde eieren bij elkaar.'},
+      {label:'Wist je dat',tekst:'Verse peper malen vlak voor gebruik geeft veel meer smaak dan voorgemalen peper.'},
+    ];
+    const tips = [...kookTips].sort(() => Math.random() - 0.5);
+
+    // CHIP LOGICA
+    let chipTimer = null;
+    function verwerkInvoer() {
+      clearTimeout(chipTimer);
+      chipTimer = setTimeout(() => {
+        const val = document.getElementById('ingredienten-input').value;
+        const delen = val.split(/[,\n]+/).map(s => s.trim()).filter(s => s.length > 1);
+        const nieuweChips = delen.filter(d => !state.ingredientChips.includes(d));
+        if (nieuweChips.length > 0) {
+          state.ingredientChips = [...new Set([...state.ingredientChips, ...nieuweChips])];
+          renderChips();
+        }
+      }, 800);
+    }
+
+    function renderChips() {
+      const container = document.getElementById('chips-container');
+      container.innerHTML = '';
+      state.ingredientChips.forEach((chip, i) => {
+        const el = document.createElement('div');
+        el.className = 'chip';
+        el.innerHTML = `${chip}<button class="chip-remove" onclick="verwijderChip(${i})" title="Verwijder">×</button>`;
+        container.appendChild(el);
+      });
+    }
+
+    function verwijderChip(index) {
+      state.ingredientChips.splice(index, 1);
+      renderChips();
+    }
+
+    function toonScherm(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
     }
 
-    function toggleProfiel(){
-      const c=document.getElementById('profiel-content');
-      const i=document.getElementById('profiel-icon');
-      c.classList.toggle('open');i.classList.toggle('open');
+    function toggleProfiel() {
+      const c = document.getElementById('profiel-content');
+      const i = document.getElementById('profiel-icon');
+      c.classList.toggle('open'); i.classList.toggle('open');
     }
 
-    document.querySelectorAll('.pill').forEach(pill=>{
-      pill.addEventListener('click',()=>{
-        const group=pill.dataset.group,value=pill.dataset.value,isMulti=pill.dataset.multi==='true';
-        if(isMulti){
+    document.querySelectorAll('.pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const group = pill.dataset.group, value = pill.dataset.value, isMulti = pill.dataset.multi === 'true';
+        if (isMulti) {
           pill.classList.toggle('selected');
-          if(!state[group])state[group]=[];
-          if(pill.classList.contains('selected')){if(!state[group].includes(value))state[group].push(value);}
-          else{state[group]=state[group].filter(v=>v!==value);}
-        }else{
-          document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p=>p.classList.remove('selected'));
-          pill.classList.add('selected');state[group]=value;
+          if (!state[group]) state[group] = [];
+          if (pill.classList.contains('selected')) { if (!state[group].includes(value)) state[group].push(value); }
+          else { state[group] = state[group].filter(v => v !== value); }
+        } else {
+          document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('selected'));
+          pill.classList.add('selected'); state[group] = value;
         }
       });
     });
 
-    function animeerLoadingSteps(){
-      const steps=['step-1','step-2','step-3'];
-      let i=0;
-      const interval=setInterval(()=>{
-        if(i>0)document.getElementById(steps[i-1]).classList.replace('active','done');
-        if(i<steps.length){document.getElementById(steps[i]).classList.add('active');i++;}
+    function animeerLoadingSteps() {
+      const steps = ['step-1', 'step-2', 'step-3'];
+      let i = 0;
+      const tipEl = document.getElementById('loading-tip');
+      let tipIndex = 0;
+      function toonTip() {
+        const tip = tips[tipIndex % tips.length];
+        tipEl.innerHTML = `<div class="loading-tip-label">${tip.label}</div>${tip.tekst}`;
+        tipEl.style.display = 'block'; tipIndex++;
+      }
+      setTimeout(toonTip, 1200);
+      window._tipInterval = setInterval(toonTip, 2800);
+      const interval = setInterval(() => {
+        if (i > 0) document.getElementById(steps[i - 1]).classList.replace('active', 'done');
+        if (i < steps.length) { document.getElementById(steps[i]).classList.add('active'); i++; }
         else clearInterval(interval);
-      },600);
+      }, 900);
       return interval;
     }
 
-    function resetLoadingSteps(){
-      ['step-1','step-2','step-3'].forEach(id=>{
-        const el=document.getElementById(id);
-        el.classList.remove('active','done');
+    function resetLoadingSteps() {
+      ['step-1', 'step-2', 'step-3'].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('active', 'done');
       });
+      const tipEl = document.getElementById('loading-tip');
+      if (tipEl) tipEl.style.display = 'none';
     }
 
-    async function haalSuggesties(verfijnParam){
-      const ingredienten=document.getElementById('ingredienten').value.trim();
-      const errorEl=document.getElementById('error-invoer');
-      errorEl.style.display='none';
-      if(!ingredienten){errorEl.textContent='Vul in wat je in huis hebt.';errorEl.style.display='block';return;}
-      if(!state.tijd){errorEl.textContent='Kies hoeveel tijd je hebt.';errorEl.style.display='block';return;}
-      if(!state.personen){errorEl.textContent='Kies voor hoeveel personen.';errorEl.style.display='block';return;}
-      if(!state.energie){errorEl.textContent='Kies je energieniveau.';errorEl.style.display='block';return;}
-      if(!state.doel){errorEl.textContent='Kies wat je vanavond wil.';errorEl.style.display='block';return;}
+    async function haalSuggesties(verfijnParam) {
+      const rawInvoer = document.getElementById('ingredienten-input').value.trim();
+      const ingredienten = rawInvoer || state.ingredientChips.join(', ');
+      const errorEl = document.getElementById('error-invoer');
+      errorEl.style.display = 'none'; errorEl.className = 'error-box';
 
-      resetLoadingSteps();
-      toonScherm('screen-laden');
-      const interval=animeerLoadingSteps();
+      if (!ingredienten && state.ingredientChips.length === 0) { errorEl.textContent = 'Vul in wat je in huis hebt.'; errorEl.style.display = 'block'; return; }
+      if (!state.tijd) { errorEl.textContent = 'Kies hoeveel tijd je hebt.'; errorEl.style.display = 'block'; return; }
+      if (!state.personen) { errorEl.textContent = 'Kies voor hoeveel personen.'; errorEl.style.display = 'block'; return; }
+      if (!state.moeite) { errorEl.textContent = 'Kies hoeveel moeite je wil doen.'; errorEl.style.display = 'block'; return; }
+      if (!state.doel) { errorEl.textContent = 'Kies wat je vanavond wil.'; errorEl.style.display = 'block'; return; }
 
-      const requestBody={
-        ingredienten,tijd:state.tijd,personen:state.personen,
-        energie:state.energie,doel:state.doel,
-        profiel:{
-          apparatuur:state.apparatuur,allergienen:state.allergienen,
-          kookniveau:state.kookniveau||'gemiddeld',
-          nooitGebruiken:document.getElementById('nooitGebruiken').value.trim()
+      resetLoadingSteps(); toonScherm('screen-laden');
+      const interval = animeerLoadingSteps();
+
+      const requestBody = {
+        ingredienten: ingredienten || state.ingredientChips.join(', '),
+        ingredientLijst: state.ingredientChips.length > 0 ? state.ingredientChips : null,
+        tijd: state.tijd, personen: state.personen, moeite: state.moeite, doel: state.doel,
+        boodschappen: state.boodschappen || 'paar',
+        profiel: {
+          apparatuur: state.apparatuur, allergienen: state.allergienen,
+          kookniveau: state.kookniveau || 'gemiddeld',
+          nooitGebruiken: document.getElementById('nooitGebruiken').value.trim()
         }
       };
-      if(verfijnParam)requestBody.verfijn=verfijnParam;
-      state.lastRequest=requestBody;
+      if (verfijnParam) requestBody.verfijn = verfijnParam;
+      state.lastRequest = requestBody;
 
-      try{
-        const response=await fetch('/api/suggesties',{
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(requestBody)
+      try {
+        const response = await fetch('/api/suggesties', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
         });
-        const data=await response.json();
+        const data = await response.json();
         clearInterval(interval);
-        if(!response.ok){
+        if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
+        if (!response.ok) {
           toonScherm('screen-invoer');
-          if(data.teLite){
-            const warnEl=document.getElementById('error-invoer');
-            warnEl.className='warn-box';warnEl.textContent=data.error;warnEl.style.display='block';
-          } else {
-            errorEl.textContent=data.error||'Onbekende fout';errorEl.style.display='block';
-          }
+          if (data.teLite) { errorEl.className = 'warn-box'; errorEl.textContent = data.error; errorEl.style.display = 'block'; }
+          else { errorEl.textContent = data.error || 'Onbekende fout'; errorEl.style.display = 'block'; }
           return;
         }
-        state.suggesties=data.suggesties;
+        state.suggesties = data.suggesties;
         toonResultaten();
-      }catch(err){
+      } catch (err) {
         clearInterval(interval);
+        if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
         toonScherm('screen-invoer');
-        errorEl.textContent=err.message||'Er ging iets mis. Probeer het opnieuw.';
-        errorEl.style.display='block';
+        errorEl.textContent = err.message || 'Er ging iets mis. Probeer het opnieuw.';
+        errorEl.style.display = 'block';
       }
     }
 
-    function verfijn(instructie){
-      if(!state.lastRequest)return;
-      haalSuggesties(instructie);
+    function verfijn(instructie) { if (state.lastRequest) haalSuggesties(instructie); }
+
+    function nogNodigBadge(s) {
+      const nog = Array.isArray(s.nogNodig) ? s.nogNodig : [];
+      if (s.allesinHuis || nog.length === 0) return '<span class="tag tag-green">Alles in huis</span>';
+      if (nog.length === 1) return '<span class="tag tag-amber">Nog 1 nodig</span>';
+      return `<span class="tag tag-amber">Nog ${nog.length} nodig</span>`;
     }
 
-    function nogNodigBadge(s){
-      const nog=Array.isArray(s.nogNodig)?s.nogNodig:[];
-      if(s.allesinHuis||nog.length===0)return'<span class="tag tag-green">Alles in huis</span>';
-      if(nog.length===1)return'<span class="tag tag-amber">Nog 1 nodig</span>';
-      return`<span class="tag tag-amber">Nog ${nog.length} nodig</span>`;
+    function badgeHtml(badge) {
+      if (!badge) return '';
+      const map = { gezond: 'tag-green', comfort: 'tag-blue', 'high protein': 'tag-accent', snel: 'tag-purple', voedzaam: 'tag-gray', budget: 'tag-green' };
+      return `<span class="tag ${map[badge] || 'tag-gray'}">${badge}</span>`;
     }
 
-    function badgeHtml(badge){
-      if(!badge)return'';
-      const map={gezond:'tag-green',comfort:'tag-blue','high protein':'tag-accent',snel:'tag-purple',voedzaam:'tag-gray'};
-      return`<span class="tag ${map[badge]||'tag-gray'}">${badge}</span>`;
+    function matchKleur(score) {
+      if (score >= 85) return 'var(--green)';
+      if (score >= 70) return 'var(--accent)';
+      return 'var(--text2)';
     }
 
-    function maakKaart(s,index){
-      const card=document.createElement('div');
-      card.className='result-card'+(s.gebruikEerstOp?' gebruik-eerst':'');
-      const extra=Array.isArray(s.extraBadges)?s.extraBadges.slice(0,2).map(b=>`<span class="tag tag-gray">${b}</span>`).join(''):'';
-      card.innerHTML=`
-        <div style="margin-bottom:4px;">
-          ${s.gebruikEerstOp?'<span class="gebruik-eerst-badge">Gebruik eerst op</span>':''}
-          ${s.rol?`<span class="rol-badge">${s.rol}</span>`:''}
+    function maakKaart(s, index, isFirst) {
+      const card = document.createElement('div');
+      let cardClass = 'result-card';
+      if (s.gebruikEerstOp) cardClass += ' gebruik-eerst';
+      else if (isFirst) cardClass += ' top-keuze';
+      card.className = cardClass;
+      const extra = Array.isArray(s.extraBadges) ? s.extraBadges.slice(0, 2).map(b => `<span class="tag tag-gray">${b}</span>`).join('') : '';
+      const score = s.matchScore ? `<span class="match-score" style="color:${matchKleur(s.matchScore)}">Match ${s.matchScore}%</span>` : '';
+      card.innerHTML = `
+        <div class="result-card-top">
+          <div class="result-badges-top">
+            ${s.gebruikEerstOp ? '<span class="gebruik-eerst-badge">Gebruik eerst op</span>' : ''}
+            ${s.rol ? `<span class="rol-badge">${s.rol}</span>` : ''}
+          </div>
+          ${score}
         </div>
         <div class="result-naam">${s.naam}</div>
         <div class="result-beschrijving">${s.korteBeschrijving}</div>
@@ -455,153 +625,197 @@
       return card;
     }
 
-    function toonResultaten(){
-      const container=document.getElementById('suggesties-container');
-      container.innerHTML='';
-      const hoofd=state.suggesties.filter(s=>!s.isExtra);
-      const extra=state.suggesties.filter(s=>s.isExtra);
-      hoofd.forEach(s=>container.appendChild(maakKaart(s,state.suggesties.indexOf(s))));
-      if(extra.length>0){
-        const wrapper=document.createElement('div');
-        const btn=document.createElement('button');
-        btn.className='extra-btn';btn.textContent='+ Toon 2 extra opties';
-        btn.onclick=()=>{btn.style.display='none';kaarten.style.display='block';};
-        const kaarten=document.createElement('div');kaarten.style.display='none';
-        const lbl=document.createElement('div');lbl.className='extra-label';lbl.textContent='Extra opties';
+    function toonResultaten() {
+      const container = document.getElementById('suggesties-container');
+      container.innerHTML = '';
+      const hoofd = state.suggesties.filter(s => !s.isExtra);
+      const extra = state.suggesties.filter(s => s.isExtra);
+      hoofd.forEach((s, i) => container.appendChild(maakKaart(s, state.suggesties.indexOf(s), i === 0)));
+      if (extra.length > 0) {
+        const wrapper = document.createElement('div');
+        const btn = document.createElement('button');
+        btn.className = 'extra-btn'; btn.textContent = '+ Toon 2 extra opties';
+        btn.onclick = () => { btn.style.display = 'none'; kaarten.style.display = 'block'; };
+        const kaarten = document.createElement('div'); kaarten.style.display = 'none';
+        const lbl = document.createElement('div'); lbl.className = 'extra-label'; lbl.textContent = 'Extra opties';
         kaarten.appendChild(lbl);
-        extra.forEach(s=>kaarten.appendChild(maakKaart(s,state.suggesties.indexOf(s))));
-        wrapper.appendChild(btn);wrapper.appendChild(kaarten);container.appendChild(wrapper);
+        extra.forEach(s => kaarten.appendChild(maakKaart(s, state.suggesties.indexOf(s), false)));
+        wrapper.appendChild(btn); wrapper.appendChild(kaarten); container.appendChild(wrapper);
       }
       toonScherm('screen-resultaten');
     }
 
-    function ingHtml(ing,klasse){
-      const naam=typeof ing==='object'?ing.naam:ing;
-      const hoeveelheid=typeof ing==='object'&&ing.hoeveelheid?ing.hoeveelheid:'';
-      return`<li class="ingredient-item">
+    function ingHtml(ing, klasse) {
+      const naam = typeof ing === 'object' ? ing.naam : ing;
+      const hoeveelheid = typeof ing === 'object' && ing.hoeveelheid ? ing.hoeveelheid : '';
+      return `<li class="ingredient-item">
         <span class="ing-dot ${klasse}"></span>
         <span class="ingredient-naam">${naam}</span>
-        ${hoeveelheid?`<span class="ingredient-hoeveelheid">${hoeveelheid}</span>`:''}
+        ${hoeveelheid ? `<span class="ingredient-hoeveelheid">${hoeveelheid}</span>` : ''}
       </li>`;
     }
 
-    function toonDetail(index){
-      const s=state.suggesties[index];
-      const container=document.getElementById('detail-container');
-      state.actieveTab[index]=state.actieveTab[index]||'portie';
+    function toonDetail(index) {
+      const s = state.suggesties[index];
+      const container = document.getElementById('detail-container');
 
-      const inHuis=Array.isArray(s.inHuis)?s.inHuis:[];
-      const basis=Array.isArray(s.basisvoorraad)?s.basisvoorraad:[];
-      const nogNodig=Array.isArray(s.nogNodig)?s.nogNodig:[];
-      const optioneel=Array.isArray(s.optioneel)?s.optioneel:[];
-      const v=s.voeding||{};const pp=v.perPortie||{};const p100=v.per100g||{};
+      const inHuis = Array.isArray(s.inHuis) ? s.inHuis : [];
+      const basis = Array.isArray(s.basisvoorraad) ? s.basisvoorraad : [];
+      const nogNodig = Array.isArray(s.nogNodig) ? s.nogNodig : [];
+      const optioneel = Array.isArray(s.optioneel) ? s.optioneel : [];
+      const v = s.voeding || {}; const pp = v.perPortie || {}; const p100 = v.per100g || {};
 
-      const macroHtml=(data)=>`
+      const macroHtml = (data) => `
         <div class="macro-grid">
-          <div class="macro-card"><div class="macro-waarde">${data.kcal||'—'}</div><div class="macro-label">kcal</div></div>
-          <div class="macro-card"><div class="macro-waarde">${data.proteinen||'—'}g</div><div class="macro-label">eiwit</div></div>
-          <div class="macro-card"><div class="macro-waarde">${data.koolhydraten||'—'}g</div><div class="macro-label">koolh.</div></div>
-          <div class="macro-card"><div class="macro-waarde">${data.vetten||'—'}g</div><div class="macro-label">vet</div></div>
+          <div class="macro-card"><div class="macro-waarde">${data.kcal || '—'}</div><div class="macro-label">kcal</div></div>
+          <div class="macro-card"><div class="macro-waarde">${data.proteinen || '—'}g</div><div class="macro-label">eiwit</div></div>
+          <div class="macro-card"><div class="macro-waarde">${data.koolhydraten || '—'}g</div><div class="macro-label">koolh.</div></div>
+          <div class="macro-card"><div class="macro-waarde">${data.vetten || '—'}g</div><div class="macro-label">vet</div></div>
         </div>`;
 
-      const nogNodigAlert=nogNodig.length>0?`
-        <div class="nog-nodig-alert">
-          <strong>Nog nodig:</strong> ${nogNodig.map(i=>typeof i==='object'?`${i.naam} (${i.hoeveelheid})`:i).join(', ')}
-        </div>`:'';
+      const negeerHtml = Array.isArray(s.negeerMeldingen) && s.negeerMeldingen.length > 0
+        ? s.negeerMeldingen.map(m => `<div class="negeer-melding">ℹ️ ${m}</div>`).join('') : '';
 
-      container.innerHTML=`
+      container.innerHTML = `
         <div style="margin-bottom:8px;">
-          ${s.gebruikEerstOp?'<span class="gebruik-eerst-badge" style="display:inline-flex;margin-bottom:6px;">Gebruik eerst op</span>':''}
-          ${s.rol?`<span class="rol-badge" style="display:inline-flex;margin-bottom:6px;">${s.rol}</span>`:''}
+          ${s.gebruikEerstOp ? '<span class="gebruik-eerst-badge" style="display:inline-flex;margin-bottom:6px;">Gebruik eerst op</span>' : ''}
+          ${s.rol ? `<span class="rol-badge" style="display:inline-flex;margin-bottom:6px;">${s.rol}</span>` : ''}
         </div>
         <div class="detail-naam">${s.naam}</div>
         <div class="detail-beschrijving">${s.korteBeschrijving}</div>
         <div class="detail-badges">
           <span class="tag tag-gray">⏱ ${s.bereidingstijd}</span>
           <span class="tag tag-gray">🍳 ${s.afwasNiveau}</span>
-          <span class="tag tag-gray">👤 ${s.porties||state.personen} pers.</span>
-          ${nogNodig.length===0?'<span class="tag tag-green">Alles in huis</span>':`<span class="tag tag-amber">Nog ${nogNodig.length} nodig</span>`}
+          <span class="tag tag-gray">👤 ${s.porties || state.personen} pers.</span>
+          ${nogNodig.length === 0 ? '<span class="tag tag-green">Alles in huis</span>' : `<span class="tag tag-amber">Nog ${nogNodig.length} nodig</span>`}
           ${badgeHtml(s.badge)}
         </div>
 
-        ${nogNodigAlert}
+        ${negeerHtml}
 
-        ${v.totaalGewicht?`
-        <div class="detail-section">
-          <div class="detail-section-title">Voedingswaarden</div>
+        ${s.matchScore ? `
+        <div class="match-blok">
+          <div class="match-blok-top">
+            <div class="match-score-groot" style="color:${matchKleur(s.matchScore)}">${s.matchScore}%</div>
+            <div class="match-label-tekst"><strong>${s.matchLabel || 'Match'}</strong><br>${s.matchUitleg || ''}</div>
+          </div>
+          <div class="match-redenen">
+            ${Array.isArray(s.matchRedenen) ? s.matchRedenen.map(r => `<span class="match-reden">${r}</span>`).join('') : ''}
+          </div>
+        </div>` : ''}
+
+        ${s.gebruikEerstOp && Array.isArray(s.gebruiktSlimOp) && s.gebruiktSlimOp.length > 0 ? `
+        <div class="gebruik-slim-blok">
+          ♻️ Waarschijnlijk handig eerst te gebruiken: <strong>${s.gebruiktSlimOp.join(', ')}</strong>
+        </div>` : ''}
+
+        ${nogNodig.length > 0 ? `
+        <div class="nog-nodig-alert">
+          <strong>Nog nodig:</strong> ${nogNodig.map(i => typeof i === 'object' ? `${i.naam} (${i.hoeveelheid})` : i).join(', ')}
+        </div>` : ''}
+
+        <!-- OVERZICHT GRID -->
+        <div class="overzicht-grid">
+          <div class="overzicht-item"><div class="overzicht-label">Totale tijd</div><div class="overzicht-waarde">${s.bereidingstijd}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Actieve tijd</div><div class="overzicht-waarde">${s.actieveKooktijd || '—'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Porties</div><div class="overzicht-waarde">${s.porties || '—'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">±${v.portieGewicht || '—'}g</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) ? s.apparatuurGebruikt.join(', ') : '—'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${s.afwasNiveau}</div></div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs" id="tabs-${index}">
+          <div class="tab active" onclick="wisselTab(this, 'tab-ing-${index}', 'tabs-${index}')">Ingrediënten</div>
+          <div class="tab" onclick="wisselTab(this, 'tab-ber-${index}', 'tabs-${index}')">Bereiding</div>
+          <div class="tab" onclick="wisselTab(this, 'tab-voe-${index}', 'tabs-${index}')">Voeding</div>
+          <div class="tab" onclick="wisselTab(this, 'tab-tip-${index}', 'tabs-${index}')">Tips</div>
+        </div>
+
+        <!-- TAB: INGREDIËNTEN -->
+        <div id="tab-ing-${index}" class="tab-content active">
+          <div class="ing-section">
+            <div class="ing-section-title">In huis</div>
+            <ul class="ingredient-list">${inHuis.map(i => ingHtml(i, 'in-huis')).join('')}</ul>
+          </div>
+          ${basis.length > 0 ? `<div class="ing-section"><div class="ing-section-title">Basisvoorraad</div><ul class="ingredient-list">${basis.map(i => ingHtml(i, 'basis')).join('')}</ul></div>` : ''}
+          ${nogNodig.length > 0 ? `<div class="ing-section"><div class="ing-section-title">Nog nodig</div><ul class="ingredient-list">${nogNodig.map(i => ingHtml(i, 'nog-nodig')).join('')}</ul></div>` : ''}
+          ${optioneel.length > 0 ? `<div class="ing-section"><div class="ing-section-title">Optioneel</div><ul class="ingredient-list">${optioneel.map(i => ingHtml(i, 'optioneel')).join('')}</ul></div>` : ''}
+          ${nogNodig.length > 0 ? `<button class="boodschappen-btn" onclick="toonBoodschappen(${index})">🛒 Maak boodschappenlijst</button>` : ''}
+        </div>
+
+        <!-- TAB: BEREIDING -->
+        <div id="tab-ber-${index}" class="tab-content">
+          <ol class="stap-list">${Array.isArray(s.stappen) ? s.stappen.map((stap, i) =>
+            `<li class="stap-item"><div class="stap-num">${i + 1}</div><div>${stap}</div></li>`
+          ).join('') : ''}</ol>
+        </div>
+
+        <!-- TAB: VOEDING -->
+        <div id="tab-voe-${index}" class="tab-content">
           <div class="voeding-disclaimer">Voedingswaarden zijn schattingen op basis van standaardproducten.</div>
+          ${v.totaalGewicht ? `
           <div class="voeding-info">
             <div class="voeding-info-item">Totaal: <span>±${v.totaalGewicht}g</span></div>
             <div class="voeding-info-item">Per portie: <span>±${v.portieGewicht}g</span></div>
-            <div class="voeding-info-item">Porties: <span>${s.porties||'—'}</span></div>
-          </div>
+            <div class="voeding-info-item">Porties: <span>${s.porties || '—'}</span></div>
+          </div>` : ''}
           <div class="voeding-tabs">
-            <div class="voeding-tab ${state.actieveTab[index]==='portie'?'active':''}" onclick="wisselTab(${index},'portie',event)">Per portie</div>
-            <div class="voeding-tab ${state.actieveTab[index]==='100g'?'active':''}" onclick="wisselTab(${index},'100g',event)">Per 100g</div>
+            <div class="voeding-tab active" onclick="wisselVoeding(${index}, 'portie', event)">Per portie</div>
+            <div class="voeding-tab" onclick="wisselVoeding(${index}, '100g', event)">Per 100g</div>
           </div>
-          <div id="macro-portie-${index}" style="display:${state.actieveTab[index]==='portie'?'block':'none'}">${macroHtml(pp)}</div>
-          <div id="macro-100g-${index}" style="display:${state.actieveTab[index]==='100g'?'block':'none'}">${macroHtml(p100)}</div>
-        </div>`:''}
-
-        <div class="detail-section">
-          <div class="detail-section-title">In huis</div>
-          <ul class="ingredient-list">${inHuis.map(i=>ingHtml(i,'in-huis')).join('')}</ul>
+          <div id="voed-portie-${index}">${macroHtml(pp)}</div>
+          <div id="voed-100g-${index}" style="display:none">${macroHtml(p100)}</div>
         </div>
-        ${basis.length>0?`<div class="detail-section"><div class="detail-section-title">Basisvoorraad</div><ul class="ingredient-list">${basis.map(i=>ingHtml(i,'basis')).join('')}</ul></div>`:''}
-        ${nogNodig.length>0?`<div class="detail-section"><div class="detail-section-title">Nog nodig</div><ul class="ingredient-list">${nogNodig.map(i=>ingHtml(i,'nog-nodig')).join('')}</ul></div>`:''}
-        ${optioneel.length>0?`<div class="detail-section"><div class="detail-section-title">Optioneel</div><ul class="ingredient-list">${optioneel.map(i=>ingHtml(i,'optioneel')).join('')}</ul></div>`:''}
 
+        <!-- TAB: TIPS -->
+        <div id="tab-tip-${index}" class="tab-content">
+          ${Array.isArray(s.smaakUpgrades) && s.smaakUpgrades.length > 0 ? `
+          <div class="tips-blok">
+            <div class="tips-blok-titel">✦ Maak het lekkerder</div>
+            ${s.smaakUpgrades.map(u => `<div class="tip-item"><span class="tip-dot">✦</span>${u}</div>`).join('')}
+          </div>` : ''}
+          ${Array.isArray(s.vervangingen) && s.vervangingen.length > 0 ? `
+          <div class="vervanging-blok">
+            <div class="vervanging-blok-titel">Handige vervangingen</div>
+            ${s.vervangingen.map(v => `<div class="vervanging-item">${v}</div>`).join('')}
+          </div>` : ''}
+          ${s.restjes ? `
+          <div class="restjes-blok">
+            <div class="restjes-titel">🥡 Morgen met restjes</div>
+            ${s.restjes.idee ? `<div class="restjes-item"><span>💡</span> ${s.restjes.idee}</div>` : ''}
+            ${s.restjes.bewaren ? `<div class="restjes-item"><span>🧊</span> ${s.restjes.bewaren}</div>` : ''}
+            ${s.restjes.invriezen !== undefined ? `<div class="restjes-item"><span>${s.restjes.invriezen ? '✅' : '❌'}</span> Invriezen: ${s.restjes.invriezen ? 'geschikt' : 'niet geschikt'}</div>` : ''}
+          </div>` : ''}
+          ${Array.isArray(s.waaromSlim) && s.waaromSlim.length > 0 ? `
+          <div style="margin-bottom:24px;">
+            <div class="ing-section-title">Waarom dit slim is</div>
+            <ul class="waarom-list">${s.waaromSlim.map(w => `<li class="waarom-item">${w}</li>`).join('')}</ul>
+          </div>` : ''}
+        </div>
+
+        <!-- FEEDBACK -->
         <div class="divider"></div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">Bereiding</div>
-          <ol class="stap-list">${Array.isArray(s.stappen)?s.stappen.map((stap,i)=>
-            `<li class="stap-item"><div class="stap-num">${i+1}</div><div>${stap}</div></li>`
-          ).join(''):''}</ol>
-        </div>
-
-        ${Array.isArray(s.smaakUpgrades)&&s.smaakUpgrades.length>0?`
-        <div class="smaak-blok">
-          <div class="smaak-blok-titel">✦ Maak het lekkerder</div>
-          ${s.smaakUpgrades.map(u=>`<div class="smaak-item">${u}</div>`).join('')}
-        </div>`:''}
-
-        ${Array.isArray(s.vervangingen)&&s.vervangingen.length>0?`
-        <div class="vervanging-blok">
-          <div class="vervanging-blok-titel">Handige vervangingen</div>
-          ${s.vervangingen.map(v=>`<div class="vervanging-item">${v}</div>`).join('')}
-        </div>`:''}
-
-        ${Array.isArray(s.waaromSlim)&&s.waaromSlim.length>0?`
-        <div class="detail-section">
-          <div class="detail-section-title">Waarom dit slim is</div>
-          <ul class="waarom-list">${s.waaromSlim.map(w=>`<li class="waarom-item">${w}</li>`).join('')}</ul>
-        </div>`:''}
-
-        ${s.restjes?`
-        <div class="restjes-blok">
-          <div class="restjes-titel">🥡 Wat kun je morgen met restjes?</div>
-          ${s.restjes.idee?`<div class="restjes-item"><span class="restjes-icon">💡</span>${s.restjes.idee}</div>`:''}
-          ${s.restjes.bewaren?`<div class="restjes-item"><span class="restjes-icon">🧊</span>${s.restjes.bewaren}</div>`:''}
-          ${s.restjes.invriezen!==undefined?`<div class="restjes-item"><span class="restjes-icon">${s.restjes.invriezen?'✅':'❌'}</span>Invriezen: ${s.restjes.invriezen?'geschikt':'niet geschikt'}</div>`:''}
-        </div>`:''}
-
-        ${nogNodig.length>0?`
-        <button class="boodschappen-btn" onclick="toonBoodschappen(${index})">
-          🛒 Maak boodschappenlijst
-        </button>`:''}
-
         <div class="feedback-sectie">
           <div class="feedback-titel">Hoe was dit recept?</div>
-          <div class="feedback-grid">
-            <button class="feedback-btn" onclick="geefFeedback(this,'gekookt')">✅ Gekookt</button>
-            <button class="feedback-btn" onclick="geefFeedback(this,'favoriet')">❤️ Favoriet</button>
-            <button class="feedback-btn" onclick="geefFeedback(this,'smaak')">👎 Niet mijn smaak</button>
-            <button class="feedback-btn" onclick="geefFeedback(this,'werk')">😓 Te veel werk</button>
-            <button class="feedback-btn" onclick="geefFeedback(this,'fout')">⚠️ Ingredient klopte niet</button>
+          <div class="feedback-grid" id="feedback-grid-${index}">
+            <button class="feedback-btn" onclick="geefFeedback(this, 'gekookt', ${index})">✅ Gekookt</button>
+            <button class="feedback-btn" onclick="geefFeedback(this, 'bewaar', ${index})">❤️ Bewaar</button>
+            <button class="feedback-btn" onclick="geefFeedback(this, 'smaak', ${index})">👎 Niet mijn smaak</button>
+            <button class="feedback-btn" onclick="geefFeedback(this, 'werk', ${index})">😓 Te veel werk</button>
+            <button class="feedback-btn" onclick="geefFeedback(this, 'fout', ${index})">⚠️ Ingrediënt klopte niet</button>
+          </div>
+          <div class="feedback-subfragen" id="feedback-sub-${index}">
+            <div class="feedback-sub-titel">Wat klopte niet?</div>
+            <div class="feedback-sub-grid">
+              <button class="feedback-sub-btn" onclick="geefSubFeedback(this)">Te pittig</button>
+              <button class="feedback-sub-btn" onclick="geefSubFeedback(this)">Te saai</button>
+              <button class="feedback-sub-btn" onclick="geefSubFeedback(this)">Te veel werk</button>
+              <button class="feedback-sub-btn" onclick="geefSubFeedback(this)">Niet lekker</button>
+              <button class="feedback-sub-btn" onclick="geefSubFeedback(this)">Ingrediënt paste niet</button>
+            </div>
           </div>
         </div>
-
         <div class="detail-acties">
           <button class="btn-ghost" onclick="toonScherm('screen-invoer')" style="flex:1;">✏️ Pas invoer aan</button>
           <button class="btn-ghost" onclick="toonScherm('screen-resultaten')" style="flex:1;">← Andere recepten</button>
@@ -610,62 +824,74 @@
       toonScherm('screen-detail');
     }
 
-    function toonBoodschappen(index){
-      const s=state.suggesties[index];
-      const nog=Array.isArray(s.nogNodig)?s.nogNodig:[];
-      if(nog.length===0)return;
-
-      const modal=document.createElement('div');
-      modal.className='boodschappen-modal';
-      modal.onclick=(e)=>{if(e.target===modal)document.body.removeChild(modal);};
-
-      const checks=nog.map((_,i)=>false);
-
-      function render(){
-        modal.innerHTML=`
-          <div class="boodschappen-sheet">
-            <div class="boodschappen-header">
-              <div class="boodschappen-naam">🛒 Boodschappenlijst</div>
-              <button class="boodschappen-sluit" onclick="document.body.removeChild(document.querySelector('.boodschappen-modal'))">×</button>
-            </div>
-            <ul class="boodschappen-lijst">
-              ${nog.map((ing,i)=>{
-                const naam=typeof ing==='object'?ing.naam:ing;
-                const hoeveelheid=typeof ing==='object'&&ing.hoeveelheid?ing.hoeveelheid:'';
-                return`<li class="boodschappen-item">
-                  <div class="boodschappen-check ${checks[i]?'checked':''}" onclick="toggleCheck(${i})">
-                    ${checks[i]?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>':''}
-                  </div>
-                  <span style="${checks[i]?'text-decoration:line-through;color:var(--text3)':''}">${naam}</span>
-                  ${hoeveelheid?`<span class="boodschappen-hoeveelheid">${hoeveelheid}</span>`:''}
-                </li>`;
-              }).join('')}
-            </ul>
-          </div>`;
-      }
-
-      window.toggleCheck=(i)=>{checks[i]=!checks[i];render();};
-      render();
-      document.body.appendChild(modal);
+    function wisselTab(tabEl, targetId, groepId) {
+      const groep = document.getElementById(groepId);
+      if (!groep) return;
+      groep.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tabEl.classList.add('active');
+      const screenDetail = document.getElementById('screen-detail');
+      screenDetail.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      const target = document.getElementById(targetId);
+      if (target) target.classList.add('active');
     }
 
-    function geefFeedback(btn,type){
-      document.querySelectorAll('.feedback-btn').forEach(b=>b.classList.remove('selected'));
-      btn.classList.add('selected');
-      // Feedback opslaan voor toekomstige personalisatie
-      const feedback={type,timestamp:Date.now()};
-      const bestaand=JSON.parse(localStorage.getItem('vanavond_feedback')||'[]');
-      bestaand.push(feedback);
-      if(bestaand.length>50)bestaand.shift();
-      try{localStorage.setItem('vanavond_feedback',JSON.stringify(bestaand));}catch(e){}
-    }
-
-    function wisselTab(index,tab,event){
-      state.actieveTab[index]=tab;
-      document.querySelectorAll('.voeding-tab').forEach(t=>t.classList.remove('active'));
+    function wisselVoeding(index, tab, event) {
+      event.target.closest('.voeding-tabs').querySelectorAll('.voeding-tab').forEach(t => t.classList.remove('active'));
       event.target.classList.add('active');
-      document.getElementById(`macro-portie-${index}`).style.display=tab==='portie'?'block':'none';
-      document.getElementById(`macro-100g-${index}`).style.display=tab==='100g'?'block':'none';
+      document.getElementById(`voed-portie-${index}`).style.display = tab === 'portie' ? 'block' : 'none';
+      document.getElementById(`voed-100g-${index}`).style.display = tab === '100g' ? 'block' : 'none';
+    }
+
+    function toonBoodschappen(index) {
+      const s = state.suggesties[index];
+      const nog = Array.isArray(s.nogNodig) ? s.nogNodig : [];
+      if (nog.length === 0) return;
+      const modal = document.createElement('div');
+      modal.className = 'boodschappen-modal';
+      modal.onclick = (e) => { if (e.target === modal) document.body.removeChild(modal); };
+      const checks = nog.map(() => false);
+      function render() {
+        modal.innerHTML = `<div class="boodschappen-sheet">
+          <div class="boodschappen-header">
+            <div class="boodschappen-naam">🛒 Boodschappenlijst</div>
+            <button class="boodschappen-sluit" onclick="document.body.removeChild(document.querySelector('.boodschappen-modal'))">×</button>
+          </div>
+          <ul class="boodschappen-lijst">
+            ${nog.map((ing, i) => {
+              const naam = typeof ing === 'object' ? ing.naam : ing;
+              const hoeveelheid = typeof ing === 'object' && ing.hoeveelheid ? ing.hoeveelheid : '';
+              return `<li class="boodschappen-item">
+                <div class="boodschappen-check ${checks[i] ? 'checked' : ''}" onclick="toggleCheck(${i})">
+                  ${checks[i] ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
+                </div>
+                <span style="${checks[i] ? 'text-decoration:line-through;color:var(--text3)' : ''}">${naam}</span>
+                ${hoeveelheid ? `<span class="boodschappen-hoeveelheid">${hoeveelheid}</span>` : ''}
+              </li>`;
+            }).join('')}
+          </ul>
+        </div>`;
+      }
+      window.toggleCheck = (i) => { checks[i] = !checks[i]; render(); };
+      render(); document.body.appendChild(modal);
+    }
+
+    function geefFeedback(btn, type, index) {
+      document.querySelectorAll(`#feedback-grid-${index} .feedback-btn`).forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const subfragen = document.getElementById(`feedback-sub-${index}`);
+      if (type === 'smaak' && subfragen) subfragen.classList.add('active');
+      else if (subfragen) subfragen.classList.remove('active');
+      try {
+        const bestaand = JSON.parse(localStorage.getItem('vanavond_feedback') || '[]');
+        bestaand.push({ type, timestamp: Date.now(), recept: state.suggesties[index]?.naam });
+        if (bestaand.length > 50) bestaand.shift();
+        localStorage.setItem('vanavond_feedback', JSON.stringify(bestaand));
+      } catch (e) {}
+    }
+
+    function geefSubFeedback(btn) {
+      document.querySelectorAll('.feedback-sub-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
     }
   </script>
 </body>
