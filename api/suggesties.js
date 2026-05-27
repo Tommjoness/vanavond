@@ -135,7 +135,7 @@ Geef 5 totaal verschillende maaltijdsuggesties. De eerste 3 zijn hoofdopties (is
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
-        max_tokens: 4000,
+        max_tokens: 6000,
         system: systeemPrompt,
         messages: [{ role: 'user', content: gebruikersBericht }]
       })
