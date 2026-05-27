@@ -17,6 +17,19 @@ export default async function handler(req, res) {
     });
   }
 
+  // Beoordeel of voorraad voldoende is voor een volwaardige maaltijd
+  const bases = ['rijst','pasta','aardappel','brood','wrap','noedels','couscous','quinoa','penne','spaghetti','fusilli','tagliatelle','fettuccine'];
+  const eiwitten = ['kip','kipfilet','gehakt','ei','eieren','tonijn','zalm','vis','bonen','kikkererwten','tofu','kwark','yoghurt','kaas','mozzarella','feta','cottage cheese','linzen','edamame','garnalen'];
+  const groenten = ['paprika','tomaat','tomaten','broccoli','courgette','sla','komkommer','spinazie','wortel','ui','prei','champignon','aubergine','bloemkool','sperziebonen','erwten','maïs','avocado','ijsbergsla','rucola','andijvie'];
+
+  const ingLower = ingLijst.map(i => i.toLowerCase());
+  const heeftBasis = bases.some(b => ingLower.some(i => i.includes(b)));
+  const heeftEiwit = eiwitten.some(e => ingLower.some(i => i.includes(e)));
+  const heeftGroente = groenten.some(g => ingLower.some(i => i.includes(g)));
+
+  const aantalComponents = [heeftBasis, heeftEiwit, heeftGroente].filter(Boolean).length;
+  const beperktVoorraad = aantalComponents <= 1 || (aantalComponents === 2 && ingLijst.length <= 3);
+
   const apparatuur = profiel?.apparatuur || ['kookplaat'];
   const allergienen = profiel?.allergienen || [];
   const nooitGebruiken = profiel?.nooitGebruiken || '';
@@ -139,6 +152,64 @@ Nooit: ${nooitGebruiken || 'niets'}
 Kookniveau: ${kookniveau}
 Apparatuur: ${apparatuur.join(', ')}
 ${verfijn ? `Verfijning: ${verfijn}` : ''}`;
+
+  // Bij beperkte voorraad: aparte prompt voor eerlijke beoordeling
+  if (beperktVoorraad && !verfijn) {
+    const beperktPrompt = `Je bent Vanavond, een eerlijke Nederlandse kookassistent.
+
+De gebruiker heeft een beperkte voorraad ingevoerd: ${ingredienten}
+
+Beoordeel eerlijk:
+1. Wat is de beste noodoptie met alleen deze ingrediënten? (max matchscore 55%, label "Noodoptie")
+2. Welke 3 losse ingrediënten zou je aanraden toe te voegen voor een volwaardige maaltijd?
+
+Per aangeraden ingrediënt: geef ook een concreet gerechtnaam dat mogelijk wordt.
+
+Geef JSON terug in dit exacte formaat:
+{
+  "beperktVoorraad": true,
+  "uitleg": "Met alleen [ingrediënten] kunnen we iets simpels maken, maar het wordt geen volwaardige maaltijd.",
+  "noodOptie": {
+    "naam": "naam van het gerecht",
+    "matchScore": 42,
+    "korteBeschrijving": "eerlijke beschrijving",
+    "stappen": ["Stap 1.", "Stap 2."],
+    "waarschuwing": "Mist groente en heeft weinig eiwit. Vullend maar niet ideaal."
+  },
+  "extraVoorstellenIngredient": [
+    {"ingredient": "ei", "gerecht": "Gebakken rijst met ei en kaas", "reden": "Meer eiwit, voller en nog steeds snel."},
+    {"ingredient": "tomatenblokjes", "gerecht": "Snelle tomaat-kaasrijst", "reden": "Geeft frisheid en kleur."},
+    {"ingredient": "diepvriesgroente", "gerecht": "Groenterijst met kaas", "reden": "Direct meer vitamines en smaak."}
+  ]
+}`;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5',
+          max_tokens: 2000,
+          system: beperktPrompt,
+          messages: [{ role: 'user', content: `Voorraad: ${ingredienten}` }]
+        })
+      });
+
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
+      const data = await response.json();
+      const tekst = data.content[0].text.trim();
+      const jsonMatch = tekst.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('Geen geldige JSON');
+      const beperktData = JSON.parse(jsonMatch[0]);
+      return res.status(200).json({ beperktVoorraad: true, ...beperktData });
+    } catch (err) {
+      // Fallback: gewoon doorgaan met normale flow
+    }
+  }
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
