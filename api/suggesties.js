@@ -113,6 +113,9 @@ Gekozen doel: "${doel}"
 - "kindvriendelijk": milde smaken, herkenbaar, niet pittig of bitter
 - "koolhydraatarm": weinig/geen rijst/pasta/brood/aardappel
 - "restjes opmaken": maximaal gebruik bestaande ingrediënten, hoge ingredient-match
+- "minder afwas": max 1 pan of 1 ovenschaal, geen meerdere pannen
+- "snel klaar": bereidingstijd maximaal 20 minuten
+- "veel groente": minimaal 200g groente per portie, duidelijk aanwezig in recept
 Als recept NIET voldoet aan drempelwaarden van gekozen doel: verlaag matchScore met 20pt.
 
 FOTOZOEKTERM: Geef een Engelse zoekterm van max 3 woorden die het gerecht zo specifiek mogelijk beschrijft.
@@ -333,6 +336,17 @@ Gerechtstijlen onderling afwisselen. Niet 3x "gebakken X met rijst".
 ${verfijnInstructie}
 
 KWALITEITSDREMPEL: Geef een suggestie alleen als matchScore >= 60. Liever 3 sterke suggesties dan 5 middelmatige.
+
+INTERNE KWALITEITSCHECK per recept vóór je het opneemt:
+✓ Taal volledig Nederlands
+✓ Geen dubbele ingrediënten
+✓ Apparatuur klopt met stappen
+✓ Afwas klopt met stappen (geen "1 pan" als er 2 nodig zijn)
+✓ Tijden zijn realistisch
+✓ Geen vage of Engelse termen
+✓ Hoeveelheden zijn logisch
+✓ Stappen zijn praktisch uitvoerbaar
+Als een recept hier niet aan voldoet, vervang het door een beter alternatief.
 
 
 VOEDINGSWAARDEN: realistisch. per100g = (perPortie / portieGewicht) * 100. Afronden.
