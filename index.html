@@ -681,7 +681,7 @@
     function maakKaart(s, index, isFirst) {
       const card = document.createElement('div');
       let cardClass = 'result-card';
-      if (s.gebruikEerstOp) cardClass += ' gebruik-eerst';
+      if (s.versProduct) cardClass += ' gebruik-eerst';
       else if (isFirst) cardClass += ' top-keuze';
       card.className = cardClass;
       const extra = Array.isArray(s.extraBadges) ? s.extraBadges.slice(0, 2).map(b => `<span class="tag tag-gray">${b}</span>`).join('') : '';
@@ -689,7 +689,7 @@
       card.innerHTML = `
         <div class="result-card-top">
           <div class="result-badges-top">
-            ${s.gebruikEerstOp ? '<span class="gebruik-eerst-badge">Gebruik eerst op</span>' : ''}
+            ${s.versProduct ? '<span class="gebruik-eerst-badge">Versproduct • beperkt houdbaar</span>' : ''}
             ${s.rol ? `<span class="rol-badge">${s.rol}</span>` : ''}
           </div>
           ${score}
@@ -761,7 +761,7 @@
 
       container.innerHTML = `
         <div style="margin-bottom:8px;">
-          ${s.gebruikEerstOp ? '<span class="gebruik-eerst-badge" style="display:inline-flex;margin-bottom:6px;">Gebruik eerst op</span>' : ''}
+          ${s.versProduct ? '<span class="gebruik-eerst-badge" style="display:inline-flex;margin-bottom:6px;">Versproduct • beperkt houdbaar</span>' : ''}
           ${s.rol ? `<span class="rol-badge" style="display:inline-flex;margin-bottom:6px;">${s.rol}</span>` : ''}
         </div>
         <div class="detail-naam">${s.naam}</div>
@@ -787,9 +787,9 @@
           </div>
         </div>` : ''}
 
-        ${s.gebruikEerstOp && Array.isArray(s.gebruiktSlimOp) && s.gebruiktSlimOp.length > 0 ? `
+        ${s.versProduct && Array.isArray(s.versProductItems) && s.versProductItems.length > 0 ? `
         <div class="gebruik-slim-blok">
-          ♻️ Waarschijnlijk handig eerst te gebruiken: <strong>${s.gebruiktSlimOp.join(', ')}</strong>
+          🌿 Dit recept gebruikt verse ingrediënten die minder lang houdbaar zijn: <strong>${s.versProductItems.join(', ')}</strong>
         </div>` : ''}
 
         ${nogNodig.length > 0 ? `
