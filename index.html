@@ -551,13 +551,22 @@
       clearTimeout(chipTimer);
       chipTimer = setTimeout(() => {
         const val = document.getElementById('ingredienten-input').value;
-        const delen = val.split(/[,\n]+/).map(s => s.trim()).filter(s => s.length > 1);
-        const nieuweChips = delen.filter(d => !state.ingredientChips.includes(d));
+        const delen = val.split(/[,\n]+/).map(s => s.trim().toLowerCase()).filter(s => s.length > 1);
+        const nieuweChips = delen.filter(d => !state.ingredientChips.map(c => c.toLowerCase()).includes(d));
         if (nieuweChips.length > 0) {
           state.ingredientChips = [...new Set([...state.ingredientChips, ...nieuweChips])];
+          state.ingredientChips = dedupChips(state.ingredientChips);
           renderChips();
         }
       }, 800);
+    }
+
+    function dedupChips(chips) {
+      // Verwijder kortere als een langere variant aanwezig is die hem bevat
+      // bijv. "kip" weggooien als "kipfilet" al aanwezig is
+      return chips.filter((chip, _, arr) =>
+        !arr.some(ander => ander !== chip && ander.toLowerCase().includes(chip.toLowerCase()) && ander.length > chip.length)
+      );
     }
 
     function renderChips() {
