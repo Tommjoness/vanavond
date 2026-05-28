@@ -89,7 +89,9 @@
     .result-card:active{transform:scale(0.99);}
     .result-card.top-keuze{border-color:rgba(232,193,112,0.3);}
     .result-card.gebruik-eerst{border-color:var(--amber);}
-    .kaart-foto{width:100%;height:180px;min-height:180px;background:var(--bg3) center/cover no-repeat;opacity:0;transition:opacity 0.6s ease;display:block;}
+    .kaart-foto{width:100%;height:180px;min-height:180px;background:var(--bg3) center/cover no-repeat;opacity:0;transition:opacity 0.6s ease;display:block;position:relative;}
+    .kaart-foto.laden{background:linear-gradient(90deg,#1a1f28 25%,#242b35 50%,#1a1f28 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
     .kaart-foto-placeholder{width:100%;height:180px;background:linear-gradient(135deg,#1a1f28 0%,#242b35 100%);display:flex;align-items:center;justify-content:center;font-size:32px;}
     .kaart-foto.geladen{opacity:1;}
     .kaart-body{padding:16px 18px 18px;}
@@ -138,9 +140,9 @@
 
     /* OVERZICHT GRID */
     .overzicht-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-    .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;}
-    .overzicht-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
-    .overzicht-waarde{font-size:15px;font-weight:600;color:var(--text);}
+    .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:flex;flex-direction:column;justify-content:center;}
+    .overzicht-label{font-size:11px;color:#6b7585;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;font-weight:500;}
+    .overzicht-waarde{font-size:15px;font-weight:600;color:#f0f0f0;line-height:1.3;}
 
     /* TABS */
     .tabs{display:flex;gap:2px;background:var(--bg3);border-radius:var(--radius-sm);padding:3px;margin-bottom:24px;position:sticky;top:0;z-index:10;}
@@ -514,36 +516,48 @@
 
     // KOOKTIPS
     const kookTips = [
-      {label:'Kooktip',tekst:'Laat vlees even rusten na het bakken. Zo blijven de sappen erin en wordt het malser.'},
-      {label:'Kooktip',tekst:'Pasta kookt beter als het water goed gezouten is. Geef gerust een flinke snuf zout mee.'},
-      {label:'Wist je dat',tekst:'Knoflook wordt milder van smaak als je het langer op laag vuur bakt.'},
-      {label:'Kooktip',tekst:'Een snufje suiker in tomatensaus haalt de zuurheid van tomaten weg.'},
-      {label:'Wist je dat',tekst:'Je pan is heet genoeg als een druppel water direct verdampt bij aanraking.'},
-      {label:'Kooktip',tekst:'Bewaar verse kruiden in een glas water in de koelkast, net zoals je bloemen zou bewaren. Ze blijven zo veel langer vers.'},
-      {label:'Wist je dat',tekst:'Eieren kook je beter door ze in koud water op te zetten. Zo voorkom je barsten.'},
-      {label:'Kooktip',tekst:'Een scheutje citroensap vlak voor het serveren maakt bijna elk gerecht direct frisser.'},
-      {label:'Kooktip',tekst:'Ui snipperen gaat makkelijker als je het mes nat maakt. Je hebt minder last van tranen.'},
-      {label:'Wist je dat',tekst:'Rijst spoelen voor het koken verwijdert zetmeel en geeft lossere, minder plakkerige korrels.'},
-      {label:'Kooktip',tekst:'Voeg zout pas toe aan het einde als je groente roerbakt. Anders trekt het vocht eruit.'},
-      {label:'Wist je dat',tekst:'Olijfolie is niet ideaal voor heel hoge temperaturen. Gebruik dan zonnebloemolie.'},
-      {label:'Kooktip',tekst:'Snij vlees altijd dwars op de draad. Zo wordt het malser en makkelijker te kauwen.'},
-      {label:'Wist je dat',tekst:'Een houten lepel op een pan kokend water voorkomt overkoken. Echt waar.'},
-      {label:'Kooktip',tekst:'Groenten gaar roosteren in de oven? Zet hem op 200°C, doe er een scheutje olie bij en wacht minstens 20 minuten.'},
-      {label:'Wist je dat',tekst:'Kaas rasp je makkelijker als hij koud is. Warme kaas plakt samen en smelt op de rasp.'},
-      {label:'Kooktip',tekst:'Prik je pasta met je vinger: als hij meebuigt maar licht weerstand biedt, is hij al dente.'},
-      {label:'Wist je dat',tekst:'Gedroogde kruiden zijn drie keer zo sterk als verse. Gebruik er dus minder van als je wisselt van vers naar gedroogd.'},
-      {label:'Kooktip',tekst:'Kip is gaar als het sap helder is als je erin prikt. Niet roze, niet troebel.'},
-      {label:'Wist je dat',tekst:'Restjes pasta bewaar je beter los van de saus. Samen bewaard wordt de pasta papperig.'},
-      {label:'Kooktip',tekst:'Voeg een scheutje pastawater toe aan je saus. Dat bindt alles samen.'},
-      {label:'Wist je dat',tekst:'Eieren op kamertemperatuur kloppen beter op tot schuim dan koude eieren.'},
-      {label:'Kooktip',tekst:'Brood wordt knapperiger als je het even opwarmt in de oven op 160°C voor 5 minuten.'},
-      {label:'Wist je dat',tekst:'De meeste gerechten smaken de volgende dag beter. Soep, stoofpot en curry zeker.'},
-      {label:'Kooktip',tekst:'Tomaten bewaar je beter buiten de koelkast. Kou tast de smaak aan.'},
-      {label:'Wist je dat',tekst:'Banaan en avocado rijpen sneller als je ze naast appels legt. Appels geven een stofje af dat het rijpingsproces versnelt.'},
-      {label:'Kooktip',tekst:'Roer sauzen met zetmeel altijd door terwijl je ze verhit. Anders klontert het.'},
-      {label:'Wist je dat',tekst:'Kikkererwten uit blik zijn prima. Spoel ze af en ze zijn meteen klaar voor gebruik.'},
-      {label:'Kooktip',tekst:'Een scheutje azijn in het kookwater helpt gepocheerde eieren bij elkaar te houden.'},
-      {label:'Wist je dat',tekst:'Verse peper malen vlak voor gebruik geeft veel meer smaak dan voorgemalen peper.'},
+      {label:'Kooktip',tekst:'Bak champignons pas als de pan goed heet is. Dan bakken ze mooi bruin in plaats van zacht te worden.'},
+      {label:'Kooktip',tekst:'Voeg zout pas op het einde toe aan groente. Anders laten ze veel vocht los.'},
+      {label:'Kooktip',tekst:'Laat vlees na het bakken even rusten. Dan blijft het malser en sappiger.'},
+      {label:'Kooktip',tekst:'Gebruik genoeg water voor pasta. Te weinig water maakt het plakkerig.'},
+      {label:'Kooktip',tekst:'Een scheutje citroensap maakt veel gerechten frisser.'},
+      {label:'Kooktip',tekst:'Bak kip niet op te hoog vuur. Dan verbrandt de buitenkant sneller dan de binnenkant gaart.'},
+      {label:'Kooktip',tekst:'Kook rijst met de deksel op de pan voor een gelijkmatiger resultaat.'},
+      {label:'Kooktip',tekst:'Snij groenten ongeveer even groot zodat alles tegelijk gaar wordt.'},
+      {label:'Kooktip',tekst:'Gebruik een hete pan als je vlees of kip wilt bakken. Anders gaat het koken in plaats van bakken.'},
+      {label:'Kooktip',tekst:'Voeg knoflook pas later toe. Knoflook verbrandt snel.'},
+      {label:'Kooktip',tekst:'Proef je saus altijd voordat je extra zout toevoegt.'},
+      {label:'Kooktip',tekst:'Een beetje pastawater maakt saus vaak smeuïger.'},
+      {label:'Kooktip',tekst:'Bewaar verse kruiden in de koelkast in een glas met een klein laagje water.'},
+      {label:'Kooktip',tekst:'Droog vlees of vis eerst af met keukenpapier voor een beter korstje.'},
+      {label:'Kooktip',tekst:'Roer niet constant in champignons. Dan bakken ze mooier.'},
+      {label:'Kooktip',tekst:'Een deksel op de pan scheelt vaak veel kooktijd.'},
+      {label:'Kooktip',tekst:'Kaas raspt makkelijker als hij koud is.'},
+      {label:'Kooktip',tekst:'Kook broccoli niet te lang. Dan blijft hij steviger en voller van smaak.'},
+      {label:'Kooktip',tekst:'Gebruik olie die geschikt is voor hoge temperaturen als je hard wilt bakken.'},
+      {label:'Kooktip',tekst:'Laat een pan eerst goed heet worden voordat je ingrediënten toevoegt.'},
+      {label:'Kooktip',tekst:'Te veel tegelijk in een pan zorgt ervoor dat eten minder goed bakt.'},
+      {label:'Kooktip',tekst:'Voeg kruiden rustig toe en proef tussendoor.'},
+      {label:'Kooktip',tekst:'Een beetje zuur, zoals citroen of azijn, maakt eten vaak frisser.'},
+      {label:'Kooktip',tekst:'Bak ui rustig op middelhoog vuur voor meer smaak.'},
+      {label:'Kooktip',tekst:'Gebruik niet te weinig olie bij het bakken. Dan plakken ingrediënten sneller vast.'},
+      {label:'Kooktip',tekst:'Restjes rijst zijn vaak perfect voor een snelle wokschotel.'},
+      {label:'Kooktip',tekst:'Snij kipfilet na het bakken in plakjes om te controleren of hij gaar is.'},
+      {label:'Kooktip',tekst:'Kook pasta liever iets korter dan te lang. De saus gaart vaak nog iets mee.'},
+      {label:'Kooktip',tekst:'Gebruik een grote pan voor pasta zodat het minder plakt.'},
+      {label:'Wist je dat',tekst:'Tomaten verliezen smaak in de koelkast.'},
+      {label:'Wist je dat',tekst:'Restjes zijn de volgende dag vaak nog lekkerder.'},
+      {label:'Wist je dat',tekst:'Rijst wordt minder plakkerig als je hem eerst afspoelt.'},
+      {label:'Wist je dat',tekst:'Een pan die te vol zit bakt minder goed.'},
+      {label:'Wist je dat',tekst:'De meeste mensen gebruiken te weinig zout in pastawater.'},
+      {label:'Wist je dat',tekst:'Kip is gaar als de binnenkant niet meer roze is.'},
+      {label:'Wist je dat',tekst:'Broccoli uit de oven smaakt heel anders dan gekookte broccoli.'},
+      {label:'Wist je dat',tekst:'Pasta gaart nog iets door nadat je hem hebt afgegoten.'},
+      {label:'Wist je dat',tekst:'Warm eten lijkt vaak zouter dan koud eten.'},
+      {label:'Wist je dat',tekst:'Champignons verliezen veel vocht als de pan niet heet genoeg is.'},
+      {label:'Wist je dat',tekst:'Een deksel op de pan kan kooktijd flink verkorten.'},
+      {label:'Wist je dat',tekst:'Versgemalen peper geeft meer smaak dan voorgemalen peper.'},
+      {label:'Wist je dat',tekst:'Rijst kun je na het koken het beste kort laten rusten met de deksel erop.'},
     ];
     const tips = [...kookTips].sort(() => Math.random() - 0.5);
 
@@ -678,7 +692,7 @@
           else { errorEl.textContent = data.error || 'Er is iets misgegaan. Probeer het opnieuw.'; errorEl.style.display = 'block'; }
           return;
         }
-        state.suggesties = data.suggesties;
+        state.suggesties = data.suggesties.map(reinigSuggestie);
 
         // Beperkte voorraad flow
         if (data.beperktVoorraad) {
@@ -719,14 +733,17 @@
           fotoCache[id] = url;
           const fotoEl = document.getElementById(`foto-${id}`);
           if (fotoEl) {
-            // Verwijder placeholder
             const placeholder = fotoEl.querySelector('.kaart-foto-placeholder');
             if (placeholder) placeholder.remove();
-            // Laad foto
+            fotoEl.classList.remove('laden');
             const img = new Image();
             img.onload = () => {
               fotoEl.style.backgroundImage = `url(${url})`;
               fotoEl.classList.add('geladen');
+            };
+            img.onerror = () => {
+              fotoEl.classList.add('geladen');
+              fotoEl.innerHTML = '<div class="kaart-foto-placeholder"><span style="font-size:36px">🍽️</span></div>';
             };
             img.src = url;
           }
@@ -822,7 +839,7 @@
       const score = s.matchScore ? `<span class="match-score" style="color:${matchKleur(s.matchScore)}">Match ${s.matchScore}%</span>` : '';
 
       card.innerHTML = `
-        <div id="${fotoId}" class="kaart-foto ${fotoKlasse}" ${fotoBg}>
+        <div id="${fotoId}" class="kaart-foto ${fotoKlasse ? fotoKlasse : 'laden'}" ${fotoBg}>
           ${!fotoCache[fotoKey] ? `<div class="kaart-foto-placeholder">${['🍝','🥘','🍗','🥗','🍜','🥩','🍛','🥙'][Math.floor(Math.random()*8)]}</div>` : ''}
         </div>
         <div class="kaart-body">
@@ -848,6 +865,56 @@
         </div>
       `;
       return card;
+    }
+
+
+    // CENTRALE TEKSTREINIGER
+    function reinigTekst(tekst) {
+      if (!tekst || typeof tekst !== 'string') return tekst;
+      const vervangingen = [
+        [/\bhigh protein\b/gi, 'eiwitrijk'],
+        [/\bsqueeze\b/gi, 'scheutje'],
+        [/\bserveer onmiddellijk\b/gi, 'serveer direct'],
+        [/\bserve\b/gi, 'serveer'],
+        [/\bprep\b/gi, 'bereiden'],
+        [/\bminced\b/gi, 'fijngehakt'],
+        [/\bgarnish\b/gi, 'garnering'],
+        [/\btopping\b/gi, 'topping'],
+        [/\bmedium heat\b/gi, 'middelhoog vuur'],
+        [/\bsterke voorraadbewegingen\b/gi, ''],
+        [/\bperfecte high-protein\b/gi, 'eiwitrijke'],
+        [/\boptimale\b/gi, 'goede'],
+        [/\bperfect gebalanceerd\b/gi, 'gebalanceerd'],
+        [/kip, kipfilet/gi, 'kipfilet'],
+        [/kipfilet, kip\b/gi, 'kipfilet'],
+        [/  +/g, ' '],
+      ];
+      let r = tekst;
+      vervangingen.forEach(([zoek, verv]) => { r = r.replace(zoek, verv); });
+      r = r.trim();
+      if (r.length > 0 && !'.!?'.includes(r[r.length-1]) && r.split(' ').length > 3) r += '.';
+      return r;
+    }
+
+    function reinigSuggestie(s) {
+      if (!s) return s;
+      if (s.korteBeschrijving) s.korteBeschrijving = reinigTekst(s.korteBeschrijving);
+      if (s.matchUitleg) s.matchUitleg = reinigTekst(s.matchUitleg);
+      if (Array.isArray(s.waaromSlim)) s.waaromSlim = s.waaromSlim.map(reinigTekst).filter(Boolean);
+      if (Array.isArray(s.smaakUpgrades)) s.smaakUpgrades = s.smaakUpgrades.map(reinigTekst).filter(Boolean);
+      if (Array.isArray(s.vervangingen)) s.vervangingen = s.vervangingen.map(reinigTekst).filter(Boolean);
+      if (Array.isArray(s.matchRedenen)) s.matchRedenen = s.matchRedenen.map(t => t?.trim()).filter(Boolean);
+      if (s.restjes?.idee) s.restjes.idee = reinigTekst(s.restjes.idee);
+      if (s.restjes?.bewaren) s.restjes.bewaren = reinigTekst(s.restjes.bewaren);
+      if (Array.isArray(s.stappen)) {
+        s.stappen = s.stappen.map(st => {
+          if (typeof st === 'object') {
+            return { titel: st.titel ? st.titel.replace(/^\d+\.\s*|^Stap \d+:?\s*/i,'') : st.titel, uitleg: reinigTekst(st.uitleg) };
+          }
+          return reinigTekst(st);
+        });
+      }
+      return s;
     }
 
     function toonResultaten() {
@@ -939,7 +1006,7 @@
 
         ${s.versProduct && Array.isArray(s.versProductItems) && s.versProductItems.length > 0 ? `
         <div class="gebruik-slim-blok">
-          🌿 Dit recept gebruikt verse ingrediënten die minder lang houdbaar zijn: <strong>${lijstNaarZin(s.versProductItems)}.</strong>
+          🌿 Versproduct: <strong>${lijstNaarZin(s.versProductItems)}.</strong>
         </div>` : ''}
 
         ${nogNodig.length > 0 ? `
@@ -996,10 +1063,9 @@
         <div id="tab-voe-${index}" class="tab-content">
           <div class="voeding-disclaimer">Voedingswaarden zijn schattingen op basis van standaardproducten.</div>
           ${v.totaalGewicht ? `
-          <div class="voeding-info">
-            <div class="voeding-info-item">Totaal: <span>±${v.totaalGewicht}g</span></div>
-            <div class="voeding-info-item">Per portie: <span>±${v.portieGewicht}g</span></div>
-            <div class="voeding-info-item">Porties: <span>${s.porties || state.personen}</span></div>
+          <div class="overzicht-grid" style="margin-bottom:16px;">
+            <div class="overzicht-item"><div class="overzicht-label">Totaalgewicht</div><div class="overzicht-waarde">±${v.totaalGewicht}g</div></div>
+            <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">±${v.portieGewicht}g</div></div>
           </div>` : ''}
           <div class="voeding-tabs">
             <div class="voeding-tab active" onclick="wisselVoeding(${index}, 'portie', event)">Per portie</div>
@@ -1017,9 +1083,9 @@
             ${s.smaakUpgrades.map(u => `<div class="tip-item"><span class="tip-dot">✦</span>${u}</div>`).join('')}
           </div>` : ''}
           ${Array.isArray(s.vervangingen) && s.vervangingen.length > 0 ? `
-          <div class="vervanging-blok">
-            <div class="vervanging-blok-titel">Handige vervangingen</div>
-            ${s.vervangingen.map(v => `<div class="vervanging-item">${v}</div>`).join('')}
+          <div class="tips-blok">
+            <div class="tips-blok-titel">↔ Handige vervangingen</div>
+            ${s.vervangingen.map(v => `<div class="tip-item"><span class="tip-dot">→</span>${v}</div>`).join('')}
           </div>` : ''}
           ${s.restjes ? `
           <div class="restjes-blok">
