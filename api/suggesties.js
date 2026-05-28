@@ -253,13 +253,26 @@ WAAROM DIT SLIM IS: alleen concrete, data-gedreven redenen.
 - Gebruik nooit "high protein" als eiwit laag is
 - Gebruik altijd concrete getallen: "Bevat 38g eiwit per portie", "Klaar in 20 minuten", "Gebruikt 1 pan"
 
-VARIATIE:
-1. hoofd rol "Snelste keuze" isExtra:false — echt snelste
-2. hoofd rol "Gezondste keuze" isExtra:false — meeste groente/balans
-3. hoofd rol "Meest vullend" isExtra:false — meest bevredigend
-4. extra isExtra:true — vegetarisch/budget/restjes
-5. extra isExtra:true — high protein/minder afwas/anders
+VARIATIE — KRITIEK: De 5 suggesties moeten TOTAAL verschillend zijn van elkaar.
+VERBODEN: 2+ suggesties met hetzelfde hoofdingrediënt EN bereiding (bijv. niet 2x kip met rijst).
+Forceer variatie in bereiding: kies uit pasta, wrap, rijstgerecht, ovenschotel, salade, bowl, roerbak, soep, loaded aardappels, noedelgerecht, omelet.
+Gerechtstijlen moeten onderling afwisselen: niet 3x "gebakken X met rijst".
+
+1. hoofd rol "Snelste keuze" isExtra:false — echt snelste, zo min mogelijk stappen
+2. hoofd rol "Gezondste keuze" isExtra:false — meeste groente, goede balans
+3. hoofd rol "Meest vullend" isExtra:false — meest bevredigend, andere bereidingsstijl
+4. extra isExtra:true — vegetarisch OF budget OF restjes, andere keuken/stijl
+5. extra isExtra:true — andere bereidingsvorm (bijv. oven/wrap/salade/soep), zeker niet hetzelfde als 1-4
 ${verfijnInstructie}
+
+KWALITEITSDREMPEL: Geef een suggestie alleen als matchScore >= 60. Liever 3 sterke suggesties dan 5 middelmatige.
+
+FOTOZOEKTERM: Geef een korte Engelse zoekterm voor een donkere food foto.
+Gebruik max 3 woorden op basis van hoofdingrediënten.
+Fout: "Gegrilde kipfilet met broccoli en rijst dark moody food photography"
+Goed: "chicken broccoli rice"
+Ander voorbeeld: "pasta tomato basil" of "wrap vegetables" of "salmon rice bowl"
+Veld: "fotoZoekterm": "chicken rice bowl"
 
 VOEDINGSWAARDEN: realistisch. per100g = (perPortie / portieGewicht) * 100. Afronden.
 
