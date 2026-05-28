@@ -958,6 +958,15 @@
             r = r.replace(/ruim binnen tijd/gi, 'Past binnen je gekozen tijd.');
             r = r.replace(/sterke voorraadbewegingen/gi, '');
         r = r.replace(/\bafkruid\b/gi, 'bestrooi met');
+        // Veelvoorkomende spelfouten uit AI-output
+        r = r.replace(/geroostedrde/gi, 'geroosterde');
+        r = r.replace(/geroostedrde/gi, 'geroosterde');
+        r = r.replace(/knappige/gi, 'knapperige');
+        r = r.replace(/knapperig\b/gi, 'knapperige');
+        r = r.replace(/goudbruin\b(?!e)/gi, 'goudbruine');
+        r = r.replace(/voedzame\b/g, 'voedzame');
+        r = r.replace(/smaakvolle\b/g, 'smaakvolle');
+        r = r.replace(/romige\b/g, 'romige');
         // Voorkomen dat noodles wordt gebruikt voor pasta
         r = r.replace(/\bnoodles\b/gi, 'pasta');
         r = r.replace(/\bnoedels van macaroni\b/gi, 'macaroni');
