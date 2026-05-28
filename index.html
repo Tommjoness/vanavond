@@ -126,13 +126,13 @@
     .detail-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
 
     /* MATCHSCORE DETAIL */
-    .match-blok{background:var(--bg2);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:16px;margin-bottom:20px;}
+    .match-blok{background:#141820;border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);padding:16px;margin-bottom:20px;}
     .match-blok-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
     .match-score-groot{font-size:26px;font-weight:700;}
     .match-label-tekst{font-size:13px;color:#c8cdd4;line-height:1.5;}
     .match-uitleg{font-size:13px;color:#c0c6ce;line-height:1.6;margin-bottom:10px;}
-    .match-redenen{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
-    .match-reden{font-size:13px;font-weight:500;color:#e8edf2;background:#333d4d;border:1px solid rgba(255,255,255,0.25);border-radius:100px;padding:7px 14px;line-height:1.3;letter-spacing:0.01em;}
+    .match-redenen{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+    .match-reden{font-size:13px;font-weight:600;color:#f5f7fa;background:#3d4a5c;border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:8px 14px;line-height:1.4;letter-spacing:0.01em;}
     .gebruik-slim-blok{background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.2);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--amber);line-height:1.5;}
 
     /* NEGEER MELDINGEN */
@@ -903,7 +903,31 @@
       if (Array.isArray(s.waaromSlim)) s.waaromSlim = s.waaromSlim.map(reinigTekst).filter(Boolean);
       if (Array.isArray(s.smaakUpgrades)) s.smaakUpgrades = s.smaakUpgrades.map(reinigTekst).filter(Boolean);
       if (Array.isArray(s.vervangingen)) s.vervangingen = s.vervangingen.map(reinigTekst).filter(Boolean);
-      if (Array.isArray(s.matchRedenen)) s.matchRedenen = s.matchRedenen.map(t => t?.trim()).filter(Boolean);
+      // versProductItems dedupliceren: houd meest specifieke versie
+      if (Array.isArray(s.versProductItems) && s.versProductItems.length > 0) {
+        let items = [...new Set(s.versProductItems.map(i => i.toLowerCase().trim()))];
+        // Verwijder kortere als langere variant dezelfde stam heeft (kip → kipfilet)
+        items = items.filter((item, _, arr) =>
+          !arr.some(other => other !== item && other.includes(item) && other.length > item.length)
+        );
+        // Verwijder ook exacte duplicaten na normalisatie
+        items = [...new Set(items)];
+        s.versProductItems = items;
+      }
+
+      if (Array.isArray(s.matchRedenen)) {
+        const verboden = ['eenpans(schaal)', 'normaal moeite', 'ruim binnen tijd', 'sterke voorraad', 'voorraadbewegingen'];
+        s.matchRedenen = s.matchRedenen
+          .map(t => {
+            let r = t?.trim() || '';
+            r = r.replace(/eenpans\(schaal\)gerecht/gi, 'Weinig afwas.');
+            r = r.replace(/normaal moeite niveau/gi, 'Past bij je gekozen moeite.');
+            r = r.replace(/ruim binnen tijd/gi, 'Past binnen je gekozen tijd.');
+            r = r.replace(/sterke voorraadbewegingen/gi, '');
+            return r.trim();
+          })
+          .filter(r => r.length > 2 && !verboden.some(v => r.toLowerCase().includes(v)));
+      }
       if (s.restjes?.idee) s.restjes.idee = reinigTekst(s.restjes.idee);
       if (s.restjes?.bewaren) s.restjes.bewaren = reinigTekst(s.restjes.bewaren);
       if (Array.isArray(s.stappen)) {
@@ -1006,7 +1030,7 @@
 
         ${s.versProduct && Array.isArray(s.versProductItems) && s.versProductItems.length > 0 ? `
         <div class="gebruik-slim-blok">
-          🌿 Versproduct: <strong>${lijstNaarZin(s.versProductItems)}.</strong>
+          🌿 Dit recept gebruikt verse ingrediënten die minder lang houdbaar zijn: <strong>${lijstNaarZin(s.versProductItems)}.</strong>
         </div>` : ''}
 
         ${nogNodig.length > 0 ? `
