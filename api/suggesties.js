@@ -103,10 +103,22 @@ INGREDIËNT INTELLIGENCE — begrijp varianten:
 NOOIT GEBRUIKEN: ${nooitGebruiken || 'niets'}
 ${geenZinInRegel}
 
-FOTOZOEKTERM: Geef per recept een Engelse zoekterm voor een donkere, sfeervolle food foto.
-Formaat: "[gerecht in het Engels] dark moody food photography"
-Voorbeeld: "chicken rice bowl dark moody food photography"
-Veld: "fotoZoekterm": "string"
+FILTERLOGICA — VASTE DREMPELWAARDEN (altijd toepassen, niet optioneel):
+Gekozen doel: "${doel}"
+- "gezond": min 120g groente per portie, geen frituur, gebalanceerde macros
+- "comfort": warm/vullend, pasta/rijst/aardappel/romige saus of ovengerecht
+- "high protein": minimaal 30g eiwit per portie, duidelijke eiwitbron
+- "budget": goedkope supermarktproducten, weinig ingrediënten, geen luxe
+- "licht eten": lager in kcal, minder vet, veel groente of lichte bereiding
+- "kindvriendelijk": milde smaken, herkenbaar, niet pittig of bitter
+- "koolhydraatarm": weinig/geen rijst/pasta/brood/aardappel
+- "restjes opmaken": maximaal gebruik bestaande ingrediënten, hoge ingredient-match
+Als recept NIET voldoet aan drempelwaarden van gekozen doel: verlaag matchScore met 20pt.
+
+FOTOZOEKTERM: Max 3-4 Engelse woorden, alleen ingrediënten/gerechtstype. Geen stijltermen.
+Fout: "chicken rice dark moody food photography"
+Goed: "chicken spinach rice bowl" of "tuna pasta tomato" of "egg potato omelette"
+Veld: "fotoZoekterm": "chicken rice bowl"
 
 APPARATUUR: ${apparatuur.join(', ')}
 STRIKTE REGEL: Stel geen recept voor dat apparatuur gebruikt die niet in de lijst staat.
@@ -284,19 +296,6 @@ ${verfijnInstructie}
 
 KWALITEITSDREMPEL: Geef een suggestie alleen als matchScore >= 60. Liever 3 sterke suggesties dan 5 middelmatige.
 
-FOTOZOEKTERM: Geef een korte Engelse zoekterm die het gerecht herkenbaar beschrijft.
-Regels:
-- Max 3-4 woorden, alleen ingrediënten en gerechtstype
-- Geen stijltermen zoals "dark", "moody", "gourmet", "plating"
-- Geen "food photography"
-- Huiselijk en herkenbaar, niet restaurantstijl
-- Fout: "chicken broccoli rice dark moody food photography"
-- Goed: "chicken broccoli rice bowl"
-- Goed: "pasta tomato sauce"
-- Goed: "egg fried rice"
-- Goed: "salmon vegetables"
-- Goed: "beef stir fry noodles"
-Veld: "fotoZoekterm": "chicken spinach rice"
 
 VOEDINGSWAARDEN: realistisch. per100g = (perPortie / portieGewicht) * 100. Afronden.
 
