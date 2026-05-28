@@ -1142,7 +1142,7 @@
           <div class="overzicht-item"><div class="overzicht-label">Totale tijd</div><div class="overzicht-waarde">${s.bereidingstijd}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Actieve tijd</div><div class="overzicht-waarde">${s.actieveKooktijd && s.actieveKooktijd !== 'onbekend' ? s.actieveKooktijd : s.bereidingstijd}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Porties</div><div class="overzicht-waarde">${s.porties || state.personen}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '±' + v.portieGewicht + 'g' : '—'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '±' + v.portieGewicht + 'g' : 'onbekend'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) && s.apparatuurGebruikt.length > 0 ? s.apparatuurGebruikt.join(', ') : 'kookplaat'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${(s.afwasNiveau || '').replace(/\+/g, 'en')}</div></div>
         </div>
