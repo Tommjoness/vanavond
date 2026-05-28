@@ -140,7 +140,7 @@
 
     /* OVERZICHT GRID */
     .overzicht-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-    .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 16px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;height:76px;}
+    .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 16px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:72px;}
     .overzicht-label{font-size:10px;color:#6b7585;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;font-weight:600;}
     .overzicht-waarde{font-size:15px;font-weight:600;color:#f0f0f0;line-height:1.3;}
 
@@ -184,7 +184,7 @@
     .voeding-tab{flex:1;padding:7px;font-size:12px;font-weight:500;text-align:center;border-radius:6px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
     .voeding-tab.active{background:var(--bg2);color:var(--text);}
     .macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-    .macro-card{background:var(--bg3);border-radius:var(--radius-sm);padding:12px 8px;text-align:center;}
+    .macro-card{background:var(--bg3);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;}
     .macro-waarde{font-size:19px;font-weight:700;color:var(--accent);}
     .macro-label{font-size:11px;color:var(--text2);margin-top:3px;}
 
@@ -207,7 +207,7 @@
     .feedback-sectie{margin-bottom:24px;}
     .feedback-titel{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
     .feedback-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
-    .feedback-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 14px;font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.15s;}
+    .feedback-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:9px 14px;font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all 0.15s;}
     .feedback-btn.selected{border-color:var(--accent);color:var(--accent);}
     .feedback-subfragen{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:none;}
     .feedback-subfragen.active{display:block;}
@@ -258,8 +258,8 @@
     .match-score-groot{font-size:32px;font-weight:800;letter-spacing:-1px;filter:drop-shadow(0 0 8px currentColor);}
 
     /* TABS DUIDELIJKER */
-    .tab{flex:1;padding:9px 4px;font-size:12px;font-weight:500;text-align:center;border-radius:6px;cursor:pointer;color:#555e6e;transition:all 0.15s;}
-    .tab.active{background:var(--bg2);color:var(--text);font-weight:600;}
+    .tab{flex:1;padding:10px 4px;font-size:12px;font-weight:500;text-align:center;border-radius:6px;cursor:pointer;color:#7a8494;transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
+    .tab.active{background:var(--bg2);color:#f0f0f0;font-weight:600;}
 
     /* TYPOGRAFIE CONTRAST */
     .result-naam{font-size:18px;font-weight:700;color:#f4f4f4;line-height:1.25;margin-bottom:3px;letter-spacing:-0.3px;}
@@ -267,6 +267,10 @@
     .detail-naam{font-size:26px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2;color:#f4f4f4;}
     .ing-section-title{font-size:11px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#6b7585;margin-bottom:10px;}
     
+    /* ACTIEVE FILTERS */
+    .actieve-filters{font-size:13px;color:var(--text2);margin-bottom:14px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);line-height:1.5;}
+    .actieve-filters strong{color:var(--accent);}
+
     /* FILTER UITLEG */
     .filter-uitleg{font-size:12px;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;line-height:1.5;animation:fadeIn 0.2s ease;}
 
@@ -373,18 +377,18 @@
       <div class="helper-text" style="margin-bottom:10px;">Kies een richting. We zoeken recepten die daar echt bij passen.</div>
       <div id="filter-uitleg" class="filter-uitleg" style="display:none;"></div>
       <div class="pill-grid">
-        <div class="pill" data-group="doel" data-value="maakt niet uit">Maakt niet uit</div>
-        <div class="pill" data-group="doel" data-value="gezond">Gezond</div>
-        <div class="pill" data-group="doel" data-value="makkelijk en vullend">Makkelijk en vullend</div>
-        <div class="pill" data-group="doel" data-value="eiwitrijk">Eiwitrijk</div>
-        <div class="pill" data-group="doel" data-value="goedkoop">Goedkoop</div>
-        <div class="pill" data-group="doel" data-value="licht eten">Licht</div>
-        <div class="pill" data-group="doel" data-value="kindvriendelijk">Kindvriendelijk</div>
-        <div class="pill" data-group="doel" data-value="koolhydraatarm">Koolhydraatarm</div>
-        <div class="pill" data-group="doel" data-value="restjes opmaken">Restjes opmaken</div>
-        <div class="pill" data-group="doel" data-value="minder afwas">Minder afwas</div>
-        <div class="pill" data-group="doel" data-value="snel klaar">Snel klaar</div>
-        <div class="pill" data-group="doel" data-value="veel groente">Veel groente</div>
+        <div class="pill" data-group="doel" data-value="maakt niet uit" data-multi="true" data-exclusief="true">Maakt niet uit</div>
+        <div class="pill" data-group="doel" data-value="gezond" data-multi="true">Gezond</div>
+        <div class="pill" data-group="doel" data-value="makkelijk en vullend" data-multi="true">Makkelijk en vullend</div>
+        <div class="pill" data-group="doel" data-value="eiwitrijk" data-multi="true">Eiwitrijk</div>
+        <div class="pill" data-group="doel" data-value="goedkoop" data-multi="true">Goedkoop</div>
+        <div class="pill" data-group="doel" data-value="licht eten" data-multi="true">Licht</div>
+        <div class="pill" data-group="doel" data-value="kindvriendelijk" data-multi="true">Kindvriendelijk</div>
+        <div class="pill" data-group="doel" data-value="koolhydraatarm" data-multi="true">Koolhydraatarm</div>
+        <div class="pill" data-group="doel" data-value="restjes opmaken" data-multi="true">Restjes opmaken</div>
+        <div class="pill" data-group="doel" data-value="minder afwas" data-multi="true">Minder afwas</div>
+        <div class="pill" data-group="doel" data-value="snel klaar" data-multi="true">Snel klaar</div>
+        <div class="pill" data-group="doel" data-value="veel groente" data-multi="true">Veel groente</div>
       </div>
     </div>
 
@@ -397,7 +401,6 @@
         <div class="pill" data-group="geenZinIn" data-value="geen pasta" data-multi="true">🚫 Pasta</div>
         <div class="pill" data-group="geenZinIn" data-value="geen pittig" data-multi="true">🚫 Pittig</div>
         <div class="pill" data-group="geenZinIn" data-value="geen vis" data-multi="true">🚫 Vis</div>
-        <div class="pill" data-group="geenZinIn" data-value="geen afwas" data-multi="true">🚫 Afwas</div>
       </div>
     </div>
 
@@ -517,7 +520,7 @@
 
   <script>
     const state = {
-      tijd:null, personen:null, moeite:null, doel:null, boodschappen:'paar',
+      tijd:null, personen:null, moeite:null, doel:[], boodschappen:'paar',
       apparatuur:['kookplaat'], allergienen:[], kookniveau:null, geenZinIn:[],
       ingredientChips:[], suggesties:[], lastRequest:null
     };
@@ -607,6 +610,7 @@
     document.querySelectorAll('.pill').forEach(pill => {
       pill.addEventListener('click', () => {
         const group = pill.dataset.group, value = pill.dataset.value, isMulti = pill.dataset.multi === 'true';
+        const isExclusief = pill.dataset.exclusief === 'true';
         // Toon filter uitleg
         const filterUitleg = {
           'gezond': 'Meer groente, normale portie, niet te vet.',
@@ -682,7 +686,7 @@
       if (!state.tijd) { errorEl.textContent = 'Geef aan hoeveel tijd je hebt.'; errorEl.style.display = 'block'; return; }
       if (!state.personen) { errorEl.textContent = 'Geef aan voor hoeveel personen je kookt.'; errorEl.style.display = 'block'; return; }
       if (!state.moeite) { errorEl.textContent = 'Kies hoeveel moeite je wilt doen.'; errorEl.style.display = 'block'; return; }
-      if (!state.doel) { errorEl.textContent = 'Kies wat je vanavond wilt eten.'; errorEl.style.display = 'block'; return; }
+      if (!state.doel || state.doel.length === 0) { errorEl.textContent = 'Kies wat je vanavond wilt.'; errorEl.style.display = 'block'; return; }
 
       resetLoadingSteps(); toonScherm('screen-laden');
       const interval = animeerLoadingSteps();
@@ -690,7 +694,7 @@
       const requestBody = {
         ingredienten: ingredienten || state.ingredientChips.join(', '),
         ingredientLijst: state.ingredientChips.length > 0 ? state.ingredientChips : null,
-        tijd: state.tijd, personen: state.personen, moeite: state.moeite, doel: state.doel,
+        tijd: state.tijd, personen: state.personen, moeite: state.moeite, doel: Array.isArray(state.doel) ? state.doel.join(', ') : state.doel, doelFilters: state.doel,
         boodschappen: state.boodschappen || 'paar',
         geenZinIn: state.geenZinIn,
         profiel: {
@@ -974,6 +978,14 @@
         r = r.replace(/Goede match/gi, 'Goede keuze');
         r = r.replace(/Redelijke match/gi, 'Redelijke keuze');
         r = r.replace(/incl\./gi, 'inclusief');
+        r = r.replace(/serveer direct\./gi, 'Lekkerst als je het meteen eet.');
+        r = r.replace(/serveer direct/gi, 'lekkerst warm gegeten');
+        r = r.replace(/eet direct warm\./gi, 'Lekkerst als je het meteen eet.');
+        r = r.replace(/\bonmiddellijk\b/gi, 'direct');
+        r = r.replace(/niet geschikt om in te vriezen/gi, 'minder geschikt om in te vriezen');
+        r = r.replace(/sterke voorraadbewegingen/gi, '');
+        r = r.replace(/normaal moeite niveau/gi, '');
+        r = r.replace(/uitstekende voedingsbalans/gi, 'goede voedingsbalans');
         r = r.replace(/breng aan de kook op hoog/gi, 'breng aan de kook');
         r = r.replace(/moeite ['"']?normaal['"']?:?\s*\d+\s*concrete stappen?\.?/gi, '');
         r = r.replace(/moeite ['"']?bijna niks['"']?:?\s*\d+\s*concrete stappen?\.?/gi, '');
@@ -999,6 +1011,16 @@
     }
 
     function toonResultaten() {
+      // Toon actieve filters
+      const filterEl = document.getElementById('actieve-filters');
+      if (filterEl && Array.isArray(state.doel) && state.doel.length > 0 && !state.doel.includes('maakt niet uit')) {
+        const filterTekst = lijstNaarZin(state.doel);
+        filterEl.innerHTML = `Je zoekt: <strong>${filterTekst}</strong>.`;
+        filterEl.style.display = 'block';
+      } else if (filterEl) {
+        filterEl.style.display = 'none';
+      }
+
       const container = document.getElementById('suggesties-container');
       container.innerHTML = '';
 
@@ -1104,7 +1126,7 @@
 
         ${nogNodig.length > 0 ? `
         <div class="nog-nodig-alert">
-          <strong>Nog nodig:</strong> ${lijstNaarZin(nogNodig.map(i => typeof i === 'object' ? i.hoeveelheid ? `${i.naam} (${i.hoeveelheid})` : i.naam : i))}.
+          <strong>Nog even kopen:</strong> ${lijstNaarZin(nogNodig.map(i => typeof i === 'object' ? i.hoeveelheid ? `${i.naam} (${i.hoeveelheid})` : i.naam : i))}.
         </div>` : ''}
 
         <!-- OVERZICHT GRID -->
@@ -1185,12 +1207,12 @@
             <div class="restjes-titel">🥡 Morgen met restjes</div>
             ${s.restjes.idee ? `<div class="restjes-item"><span>💡</span> ${s.restjes.idee}</div>` : ''}
             ${s.restjes.bewaren ? `<div class="restjes-item"><span>🧊</span> ${s.restjes.bewaren}</div>` : ''}
-            ${s.restjes.invriezen !== undefined ? `<div class="restjes-item"><span>${s.restjes.invriezen ? '✅' : '❌'}</span> Invriezen: ${s.restjes.invriezen ? 'geschikt' : 'niet geschikt'}</div>` : ''}
+            ${s.restjes.invriezen !== undefined ? `<div class="restjes-item"><span>${s.restjes.invriezen ? '✅' : '⚠️'}</span> Invriezen: ${s.restjes.invriezen ? 'geschikt' : 'minder geschikt'}</div>` : ''}
           </div>` : ''}
-          ${Array.isArray(s.waaromSlim) && s.waaromSlim.length > 0 ? `
+          ${(Array.isArray(s.waaromPast || s.waaromSlim)) && (s.waaromPast || s.waaromSlim).length > 0 ? `
           <div style="margin-bottom:24px;">
-            <div class="ing-section-title">Waarom dit slim is</div>
-            <ul class="waarom-list">${s.waaromSlim.map(w => `<li class="waarom-item">${w}</li>`).join('')}</ul>
+            <div class="ing-section-title">Waarom dit past</div>
+            <ul class="waarom-list">${(s.waaromPast || s.waaromSlim).map(w => `<li class="waarom-item">${w}</li>`).join('')}</ul>
           </div>` : ''}
         </div>
 
@@ -1218,7 +1240,7 @@
           </div>
         </div>
         <div class="detail-acties">
-          <button class="btn-ghost" onclick="toonScherm('screen-invoer')" style="flex:1;">✏️ Pas invoer aan</button>
+          <button class="btn-ghost" onclick="toonScherm('screen-invoer')" style="flex:1;">✏️ Pas aan</button>
           <button class="btn-ghost" onclick="toonScherm('screen-resultaten')" style="flex:1;">← Andere recepten</button>
         </div>
       `;
