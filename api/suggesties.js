@@ -186,6 +186,8 @@ GRAMMATICA EN STIJL — VERPLICHT:
 - Hoofdletters: alleen aan het begin van een zin, niet willekeurig midden in een zin.
 - matchUitleg, korteBeschrijving, waaromSlim en restjes.idee zijn volledige zinnen met punt aan het einde.
 - matchRedenen zijn korte fragmenten zonder punt (worden als chips getoond).
+- VERBODEN als matchReden: "Eenpans(schaal)gerecht", "Normaal moeite niveau", "Ruim binnen tijd", "Sterke voorraadbewegingen", vage of AI-achtige teksten.
+- GOED als matchReden: "42g eiwit per portie", "Klaar in 25 minuten", "Alles in huis", "Weinig afwas", "Veel groente", "Past binnen je gekozen tijd".
 
 TAALREGELS — KRITIEK:
 - Schrijf ALLEEN in het Nederlands. Geen Engelse woorden.
@@ -402,70 +404,108 @@ Beoordeel eerlijk. Geef JSON:
       if (s.restjes?.idee) s.restjes.idee = metPunt(s.restjes.idee);
       if (s.restjes?.bewaren) s.restjes.bewaren = metPunt(s.restjes.bewaren);
 
-      // versProductItems: gebruik 'en' voor laatste item
-      if (Array.isArray(s.versProductItems) && s.versProductItems.length > 0) {
-        s.versProductItems = s.versProductItems.filter((v, i, a) => a.indexOf(v) === i); // dedup
-      }
-
       if (!Array.isArray(s.stappen)) return;
       const stappenTekst = s.stappen.map(st => typeof st === 'object' ? `${st.titel || ''} ${st.uitleg || ''}` : st).join(' ').toLowerCase();
 
-      const heeftOven = ['oven', 'bakplaat', 'ovenschaal', 'verwarm de oven'].some(w => stappenTekst.includes(w));
+      // Detecteer alle gebruikte hulpmiddelen
+      const heeftOven = ['oven', 'verwarm de oven', 'zet de oven'].some(w => stappenTekst.includes(w));
+      const heeftBakplaat = stappenTekst.includes('bakplaat');
+      const heeftOvenschaal = stappenTekst.includes('ovenschaal');
       const heeftAirfryer = stappenTekst.includes('airfryer');
       const heeftMagnetron = stappenTekst.includes('magnetron');
-      const heeftPan = stappenTekst.includes('pan') || stappenTekst.includes('pot') || stappenTekst.includes('wok');
+      const heeftKom = ['in een kom', 'in een schaal', 'in een mengkom', 'meng in'].some(w => stappenTekst.includes(w));
+      const heeftSnijplank = ['snijplank', 'snijden', 'hakken', 'snipper', 'in stukken', 'in blokjes', 'in plakjes', 'in reepjes'].some(w => stappenTekst.includes(w));
+      const heeftPan = ['pan', 'pot', 'wok', 'koekenpan', 'steelpan', 'hapjespan'].some(w => stappenTekst.includes(w));
 
+      // Tel pannen
       let panCount = 0;
       if (heeftPan) {
         panCount = 1;
-        const extraSignalen = ['tweede pan','aparte pan','andere pan','apart koken','apart bakken','kook de rijst','kook de pasta','kook de noedels','kook de aardappel','in een andere','in een tweede'];
+        const extraSignalen = [
+          'tweede pan', 'aparte pan', 'andere pan', 'in een andere pan',
+          'apart koken', 'apart bakken', 'kook de rijst', 'kook de pasta',
+          'kook de noedels', 'kook de aardappel', 'zet een pan op', 'zet een pot op'
+        ];
         if (extraSignalen.some(w => stappenTekst.includes(w))) panCount++;
-        const derdeSignalen = ['derde pan','nog een pan','ook apart','derde kookmoment'];
+        const derdeSignalen = ['derde pan', 'nog een pan', 'ook in een pan', 'derde kookmoment'];
         if (derdeSignalen.some(w => stappenTekst.includes(w))) panCount++;
       }
 
-      let gecorrigeerd = s.afwasNiveau;
-      if (heeftOven && !s.afwasNiveau.toLowerCase().includes('oven')) {
-        gecorrigeerd = stappenTekst.includes('bakplaat') ? 'Oven + bakplaat' : 'Oven + ovenschaal';
-      } else if (heeftAirfryer && !s.afwasNiveau.toLowerCase().includes('airfryer')) {
-        gecorrigeerd = 'Airfryer';
-      } else if (panCount >= 2 && (s.afwasNiveau === '1 pan' || s.afwasNiveau === '1 pan + snijplank')) {
-        gecorrigeerd = panCount === 2 ? '2 pannen' : `${panCount} pannen`;
-      } else if (!heeftPan && !heeftOven && !heeftAirfryer && !heeftMagnetron) {
-        gecorrigeerd = '0 pannen';
+      // Bouw een eerlijke afwasbeschrijving op
+      const onderdelen = [];
+
+      if (panCount === 1) onderdelen.push('1 pan');
+      else if (panCount === 2) onderdelen.push('2 pannen');
+      else if (panCount >= 3) onderdelen.push(`${panCount} pannen`);
+
+      if (heeftOven) {
+        if (heeftBakplaat) onderdelen.push('bakplaat');
+        else if (heeftOvenschaal) onderdelen.push('ovenschaal');
+        else onderdelen.push('oven');
       }
+      if (heeftAirfryer) onderdelen.push('airfryer');
+      if (heeftMagnetron) onderdelen.push('magnetron');
+      if (heeftKom) onderdelen.push('kom');
+      if (heeftSnijplank) onderdelen.push('snijplank');
+
+      let gecorrigeerd;
+      if (onderdelen.length === 0) {
+        gecorrigeerd = '0 pannen';
+      } else {
+        gecorrigeerd = onderdelen.join(' + ');
+      }
+
       s.afwasNiveau = gecorrigeerd;
+      s.apparatuurGebruikt = [...new Set([
+        ...(heeftOven ? ['oven'] : []),
+        ...(heeftAirfryer ? ['airfryer'] : []),
+        ...(heeftMagnetron ? ['magnetron'] : []),
+        ...(panCount > 0 ? ['kookplaat'] : []),
+      ])];
 
       // Corrigeer waaromSlim: verwijder claims die niet kloppen
       if (Array.isArray(s.waaromSlim)) {
         s.waaromSlim = s.waaromSlim.filter(w => {
           const wl = w.toLowerCase();
-          if (wl.includes('weinig afwas') && panCount >= 2) return false;
+          if (wl.includes('weinig afwas') && onderdelen.length >= 3) return false;
           if (wl.includes('1 pan') && panCount >= 2) return false;
           if (wl.includes('alles in huis') && Array.isArray(s.nogNodig) && s.nogNodig.length > 0) return false;
-          if (wl.includes('high protein') && s.voeding?.perPortie?.proteinen < 20) return false;
+          if (wl.includes('eiwitrijk') && s.voeding?.perPortie?.proteinen < 20) return false;
           return true;
         });
-        // Voeg correcte afwas toe als die er niet in staat
-        const heeftAfwasBullet = s.waaromSlim.some(w => w.toLowerCase().includes('pan') || w.toLowerCase().includes('afwas'));
-        if (!heeftAfwasBullet && gecorrigeerd) {
-          s.waaromSlim.push(`Afwas: ${gecorrigeerd}`);
-        }
       }
 
       // Corrigeer matchRedenen
       if (Array.isArray(s.matchRedenen)) {
         s.matchRedenen = s.matchRedenen.filter(r => {
-          if (r.toLowerCase().includes('weinig afwas') && panCount >= 2) return false;
-          if (r.toLowerCase().includes('1 pan') && panCount >= 2) return false;
+          const rl = r.toLowerCase();
+          if (rl.includes('weinig afwas') && onderdelen.length >= 3) return false;
+          if (rl.includes('1 pan') && panCount >= 2) return false;
           return true;
         });
       }
 
-      // Versproduct badge corrigeren
-      const versItems = ['kip','kipfilet','gehakt','zalm','vis','tonijn vers','sla','ijsbergsla','rucola','andijvie','spinazie','broccoli','courgette','paprika','tomaat','champignon','garnalen'];
-      const inHuisNamen = Array.isArray(s.inHuis) ? s.inHuis.map(i => (typeof i === 'object' ? i.naam : i).toLowerCase()) : [];
-      const gebruikteVersItems = versItems.filter(v => inHuisNamen.some(n => n.includes(v)));
+      // Versproduct badge corrigeren op basis van inHuis
+      const versItems = ['kipfilet','kipdijfilet','gehakt','zalm','vis','tonijn','sla','ijsbergsla','rucola','andijvie','spinazie','broccoli','courgette','paprika','tomaat','champignon','garnalen','kip'];
+      const inHuisNamen = Array.isArray(s.inHuis) ? s.inHuis.map(i => (typeof i === 'object' ? i.naam : i).toLowerCase().trim()) : [];
+
+      // Match: gebruik de exacte inHuis naam als die in de versItems lijst past
+      let gebruikteVersItems = [];
+      inHuisNamen.forEach(naam => {
+        const match = versItems.find(v => naam.includes(v) || v.includes(naam));
+        if (match) {
+          // Gebruik de meest specifieke: inHuis naam als die langer is
+          const beste = naam.length >= match.length ? naam : match;
+          gebruikteVersItems.push(beste);
+        }
+      });
+
+      // Dedupliceer: verwijder kortere als langere variant al aanwezig is
+      gebruikteVersItems = [...new Set(gebruikteVersItems)];
+      gebruikteVersItems = gebruikteVersItems.filter((item, _, arr) =>
+        !arr.some(other => other !== item && other.includes(item) && other.length > item.length)
+      );
+
       s.versProduct = gebruikteVersItems.length > 0;
       s.versProductItems = gebruikteVersItems;
     });
