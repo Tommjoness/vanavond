@@ -367,14 +367,15 @@
 
     <div class="form-group">
       <div class="section-label">Wat wil je vanavond?</div>
+      <div class="helper-text" style="margin-bottom:10px;">Kies een richting. We zoeken recepten die daar echt bij passen.</div>
       <div class="pill-grid">
         <div class="pill" data-group="doel" data-value="maakt niet uit">Maakt niet uit</div>
         <div class="pill" data-group="doel" data-value="gezond">Gezond</div>
-        <div class="pill" data-group="doel" data-value="comfort">Comfort</div>
-        <div class="pill" data-group="doel" data-value="high protein">High protein</div>
-        <div class="pill" data-group="doel" data-value="budget">Budget</div>
+        <div class="pill" data-group="doel" data-value="makkelijk en vullend">Makkelijk en vullend</div>
+        <div class="pill" data-group="doel" data-value="eiwitrijk">Eiwitrijk</div>
+        <div class="pill" data-group="doel" data-value="goedkoop">Goedkoop</div>
         <div class="pill" data-group="doel" data-value="licht eten">Licht eten</div>
-        <div class="pill" data-group="doel" data-value="katerproof">Katerproof</div>
+        <div class="pill" data-group="doel" </div>
         <div class="pill" data-group="doel" data-value="kindvriendelijk">Kindvriendelijk</div>
         <div class="pill" data-group="doel" data-value="koolhydraatarm">Koolhydraatarm</div>
         <div class="pill" data-group="doel" data-value="restjes opmaken">Restjes opmaken</div>
@@ -691,7 +692,7 @@
         clearInterval(interval);
         if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
         toonScherm('screen-invoer');
-        errorEl.textContent = 'Suggesties laden lukt niet. Controleer je verbinding en probeer opnieuw.';
+        errorEl.innerHTML = 'Suggesties laden lukt niet. Controleer je verbinding en probeer opnieuw. <button onclick="haalSuggesties()" style="background:none;border:none;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:14px;padding:0;margin-left:4px;">Opnieuw proberen</button>';
         errorEl.style.display = 'block';
       }
     }
@@ -910,6 +911,24 @@
             r = r.replace(/ruim binnen tijd/gi, 'Past binnen je gekozen tijd.');
             r = r.replace(/sterke voorraadbewegingen/gi, '');
         r = r.replace(/\bafkruid\b/gi, 'bestrooi met');
+        r = r.replace(/\bsqueeze\b/gi, 'scheutje');
+        r = r.replace(/\bhigh protein\b/gi, 'eiwitrijk');
+        r = r.replace(/\bcomfort\b/gi, 'makkelijk en vullend');
+        r = r.replace(/\bbudget\b/gi, 'goedkoop');
+        r = r.replace(/\bkaterproof\b/gi, 'vullend');
+        r = r.replace(/serveer onmiddellijk/gi, 'serveer direct');
+        r = r.replace(/eet onmiddellijk/gi, 'eet direct');
+        r = r.replace(/serveer meteen/gi, 'serveer direct');
+        r = r.replace(/\bpantry\b/gi, 'voorraadkast');
+        r = r.replace(/kaal recept/gi, 'eenvoudig recept');
+        r = r.replace(/binnen tijd/gi, 'op tijd klaar');
+        r = r.replace(/Eénpans\(schaal\)gerecht/gi, '1 pan');
+        r = r.replace(/eenpans\(schaal\)gerecht/gi, '1 pan');
+        r = r.replace(/\bMatch\b/g, 'Score');
+        r = r.replace(/Sterke match/gi, 'Sterke keuze');
+        r = r.replace(/Goede match/gi, 'Goede keuze');
+        r = r.replace(/Redelijke match/gi, 'Redelijke keuze');
+        r = r.replace(/incl\./gi, 'inclusief');
         r = r.replace(/breng aan de kook op hoog/gi, 'breng aan de kook');
         r = r.replace(/moeite ['"']?normaal['"']?:?\s*\d+\s*concrete stappen?\.?/gi, '');
         r = r.replace(/moeite ['"']?bijna niks['"']?:?\s*\d+\s*concrete stappen?\.?/gi, '');
@@ -1026,7 +1045,7 @@
         <div class="match-blok">
           <div class="match-blok-top">
             <div class="match-score-groot" style="color:${matchKleur(s.matchScore)}">${s.matchScore}%</div>
-            <div class="match-label-tekst"><strong>${s.matchLabel || 'Match'}</strong><br>${s.matchUitleg || ''}</div>
+            <div class="match-label-tekst"><strong>${s.matchLabel || 'Keuze'}</strong><br>${s.matchUitleg || ''}</div>
           </div>
           <div class="match-redenen">
             ${Array.isArray(s.matchRedenen) ? s.matchRedenen.slice(0,3).map(r => `<span class="match-reden">${r}</span>`).join('') : ''}
@@ -1330,7 +1349,7 @@
           <div class="kookmodus-timer">
             <div class="kookmodus-timer-display" id="km-timer">0:00</div>
             <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;">
-              <button class="kookmodus-timer-btn" onclick="toggleTimer()" id="km-timer-btn">⏱ Start timer</button>
+              <button class="kookmodus-timer-btn" onclick="toggleTimer()" id="km-timer-btn">Timer starten</button>
               <button class="kookmodus-timer-btn" onclick="resetTimer()" style="opacity:0.6;">↺ Reset</button>
             </div>
             \${stapMinuten > 0 ? `<div style="font-size:12px;color:var(--text3);margin-top:8px;">Suggestie: \${stapMinuten} minuten</div>` : ''}
@@ -1376,7 +1395,7 @@
       const el = document.getElementById('km-timer');
       if (el) el.textContent = '0:00';
       const btn = document.getElementById('km-timer-btn');
-      if (btn) btn.textContent = '⏱ Start timer';
+      if (btn) btn.textContent = 'Timer starten';
     }
 
     function toggleTimer() {
