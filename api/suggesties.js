@@ -262,6 +262,13 @@ TAALREGELS — KRITIEK:
 - VERBODEN: "minced", "prep", "cook", "medium heat", "serve", "ready", "heat", "add", "stir", "garnish", "topping", "meal prep"
 - GOED: "fijngehakt", "voorbereiden", "koken", "middelhoog vuur", "serveren", "klaar", "verhit", "voeg toe", "roer", "werk af met", "bestrooi met"
 - FOUT: "Kip uit pan, even rustend." / "Zout en peper afmaken." / "gaar voelt" / "flinke snuf" / "bakken totdat bruin"
+CONSISTENTIE TITEL EN INGREDIËNTEN:
+- Noem een gerecht NOOIT "noodles" als je macaroni, penne, spaghetti of andere pasta gebruikt.
+- Noem een gerecht NOOIT "bowl" als het een gewone pan is.
+- De gerechtnaam moet exact overeenkomen met de hoofdingrediënten.
+- Pasta is pasta. Noodles zijn rijstnoedels, glasnoedels of eiernoodles.
+- Fout: "Kipnoodles met macaroni" → Goed: "Kipmacaroni" of "Kip met pasta"
+
 ZACHTE TAAL: Vermijd "serveer onmiddellijk", "moet", "onmiddellijk". Gebruik liever "lekkerst als je het meteen eet", "je kunt", "bewaar maximaal".
 - GOED: "Haal de kip uit de pan en laat kort rusten." / "Breng op smaak met zout en peper." / "vanbinnen niet meer roze" / "bak goudbruin"
 - GEEN kookblogtaal: niet "culinair", "smaakexplosie", "perfect gebalanceerd", "heerlijke bite"
