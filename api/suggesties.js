@@ -23,7 +23,32 @@ export default async function handler(req, res) {
   const groenten = ['paprika','tomaat','tomaten','broccoli','courgette','sla','komkommer','spinazie','wortel','ui','prei','champignon','aubergine','bloemkool','sperziebonen','erwten','maïs','ijsbergsla','rucola','andijvie'];
   const bederfelijk = ['kip','kipfilet','gehakt','zalm','vis','tonijn vers','sla','ijsbergsla','rucola','andijvie','spinazie','broccoli','courgette','paprika','tomaat','champignon','garnalen','zuivel','melk','yoghurt','kwark','slagroom','room'];
 
-  const ingLower = ingLijst.map(i => i.toLowerCase());
+  // Ingredient intelligence: normaliseer varianten naar basistermen
+  function normaliseer(ing) {
+    const i = ing.toLowerCase().trim();
+    if (/kip|kipdij|kipfilet|kippendij|kipstuk|kipvlees/.test(i)) return 'kip';
+    if (/gehakt|rundergehakt|varkensgehakt|gemengd gehakt/.test(i)) return 'gehakt';
+    if (/kaas|geraspte kaas|goudse|cheddar|mozzarella|parmezaan|feta|camembert/.test(i)) return 'kaas';
+    if (/penne|spaghetti|fusilli|tagliatelle|rigatoni|farfalle|macaroni|linguine|fettuccine/.test(i)) return 'pasta';
+    if (/rijst|basmati|jasmine|zilvervliesrijst/.test(i)) return 'rijst';
+    if (/ui|rode ui|witte ui|sjalot|lente-ui/.test(i)) return 'ui';
+    if (/tomaat|tomaten|kerstomaat|cherry tomaat|pruimtomaat/.test(i)) return 'tomaat';
+    if (/paprika|rode paprika|groene paprika|gele paprika/.test(i)) return 'paprika';
+    if (/yoghurt|griekse yoghurt|magere yoghurt/.test(i)) return 'yoghurt';
+    if (/room|slagroom|kookroom|crème fraîche/.test(i)) return 'room';
+    if (/ei|eieren|kippenei/.test(i)) return 'ei';
+    if (/zalm|zalmfilet|gerookte zalm/.test(i)) return 'zalm';
+    if (/tonijn|tonijn blik|tonijn in water/.test(i)) return 'tonijn';
+    if (/champignon|paddestoel|portobello/.test(i)) return 'champignon';
+    if (/brood|boterham|volkoren brood|wit brood/.test(i)) return 'brood';
+    if (/aardappel|kruimige aardappel|vastkokende aardappel/.test(i)) return 'aardappel';
+    return i;
+  }
+
+  const ingLijstGenormaliseerd = ingLijst.map(normaliseer);
+  const ingNormLower = ingLijstGenormaliseerd;
+
+  const ingLower = ingNormLower;
   const heeftBasis = bases.some(b => ingLower.some(i => i.includes(b)));
   const heeftEiwit = eiwitten.some(e => ingLower.some(i => i.includes(e)));
   const heeftGroente = groenten.some(g => ingLower.some(i => i.includes(g)));
@@ -63,6 +88,18 @@ ${allergienen.length > 0 ? allergienen.join(', ') : 'geen beperkingen'}
 - soja-allergie: geen sojasaus/tofu/edamame
 - schaaldierenallergie: geen garnalen/kreeft/krab
 - ei-allergie: geen eieren
+INGREDIËNT INTELLIGENCE — begrijp varianten:
+- "geraspte kaas", "parmezaan", "cheddar" = kaas
+- "kipdijfilet", "kippendij", "kipstuk" = kip
+- "penne", "spaghetti", "fusilli", "tagliatelle" = pasta
+- "basmati", "zilvervliesrijst", "jasmijnrijst" = rijst
+- "rode ui", "sjalot", "lente-ui" = ui
+- "kerstomaat", "pruimtomaat", "cherrytomaat" = tomaat
+- "rode paprika", "groene paprika" = paprika
+- "Griekse yoghurt", "magere yoghurt" = yoghurt
+- "kookroom", "slagroom", "crème fraîche" = room (let op: NIET hetzelfde als yoghurt)
+- "zalmfilet", "gerookte zalm" = zalm
+- Paprikapoeder ≠ paprika (is een kruid, geen groente)
 NOOIT GEBRUIKEN: ${nooitGebruiken || 'niets'}
 ${geenZinInRegel}
 
