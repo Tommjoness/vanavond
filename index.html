@@ -267,6 +267,9 @@
     .detail-naam{font-size:26px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2;color:#f4f4f4;}
     .ing-section-title{font-size:11px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#6b7585;margin-bottom:10px;}
     
+    /* FILTER UITLEG */
+    .filter-uitleg{font-size:12px;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;line-height:1.5;animation:fadeIn 0.2s ease;}
+
     /* BOODSCHAPPEN MODAL */
     .boodschappen-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:flex-end;z-index:100;animation:fadeIn 0.2s ease;}
     .boodschappen-sheet{background:var(--bg2);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:540px;margin:0 auto;}
@@ -368,16 +371,20 @@
     <div class="form-group">
       <div class="section-label">Wat wil je vanavond?</div>
       <div class="helper-text" style="margin-bottom:10px;">Kies een richting. We zoeken recepten die daar echt bij passen.</div>
+      <div id="filter-uitleg" class="filter-uitleg" style="display:none;"></div>
       <div class="pill-grid">
         <div class="pill" data-group="doel" data-value="maakt niet uit">Maakt niet uit</div>
         <div class="pill" data-group="doel" data-value="gezond">Gezond</div>
         <div class="pill" data-group="doel" data-value="makkelijk en vullend">Makkelijk en vullend</div>
         <div class="pill" data-group="doel" data-value="eiwitrijk">Eiwitrijk</div>
         <div class="pill" data-group="doel" data-value="goedkoop">Goedkoop</div>
-        <div class="pill" data-group="doel" data-value="licht eten">Licht eten</div>
+        <div class="pill" data-group="doel" data-value="licht eten">Licht</div>
         <div class="pill" data-group="doel" data-value="kindvriendelijk">Kindvriendelijk</div>
         <div class="pill" data-group="doel" data-value="koolhydraatarm">Koolhydraatarm</div>
         <div class="pill" data-group="doel" data-value="restjes opmaken">Restjes opmaken</div>
+        <div class="pill" data-group="doel" data-value="minder afwas">Minder afwas</div>
+        <div class="pill" data-group="doel" data-value="snel klaar">Snel klaar</div>
+        <div class="pill" data-group="doel" data-value="veel groente">Veel groente</div>
       </div>
     </div>
 
@@ -600,6 +607,30 @@
     document.querySelectorAll('.pill').forEach(pill => {
       pill.addEventListener('click', () => {
         const group = pill.dataset.group, value = pill.dataset.value, isMulti = pill.dataset.multi === 'true';
+        // Toon filter uitleg
+        const filterUitleg = {
+          'gezond': 'Meer groente, normale portie, niet te vet.',
+          'makkelijk en vullend': 'Warm, simpel en stevig zonder ingewikkelde stappen.',
+          'eiwitrijk': 'Minimaal 30 gram eiwit per portie.',
+          'goedkoop': 'Basisproducten, weinig ingrediënten, geen luxe.',
+          'licht eten': 'Minder zwaar, veel groente, geen grote hoeveelheid vet.',
+          'kindvriendelijk': 'Mild van smaak, herkenbaar, niet pittig.',
+          'koolhydraatarm': 'Minder rijst, pasta, brood of aardappel.',
+          'restjes opmaken': 'Gebruikt zoveel mogelijk wat je al in huis hebt.',
+          'minder afwas': 'Voorkeur voor 1 pan, ovenschaal of airfryer.',
+          'snel klaar': 'Klaar in 20 minuten of minder.',
+          'veel groente': 'Minimaal de helft van de maaltijd bestaat uit groente.',
+        };
+        if (group === 'doel' && !isMulti) {
+          const uitlegEl = document.getElementById('filter-uitleg');
+          if (uitlegEl && filterUitleg[value]) {
+            uitlegEl.textContent = filterUitleg[value];
+            uitlegEl.style.display = 'block';
+          } else if (uitlegEl) {
+            uitlegEl.style.display = 'none';
+          }
+        }
+
         if (isMulti) {
           pill.classList.toggle('selected');
           if (!state[group]) state[group] = [];
@@ -932,6 +963,12 @@
         r = r.replace(/binnen tijd/gi, 'op tijd klaar');
         r = r.replace(/Eénpans\(schaal\)gerecht/gi, '1 pan');
         r = r.replace(/eenpans\(schaal\)gerecht/gi, '1 pan');
+        r = r.replace(/(\d+)\s*\+\s*(\d+)/g, '$1 en $2');
+        r = r.replace(/pan\s*\+\s*/gi, 'pan en ');
+        r = r.replace(/kom\s*\+\s*/gi, 'kom en ');
+        r = r.replace(/ovenschaal\s*\+\s*/gi, 'ovenschaal en ');
+        r = r.replace(/bakplaat\s*\+\s*/gi, 'bakplaat en ');
+        r = r.replace(/eenpans\(schaal\)gerecht/gi, '1 pan');
         r = r.replace(/\bMatch\b/g, 'Score');
         r = r.replace(/Sterke match/gi, 'Sterke keuze');
         r = r.replace(/Goede match/gi, 'Goede keuze');
@@ -1073,11 +1110,11 @@
         <!-- OVERZICHT GRID -->
         <div class="overzicht-grid">
           <div class="overzicht-item"><div class="overzicht-label">Totale tijd</div><div class="overzicht-waarde">${s.bereidingstijd}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Actieve tijd</div><div class="overzicht-waarde">${s.actieveKooktijd || 'onbekend'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Actieve tijd</div><div class="overzicht-waarde">${s.actieveKooktijd && s.actieveKooktijd !== 'onbekend' ? s.actieveKooktijd : s.bereidingstijd}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Porties</div><div class="overzicht-waarde">${s.porties || state.personen}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">±${v.portieGewicht || '?'}g</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) ? s.apparatuurGebruikt.join(', ') : 'zie bereiding'}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${s.afwasNiveau}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '±' + v.portieGewicht + 'g' : '—'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) && s.apparatuurGebruikt.length > 0 ? s.apparatuurGebruikt.join(', ') : 'kookplaat'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${(s.afwasNiveau || '').replace(/\+/g, 'en')}</div></div>
         </div>
 
         <!-- TABS -->
@@ -1355,7 +1392,7 @@
           ${titel ? `<div class="kookmodus-stap-titel">${titel}</div>` : ''}
           <div class="kookmodus-stap-uitleg">${uitleg}</div>
           <div class="kookmodus-timer">
-            <div class="kookmodus-timer-display" id="km-timer">0:00</div>
+            <div class="kookmodus-timer-display" id="km-timer">${stapMinuten > 0 ? stapMinuten + ":00" : "0:00"}</div>
             <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;">
               <button class="kookmodus-timer-btn" onclick="toggleTimer()" id="km-timer-btn">Timer starten</button>
               <button class="kookmodus-timer-btn" onclick="resetTimer()" style="opacity:0.6;">↺ Reset</button>
