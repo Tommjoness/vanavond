@@ -561,14 +561,12 @@
       clearTimeout(chipTimer);
       chipTimer = setTimeout(() => {
         const val = document.getElementById('ingredienten-input').value;
-        const delen = val.split(/[,\n]+/).map(s => s.trim()).filter(s => s.length > 1);
-        // Splits ook op " en " binnen elk deel
-        const uitgesplitst = [];
-        delen.forEach(deel => {
-          const subDelen = deel.split(/\s+en\s+/i).map(s => s.trim()).filter(s => s.length > 1);
-          uitgesplitst.push(...subDelen);
-        });
-        const nieuweChips = uitgesplitst.filter(d => !state.ingredientChips.map(c => c.toLowerCase()).includes(d.toLowerCase()));
+        // Splits op komma, newline én " en "
+        const delen = val
+          .split(/[,\n]|\s+en\s+/i)
+          .map(s => s.trim().replace(/\s+en\s*$/i, '').replace(/^\s*en\s+/i, '').trim())
+          .filter(s => s.length > 1);
+        const nieuweChips = delen.filter(d => !state.ingredientChips.map(c => c.toLowerCase()).includes(d.toLowerCase()));
         if (nieuweChips.length > 0) {
           state.ingredientChips = [...new Set([...state.ingredientChips, ...nieuweChips])];
           state.ingredientChips = dedupChips(state.ingredientChips);
