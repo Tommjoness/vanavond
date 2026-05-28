@@ -257,6 +257,15 @@ GRAMMATICA EN STIJL — VERPLICHT:
 - GOED als matchReden: "42g eiwit per portie", "Klaar in 25 minuten", "Alles in huis", "Weinig afwas", "Veel groente", "Past bij je gekozen filters".
 - Als filters zijn meegegeven: noem in matchUitleg welke filters goed worden geraakt.
 
+SPELLING — controleer elk woord vóór je het schrijft:
+- "geroosterd" niet "geroostedrde"
+- "knapperig" niet "knappig" of "knappige"
+- "goudbruin" niet "goudbruine" tenzij bijvoeglijk naamwoord
+- "voedzaam" niet "voedzame" tenzij bijvoeglijk naamwoord
+- "eiwitrijk" niet "eiwitrijke" tenzij bijvoeglijk naamwoord
+- Controleer alle adjectieven op correcte uitgang (-e of geen -e)
+- Geen dubbele letters die er niet horen: "geroostedrde" → "geroosterde"
+
 TAALREGELS — KRITIEK:
 - Schrijf ALLEEN in het Nederlands. Geen Engelse woorden.
 - VERBODEN: "minced", "prep", "cook", "medium heat", "serve", "ready", "heat", "add", "stir", "garnish", "topping", "meal prep"

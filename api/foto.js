@@ -6,89 +6,86 @@ export default async function handler(req, res) {
 
   function schoonMaken(term) {
     return term
-      .replace(/dark moody food photography/gi, '')
-      .replace(/food photography/gi, '')
-      .replace(/moody|dark|plating|gourmet|restaurant|homemade/gi, '')
-      .trim()
-      .replace(/\s+/g, ' ');
+      .replace(/dark moody food photography|food photography|moody|dark|plating|gourmet|restaurant|homemade/gi, '')
+      .trim().replace(/\s+/g, ' ');
   }
 
   async function zoekPexels(zoekterm) {
-    const url = `https://api.pexels.com/v1/search?query=${encodeURIComponent(zoekterm)}&per_page=8&orientation=landscape`;
-    const response = await fetch(url, {
-      headers: { Authorization: process.env.PEXELS_API_KEY }
-    });
+    const url = `https://api.pexels.com/v1/search?query=${encodeURIComponent(zoekterm)}&per_page=10&orientation=landscape`;
+    const response = await fetch(url, { headers: { Authorization: process.env.PEXELS_API_KEY } });
     if (!response.ok) throw new Error(`Pexels error: ${response.status}`);
     const data = await response.json();
     return data.photos || [];
   }
 
-  // Kies beste foto: goede ratio, geen verdachte tags
-  function kiesBesteFoto(fotos, zoekterm) {
+  // Woorden die NIET in de foto mogen (alt-tekst check)
+  const ONGEWENST = ['fries', 'french fries', 'chips', 'fastfood', 'fast food', 'burger', 'pizza', 'sushi', 'ramen', 'bibimbap', 'fried egg on top', 'egg on top', 'candle', 'wine', 'restaurant'];
+
+  function scoreOrFotos(fotos, zoekterm) {
     if (!fotos || fotos.length === 0) return null;
+    const zoekWoorden = zoekterm.toLowerCase().split(' ').filter(w => w.length > 2);
 
-    // Filter fotos op basis van alt-tekst als die beschikbaar is
-    const zoekWoorden = zoekterm.toLowerCase().split(' ');
-
-    const gescoord = fotos
+    return fotos
       .filter(f => f.src?.large || f.src?.large2x)
       .map(f => {
-        let score = 0;
-        // Goede landscape ratio
-        const ratio = f.width / f.height;
-        if (ratio >= 1.3 && ratio <= 1.8) score += 2;
-
-        // Alt tekst match (als beschikbaar)
         const alt = (f.alt || '').toLowerCase();
-        zoekWoorden.forEach(woord => {
-          if (alt.includes(woord)) score += 1;
-        });
+        let score = 0;
+
+        // Diskwalificeer fotos met ongewenste elementen
+        if (ONGEWENST.some(o => alt.includes(o))) {
+          score -= 10;
+        }
+
+        // Bonus voor goede ratio
+        const ratio = f.width / f.height;
+        if (ratio >= 1.2 && ratio <= 1.9) score += 2;
+
+        // Bonus voor alt-tekst match
+        zoekWoorden.forEach(w => { if (alt.includes(w)) score += 2; });
 
         return { foto: f, score };
       })
-      .sort((a, b) => b.score - a.score);
-
-    return gescoord[0]?.foto || fotos[0];
+      .filter(item => item.score >= 0) // verwijder diskwalificeerde fotos
+      .sort((a, b) => b.score - a.score)[0]?.foto || null;
   }
 
   try {
     const schoon = schoonMaken(q);
     const woorden = schoon.split(' ').filter(w => w.length > 1);
     let fotos = [];
+    let resultaat = null;
 
-    // Poging 1: eerste 2-3 woorden + "dinner plate"
-    const term1 = woorden.slice(0, 3).join(' ') + ' dinner';
+    // Poging 1: eerste 2 woorden + "meal"
+    const term1 = woorden.slice(0, 2).join(' ') + ' meal';
     fotos = await zoekPexels(term1);
+    resultaat = scoreOrFotos(fotos, schoon);
 
-    // Poging 2: eerste 2 woorden alleen
-    if (fotos.length < 2) {
-      const term2 = woorden.slice(0, 2).join(' ');
-      const extra = await zoekPexels(term2);
-      fotos = [...fotos, ...extra];
+    // Poging 2: alleen eerste woord + "dish"
+    if (!resultaat && woorden.length > 0) {
+      const term2 = woorden[0] + ' dish';
+      fotos = await zoekPexels(term2);
+      resultaat = scoreOrFotos(fotos, schoon);
     }
 
     // Poging 3: eerste woord + "food"
-    if (fotos.length === 0) {
+    if (!resultaat && woorden.length > 0) {
       const term3 = woorden[0] + ' food';
       fotos = await zoekPexels(term3);
+      resultaat = scoreOrFotos(fotos, schoon);
     }
 
-    if (fotos.length === 0) {
-      return res.status(404).json({ error: 'Geen foto gevonden' });
+    if (!resultaat) {
+      return res.status(404).json({ error: 'Geen passende foto gevonden' });
     }
 
-    const foto = kiesBesteFoto(fotos, schoon);
-    const url = foto?.src?.large2x || foto?.src?.large || foto?.src?.medium;
-
-    if (!url) {
-      return res.status(404).json({ error: 'Geen bruikbare url' });
-    }
+    const url = resultaat.src?.large2x || resultaat.src?.large || resultaat.src?.medium;
+    if (!url) return res.status(404).json({ error: 'Geen bruikbare url' });
 
     return res.status(200).json({
       url,
-      urlSmall: foto.src?.medium || url,
-      fotograaf: foto.photographer || '',
-      pexelsUrl: foto.url || ''
+      urlSmall: resultaat.src?.medium || url,
+      fotograaf: resultaat.photographer || '',
+      pexelsUrl: resultaat.url || ''
     });
 
   } catch (err) {
