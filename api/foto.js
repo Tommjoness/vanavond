@@ -4,77 +4,61 @@ export default async function handler(req, res) {
   const { q } = req.query;
   if (!q) return res.status(400).json({ error: 'Geen zoekterm' });
 
-  // Verwijder stijltermen en houd alleen ingrediënten/gerechtstype
+  // Maak zoekterm schoon en specifieker
   function maakZoekterm(term) {
     return term
       .replace(/dark moody food photography/gi, '')
       .replace(/food photography/gi, '')
-      .replace(/moody/gi, '')
-      .replace(/dark/gi, '')
-      .replace(/plating/gi, '')
-      .replace(/gourmet/gi, '')
-      .replace(/restaurant/gi, '')
+      .replace(/moody|dark|plating|gourmet|restaurant/gi, '')
       .trim()
       .replace(/\s+/g, ' ');
   }
 
-  // Voeg "homemade" toe voor huiselijkere resultaten
-  function maakHuiselijkeTerm(term) {
+  // Voeg "meal" toe voor betere food-match, vermijd generieke stockfotos
+  function maakSpecifiekeTerm(term) {
     const schoon = maakZoekterm(term);
-    return `homemade ${schoon} dinner`;
+    // Voeg "homemade" toe voor huiselijkere resultaten
+    return `homemade ${schoon}`;
   }
 
   async function zoekPexels(zoekterm) {
-    const response = await fetch(
-      `https://api.pexels.com/v1/search?query=${encodeURIComponent(zoekterm)}&per_page=5&orientation=landscape`,
-      { headers: { Authorization: process.env.PEXELS_API_KEY } }
-    );
+    const url = `https://api.pexels.com/v1/search?query=${encodeURIComponent(zoekterm)}&per_page=5&orientation=landscape`;
+    const response = await fetch(url, {
+      headers: { Authorization: process.env.PEXELS_API_KEY }
+    });
     if (!response.ok) throw new Error(`Pexels error: ${response.status}`);
     const data = await response.json();
     return data.photos || [];
   }
 
-  // Kies de beste foto op basis van breedte/hoogte verhouding
+  // Kies beste foto op basis van landscape ratio
   function kiesBesteFoto(fotos) {
     if (!fotos || fotos.length === 0) return null;
-    // Prefereer landscape foto's met goede verhouding
-    const gesorteerd = fotos
+    return fotos
       .filter(f => f.src?.large || f.src?.large2x)
-      .sort((a, b) => {
-        const ratioA = a.width / a.height;
-        const ratioB = b.width / b.height;
-        // Ideale ratio tussen 1.3 en 1.8 (landscape maar niet te breed)
-        const scoreA = Math.abs(ratioA - 1.5);
-        const scoreB = Math.abs(ratioB - 1.5);
-        return scoreA - scoreB;
-      });
-    return gesorteerd[0] || fotos[0];
+      .sort((a, b) => Math.abs(a.width / a.height - 1.5) - Math.abs(b.width / b.height - 1.5))[0] || fotos[0];
+  }
+
+  // Haal sleutelwoorden op uit zoekterm (eerste 2 woorden na cleanup)
+  function sleutelwoorden(term) {
+    return maakZoekterm(term).split(' ').slice(0, 2).join(' ');
   }
 
   try {
     let fotos = [];
 
-    // Poging 1: huiselijke term
-    const huiselijkeTerm = maakHuiselijkeTerm(q);
-    fotos = await zoekPexels(huiselijkeTerm);
+    // Poging 1: homemade + volledige term
+    fotos = await zoekPexels(maakSpecifiekeTerm(q));
 
-    // Poging 2: schone zoekterm zonder stijl
+    // Poging 2: alleen kernwoorden + "dinner"
     if (fotos.length === 0) {
-      const schoneTerm = maakZoekterm(q);
-      fotos = await zoekPexels(schoneTerm);
+      fotos = await zoekPexels(sleutelwoorden(q) + ' dinner');
     }
 
-    // Poging 3: eerste 2 woorden van schone term
-    if (fotos.length === 0) {
-      const schoneTerm = maakZoekterm(q);
-      const korteTerm = schoneTerm.split(' ').slice(0, 2).join(' ');
-      fotos = await zoekPexels(korteTerm + ' food');
-    }
-
-    // Poging 4: eerste woord + food
+    // Poging 3: eerste woord + "food"
     if (fotos.length === 0) {
       const eersteWoord = maakZoekterm(q).split(' ')[0];
-      fotos = await zoekPexels(eersteWoord + ' dinner');
+      fotos = await zoekPexels(eersteWoord + ' food bowl');
     }
 
     if (fotos.length === 0) {
@@ -82,7 +66,7 @@ export default async function handler(req, res) {
     }
 
     const foto = kiesBesteFoto(fotos);
-    const url = foto.src?.large2x || foto.src?.large || foto.src?.medium;
+    const url = foto?.src?.large2x || foto?.src?.large || foto?.src?.medium;
 
     if (!url) {
       return res.status(404).json({ error: 'Geen bruikbare foto-url' });

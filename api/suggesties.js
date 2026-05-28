@@ -115,10 +115,22 @@ Gekozen doel: "${doel}"
 - "restjes opmaken": maximaal gebruik bestaande ingrediënten, hoge ingredient-match
 Als recept NIET voldoet aan drempelwaarden van gekozen doel: verlaag matchScore met 20pt.
 
-FOTOZOEKTERM: Max 3-4 Engelse woorden, alleen ingrediënten/gerechtstype. Geen stijltermen.
-Fout: "chicken rice dark moody food photography"
-Goed: "chicken spinach rice bowl" of "tuna pasta tomato" of "egg potato omelette"
-Veld: "fotoZoekterm": "chicken rice bowl"
+FOTOZOEKTERM: Geef een Engelse zoekterm van max 3 woorden die het gerecht zo specifiek mogelijk beschrijft.
+Gebruik hoofdingrediënten en bereidingsvorm. Geen stijltermen.
+Regels:
+- Gebruik het hoofdingrediënt als eerste woord
+- Geef de bereidingsvorm mee (bowl, pasta, stir fry, omelette, soup, wrap)
+- Geen "dark", "moody", "food photography", "plating", "gourmet"
+- Fout: "chicken rice dark moody" of "healthy meal prep"
+- Goed: "chicken rice bowl" of "tuna pasta" of "beef stir fry" of "vegetable omelette"
+Voorbeelden per type:
+- Kip + rijst → "chicken rice bowl"
+- Pasta + tonijn → "tuna pasta tomato"
+- Wrap + groente → "chicken wrap vegetables"
+- Soep → "vegetable soup bowl"
+- Salade → "chicken salad bowl"
+- Aardappel → "potato dish homemade"
+Veld: "fotoZoekterm": "chicken broccoli bowl"
 
 APPARATUUR: ${apparatuur.join(', ')}
 STRIKTE REGEL: Stel geen recept voor dat apparatuur gebruikt die niet in de lijst staat.
