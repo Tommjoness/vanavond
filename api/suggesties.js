@@ -119,22 +119,20 @@ Gekozen filters (combineer als voorkeuren, niet als harde eisen): "${actieveFilt
 - "veel groente": minimaal 200g groente per portie, duidelijk aanwezig in recept
 Als recept NIET voldoet aan drempelwaarden van gekozen doel: verlaag matchScore met 20pt.
 
-FOTOZOEKTERM: Geef een Engelse zoekterm van max 3 woorden die het gerecht zo specifiek mogelijk beschrijft.
-Gebruik hoofdingrediënten en bereidingsvorm. Geen stijltermen.
-Regels:
-- Gebruik het hoofdingrediënt als eerste woord
-- Geef de bereidingsvorm mee (bowl, pasta, stir fry, omelette, soup, wrap)
-- Geen "dark", "moody", "food photography", "plating", "gourmet"
-- Fout: "chicken rice dark moody" of "healthy meal prep"
-- Goed: "chicken rice bowl" of "tuna pasta" of "beef stir fry" of "vegetable omelette"
-Voorbeelden per type:
-- Kip + rijst → "chicken rice bowl"
-- Pasta + tonijn → "tuna pasta tomato"
-- Wrap + groente → "chicken wrap vegetables"
-- Soep → "vegetable soup bowl"
-- Salade → "chicken salad bowl"
-- Aardappel → "potato dish homemade"
-Veld: "fotoZoekterm": "chicken broccoli bowl"
+FOTOZOEKTERM: Geef een Engelse zoekterm van max 3 woorden voor Pexels.
+Gebruik het hoofdingrediënt als eerste woord, dan eventueel een tweede hoofdingrediënt.
+Geen "bowl", "dinner", "plate", "food", "homemade" toevoegen — dat doet de fotodienst zelf.
+Wees zo specifiek mogelijk op het hoofdingrediënt van het recept.
+- Kip + rijst: "chicken rice"
+- Gehakt + rijst + mais: "minced beef rice"
+- Zalm + pasta: "salmon pasta"
+- Tonijn + pasta + tomaat: "tuna pasta tomato"
+- Ei + aardappel: "egg potato"
+- Groente wrap: "vegetable wrap"
+- Kipsoep: "chicken soup"
+- Salade + kip: "chicken salad"
+NOOIT een ingredient meegeven dat niet in het recept zit.
+Veld: "fotoZoekterm": "salmon pasta"
 
 APPARATUUR: ${apparatuur.join(', ')}
 STRIKTE REGEL: Stel geen recept voor dat apparatuur gebruikt die niet in de lijst staat.
