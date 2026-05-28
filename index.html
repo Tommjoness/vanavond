@@ -262,7 +262,8 @@
     .tab.active{background:var(--bg2);color:var(--text);font-weight:600;}
 
     /* TYPOGRAFIE CONTRAST */
-    .result-naam{font-size:18px;font-weight:700;color:#f4f4f4;line-height:1.25;margin-bottom:5px;letter-spacing:-0.3px;}
+    .result-naam{font-size:18px;font-weight:700;color:#f4f4f4;line-height:1.25;margin-bottom:3px;letter-spacing:-0.3px;}
+    .slimme-reden{font-size:12px;color:var(--accent);font-weight:500;margin-bottom:6px;opacity:0.85;}
     .detail-naam{font-size:26px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2;color:#f4f4f4;}
     .ing-section-title{font-size:11px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#6b7585;margin-bottom:10px;}
     
@@ -816,7 +817,7 @@
 
       const kcal = s.voeding?.perPortie?.kcal;
       const eiwit = s.voeding?.perPortie?.proteinen;
-      const voedingBadge = kcal ? `<span class="tag tag-gray">${kcal} kcal</span>${eiwit ? `<span class="tag tag-gray">${eiwit}g eiwit</span>` : ''}` : '';
+      const voedingBadge = kcal ? `<span class="tag tag-gray">±${kcal} kcal</span>${eiwit ? `<span class="tag tag-gray">±${eiwit}g eiwit</span>` : ''}` : '';
 
       const extra = Array.isArray(s.extraBadges) ? s.extraBadges.slice(0,1).map(b=>`<span class="tag tag-gray">${b}</span>`).join('') : '';
       const score = s.matchScore ? `<span class="match-score" style="color:${matchKleur(s.matchScore)}">Match ${s.matchScore}%</span>` : '';
@@ -834,6 +835,7 @@
             ${score}
           </div>
           <div class="result-naam">${s.naam}</div>
+          ${s.slimmeReden ? `<div class="slimme-reden">${s.slimmeReden}</div>` : ''}
           <div class="result-beschrijving">${s.korteBeschrijving}</div>
           ${mistTekst}
           <div class="result-meta">
@@ -993,10 +995,10 @@
 
       const macroHtml = (data) => `
         <div class="macro-grid">
-          <div class="macro-card"><div class="macro-waarde">${data.kcal || '.'}</div><div class="macro-label">kcal</div></div>
-          <div class="macro-card"><div class="macro-waarde">${data.proteinen || '.'}g</div><div class="macro-label">eiwit</div></div>
-          <div class="macro-card"><div class="macro-waarde">${data.koolhydraten || '.'}g</div><div class="macro-label">koolh.</div></div>
-          <div class="macro-card"><div class="macro-waarde">${data.vetten || '.'}g</div><div class="macro-label">vet</div></div>
+          <div class="macro-card"><div class="macro-waarde">±${data.kcal || '?'}</div><div class="macro-label">kcal</div></div>
+          <div class="macro-card"><div class="macro-waarde">±${data.proteinen || '?'}g</div><div class="macro-label">eiwit</div></div>
+          <div class="macro-card"><div class="macro-waarde">±${data.koolhydraten || '?'}g</div><div class="macro-label">koolh.</div></div>
+          <div class="macro-card"><div class="macro-waarde">±${data.vetten || '?'}g</div><div class="macro-label">vet</div></div>
         </div>`;
 
       const negeerHtml = Array.isArray(s.negeerMeldingen) && s.negeerMeldingen.length > 0
@@ -1297,6 +1299,9 @@
       const stap = kookmodusStappen[kookmodusStap];
       const titel = typeof stap === 'object' ? stap.titel : '';
       const uitleg = typeof stap === 'object' ? stap.uitleg : (typeof stap === 'string' ? stap : '');
+      // Detecteer tijdsindicatie in stap
+      const tijdMatch = uitleg.match(/(\d+)(?:\s*tot\s*\d+)?\s*minuten?/i);
+      const stapMinuten = tijdMatch ? parseInt(tijdMatch[1]) : 0;
       const totaal = kookmodusStappen.length;
       const progress = ((kookmodusStap + 1) / totaal) * 100;
       const isLaatste = kookmodusStap === totaal - 1;
@@ -1324,7 +1329,11 @@
           <div class="kookmodus-stap-uitleg">${uitleg}</div>
           <div class="kookmodus-timer">
             <div class="kookmodus-timer-display" id="km-timer">0:00</div>
-            <div><button class="kookmodus-timer-btn" onclick="toggleTimer()" id="km-timer-btn">⏱ Start timer</button></div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;">
+              <button class="kookmodus-timer-btn" onclick="toggleTimer()" id="km-timer-btn">⏱ Start timer</button>
+              <button class="kookmodus-timer-btn" onclick="resetTimer()" style="opacity:0.6;">↺ Reset</button>
+            </div>
+            \${stapMinuten > 0 ? `<div style="font-size:12px;color:var(--text3);margin-top:8px;">Suggestie: \${stapMinuten} minuten</div>` : ''}
           </div>
         </div>
         <div class="kookmodus-footer">
@@ -1358,6 +1367,16 @@
       const overlay = document.getElementById('kookmodus-overlay');
       if (overlay) overlay.remove();
       kookmodusActief = false;
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerLoopt = false;
+      timerSeconden = 0;
+      const el = document.getElementById('km-timer');
+      if (el) el.textContent = '0:00';
+      const btn = document.getElementById('km-timer-btn');
+      if (btn) btn.textContent = '⏱ Start timer';
     }
 
     function toggleTimer() {
