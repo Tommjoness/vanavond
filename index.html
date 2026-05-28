@@ -132,7 +132,7 @@
     .match-label-tekst{font-size:13px;color:#c8cdd4;line-height:1.5;}
     .match-uitleg{font-size:13px;color:#c0c6ce;line-height:1.6;margin-bottom:10px;}
     .match-redenen{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
-    .match-reden{font-size:13px;font-weight:600;color:#f5f7fa;background:#3d4a5c;border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:8px 14px;line-height:1.4;letter-spacing:0.01em;}
+    .match-reden{font-size:13px;font-weight:600;color:#ffffff;background:#44536a;border:1px solid rgba(255,255,255,0.35);border-radius:8px;padding:9px 15px;line-height:1.4;}
     .gebruik-slim-blok{background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.2);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--amber);line-height:1.5;}
 
     /* NEGEER MELDINGEN */
@@ -140,7 +140,7 @@
 
     /* OVERZICHT GRID */
     .overzicht-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-    .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:flex;flex-direction:column;justify-content:center;}
+    .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
     .overzicht-label{font-size:11px;color:#6b7585;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;font-weight:500;}
     .overzicht-waarde{font-size:15px;font-weight:600;color:#f0f0f0;line-height:1.3;}
 
@@ -516,48 +516,31 @@
 
     // KOOKTIPS
     const kookTips = [
-      {label:'Kooktip',tekst:'Bak champignons pas als de pan goed heet is. Dan bakken ze mooi bruin in plaats van zacht te worden.'},
-      {label:'Kooktip',tekst:'Voeg zout pas op het einde toe aan groente. Anders laten ze veel vocht los.'},
-      {label:'Kooktip',tekst:'Laat vlees na het bakken even rusten. Dan blijft het malser en sappiger.'},
-      {label:'Kooktip',tekst:'Gebruik genoeg water voor pasta. Te weinig water maakt het plakkerig.'},
-      {label:'Kooktip',tekst:'Een scheutje citroensap maakt veel gerechten frisser.'},
-      {label:'Kooktip',tekst:'Bak kip niet op te hoog vuur. Dan verbrandt de buitenkant sneller dan de binnenkant gaart.'},
-      {label:'Kooktip',tekst:'Kook rijst met de deksel op de pan voor een gelijkmatiger resultaat.'},
-      {label:'Kooktip',tekst:'Snij groenten ongeveer even groot zodat alles tegelijk gaar wordt.'},
-      {label:'Kooktip',tekst:'Gebruik een hete pan als je vlees of kip wilt bakken. Anders gaat het koken in plaats van bakken.'},
-      {label:'Kooktip',tekst:'Voeg knoflook pas later toe. Knoflook verbrandt snel.'},
-      {label:'Kooktip',tekst:'Proef je saus altijd voordat je extra zout toevoegt.'},
-      {label:'Kooktip',tekst:'Een beetje pastawater maakt saus vaak smeuïger.'},
-      {label:'Kooktip',tekst:'Bewaar verse kruiden in de koelkast in een glas met een klein laagje water.'},
-      {label:'Kooktip',tekst:'Droog vlees of vis eerst af met keukenpapier voor een beter korstje.'},
-      {label:'Kooktip',tekst:'Roer niet constant in champignons. Dan bakken ze mooier.'},
-      {label:'Kooktip',tekst:'Een deksel op de pan scheelt vaak veel kooktijd.'},
-      {label:'Kooktip',tekst:'Kaas raspt makkelijker als hij koud is.'},
-      {label:'Kooktip',tekst:'Kook broccoli niet te lang. Dan blijft hij steviger en voller van smaak.'},
-      {label:'Kooktip',tekst:'Gebruik olie die geschikt is voor hoge temperaturen als je hard wilt bakken.'},
-      {label:'Kooktip',tekst:'Laat een pan eerst goed heet worden voordat je ingrediënten toevoegt.'},
-      {label:'Kooktip',tekst:'Te veel tegelijk in een pan zorgt ervoor dat eten minder goed bakt.'},
-      {label:'Kooktip',tekst:'Voeg kruiden rustig toe en proef tussendoor.'},
-      {label:'Kooktip',tekst:'Een beetje zuur, zoals citroen of azijn, maakt eten vaak frisser.'},
-      {label:'Kooktip',tekst:'Bak ui rustig op middelhoog vuur voor meer smaak.'},
-      {label:'Kooktip',tekst:'Gebruik niet te weinig olie bij het bakken. Dan plakken ingrediënten sneller vast.'},
-      {label:'Kooktip',tekst:'Restjes rijst zijn vaak perfect voor een snelle wokschotel.'},
-      {label:'Kooktip',tekst:'Snij kipfilet na het bakken in plakjes om te controleren of hij gaar is.'},
-      {label:'Kooktip',tekst:'Kook pasta liever iets korter dan te lang. De saus gaart vaak nog iets mee.'},
-      {label:'Kooktip',tekst:'Gebruik een grote pan voor pasta zodat het minder plakt.'},
+      {label:'Kooktip',tekst:'Rijst van gisteren bakt veel beter dan verse rijst.'},
+      {label:'Kooktip',tekst:'Champignons bakken beter als je ze niet meteen roert.'},
+      {label:'Kooktip',tekst:'Een volle pan bakt minder goed. Bak liever in delen.'},
+      {label:'Kooktip',tekst:'Koude kaas raspt makkelijker dan kaas op kamertemperatuur.'},
+      {label:'Kooktip',tekst:'Een deksel op de pan scheelt vaak minuten kooktijd.'},
+      {label:'Kooktip',tekst:'Wraps worden zachter als je ze kort verwarmt in een droge pan.'},
+      {label:'Kooktip',tekst:'Laat vlees na het bakken even rusten. Dan blijft het sappiger.'},
+      {label:'Kooktip',tekst:'Bak kip niet op te hoog vuur. Dan verbrandt de buitenkant voor de binnenkant gaar is.'},
+      {label:'Kooktip',tekst:'Droog vlees of vis eerst af met keukenpapier. Dan bakt het beter aan.'},
+      {label:'Kooktip',tekst:'Gebruik ruim water voor pasta. Dan plakt het minder.'},
+      {label:'Kooktip',tekst:'Kook broccoli niet te lang. Dan blijft hij knapperiger.'},
+      {label:'Kooktip',tekst:'Knoflook verbrandt snel. Voeg het pas toe als de ui zacht is.'},
+      {label:'Kooktip',tekst:'Voeg zout pas op het einde toe aan groente. Anders laat het veel vocht los.'},
+      {label:'Kooktip',tekst:'Een scheutje citroensap vlak voor het serveren maakt bijna elk gerecht frisser.'},
+      {label:'Kooktip',tekst:'Gebruik niet te weinig olie. Dan plakken ingrediënten sneller vast.'},
+      {label:'Kooktip',tekst:'Rijst wordt minder plakkerig als je hem voor het koken even afspoelt.'},
       {label:'Wist je dat',tekst:'Tomaten verliezen smaak in de koelkast.'},
-      {label:'Wist je dat',tekst:'Restjes zijn de volgende dag vaak nog lekkerder.'},
-      {label:'Wist je dat',tekst:'Rijst wordt minder plakkerig als je hem eerst afspoelt.'},
-      {label:'Wist je dat',tekst:'Een pan die te vol zit bakt minder goed.'},
-      {label:'Wist je dat',tekst:'De meeste mensen gebruiken te weinig zout in pastawater.'},
-      {label:'Wist je dat',tekst:'Kip is gaar als de binnenkant niet meer roze is.'},
-      {label:'Wist je dat',tekst:'Broccoli uit de oven smaakt heel anders dan gekookte broccoli.'},
       {label:'Wist je dat',tekst:'Pasta gaart nog iets door nadat je hem hebt afgegoten.'},
-      {label:'Wist je dat',tekst:'Warm eten lijkt vaak zouter dan koud eten.'},
+      {label:'Wist je dat',tekst:'Versgemalen peper geeft meer smaak dan peper uit een potje.'},
+      {label:'Wist je dat',tekst:'Kip is gaar als de binnenkant niet meer roze is.'},
+      {label:'Wist je dat',tekst:'Een pan die te vol zit, bakt minder goed.'},
+      {label:'Wist je dat',tekst:'Rijst kun je na het koken het beste even laten rusten met de deksel erop.'},
       {label:'Wist je dat',tekst:'Champignons verliezen veel vocht als de pan niet heet genoeg is.'},
-      {label:'Wist je dat',tekst:'Een deksel op de pan kan kooktijd flink verkorten.'},
-      {label:'Wist je dat',tekst:'Versgemalen peper geeft meer smaak dan voorgemalen peper.'},
-      {label:'Wist je dat',tekst:'Rijst kun je na het koken het beste kort laten rusten met de deksel erop.'},
+      {label:'Wist je dat',tekst:'Verse kruiden bewaar je het langst in een glas water in de koelkast.'},
+      {label:'Wist je dat',tekst:'Broccoli uit de oven smaakt heel anders dan gekookte broccoli.'},
     ];
     const tips = [...kookTips].sort(() => Math.random() - 0.5);
 
@@ -924,6 +907,14 @@
             r = r.replace(/normaal moeite niveau/gi, 'Past bij je gekozen moeite.');
             r = r.replace(/ruim binnen tijd/gi, 'Past binnen je gekozen tijd.');
             r = r.replace(/sterke voorraadbewegingen/gi, '');
+        r = r.replace(/\bafkruid\b/gi, 'bestrooi met');
+        r = r.replace(/breng aan de kook op hoog/gi, 'breng aan de kook');
+        r = r.replace(/moeite ['"']?normaal['"']?:?\s*\d+\s*concrete stappen?\.?/gi, '');
+        r = r.replace(/moeite ['"']?bijna niks['"']?:?\s*\d+\s*concrete stappen?\.?/gi, '');
+        r = r.replace(/moeite ['"']?echt koken['"']?:?\s*\d+\s*concrete stappen?\.?/gi, '');
+        r = r.replace(/\bop hoog vuur\b/gi, 'op hoog vuur');
+        r = r.replace(/airtight container/gi, 'afgesloten container');
+        r = r.replace(/luchtfriet/gi, 'airfryer');
             return r.trim();
           })
           .filter(r => r.length > 2 && !verboden.some(v => r.toLowerCase().includes(v)));
@@ -1109,7 +1100,7 @@
           ${Array.isArray(s.vervangingen) && s.vervangingen.length > 0 ? `
           <div class="tips-blok">
             <div class="tips-blok-titel">↔ Handige vervangingen</div>
-            ${s.vervangingen.map(v => `<div class="tip-item"><span class="tip-dot">→</span>${v}</div>`).join('')}
+            ${s.vervangingen.map(v => `<div class="tip-item"><span class="tip-dot">•</span>${v}</div>`).join('')}
           </div>` : ''}
           ${s.restjes ? `
           <div class="restjes-blok">
