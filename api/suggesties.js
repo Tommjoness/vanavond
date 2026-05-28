@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { ingredienten, ingredientLijst, tijd, personen, moeite, doel, boodschappen, geenZinIn, profiel, verfijn } = req.body;
+  const { ingredienten, ingredientLijst, tijd, personen, moeite, doel, doelFilters, boodschappen, geenZinIn, profiel, verfijn } = req.body;
 
   if (!ingredienten || !tijd || !personen || !moeite || !doel) {
     return res.status(400).json({ error: 'Verplichte velden ontbreken' });
@@ -62,7 +62,8 @@ export default async function handler(req, res) {
   const nooitGebruiken = profiel?.nooitGebruiken || '';
   const kookniveau = profiel?.kookniveau || 'gemiddeld';
   const verfijnInstructie = verfijn ? `\nVERFIJNING: ${verfijn}` : '';
-  const wilMindaAfwas = (verfijn && verfijn.toLowerCase().includes('afwas')) || (Array.isArray(geenZinIn) && geenZinIn.includes('geen afwas'));
+  const actieveFilters = Array.isArray(doelFilters) ? doelFilters : (doel ? [doel] : []);
+  const wilMindaAfwas = (verfijn && verfijn.toLowerCase().includes('afwas')) || actieveFilters.includes('minder afwas');
   const geenZinInRegel = Array.isArray(geenZinIn) && geenZinIn.length > 0 ? `\nGEEN ZIN IN (strikt vermijden): ${geenZinIn.join(', ')}` : '';
 
   const boodschappenRegel = boodschappen === 'nee' ? 'Geen ontbrekende hoofdingrediënten toegestaan. Alleen basisvoorraad.' :
@@ -104,7 +105,7 @@ NOOIT GEBRUIKEN: ${nooitGebruiken || 'niets'}
 ${geenZinInRegel}
 
 FILTERLOGICA — VASTE DREMPELWAARDEN (altijd toepassen, niet optioneel):
-Gekozen doel: "${doel}"
+Gekozen filters (combineer als voorkeuren, niet als harde eisen): "${actieveFilters.join(', ')}"
 - "gezond": min 120g groente per portie, geen frituur, gebalanceerde macros
 - "makkelijk en vullend": warm/vullend, pasta/rijst/aardappel/romige saus of ovengerecht
 - "eiwitrijk": minimaal 30g eiwit per portie, duidelijke eiwitbron
@@ -255,13 +256,15 @@ GRAMMATICA EN STIJL — VERPLICHT:
 - matchUitleg, korteBeschrijving, waaromSlim en restjes.idee zijn volledige zinnen met punt aan het einde.
 - matchRedenen zijn korte fragmenten zonder punt (worden als chips getoond).
 - VERBODEN als matchReden: "Eenpans(schaal)gerecht", "Normaal moeite niveau", "Ruim binnen tijd", "Sterke voorraadbewegingen", vage of AI-achtige teksten.
-- GOED als matchReden: "42g eiwit per portie", "Klaar in 25 minuten", "Alles in huis", "Weinig afwas", "Veel groente", "Past binnen je gekozen tijd".
+- GOED als matchReden: "42g eiwit per portie", "Klaar in 25 minuten", "Alles in huis", "Weinig afwas", "Veel groente", "Past bij je gekozen filters".
+- Als filters zijn meegegeven: noem in matchUitleg welke filters goed worden geraakt.
 
 TAALREGELS — KRITIEK:
 - Schrijf ALLEEN in het Nederlands. Geen Engelse woorden.
 - VERBODEN: "minced", "prep", "cook", "medium heat", "serve", "ready", "heat", "add", "stir", "garnish", "topping", "meal prep"
 - GOED: "fijngehakt", "voorbereiden", "koken", "middelhoog vuur", "serveren", "klaar", "verhit", "voeg toe", "roer", "werk af met", "bestrooi met"
 - FOUT: "Kip uit pan, even rustend." / "Zout en peper afmaken." / "gaar voelt" / "flinke snuf" / "bakken totdat bruin"
+ZACHTE TAAL: Vermijd "serveer onmiddellijk", "moet", "onmiddellijk". Gebruik liever "lekkerst als je het meteen eet", "je kunt", "bewaar maximaal".
 - GOED: "Haal de kip uit de pan en laat kort rusten." / "Breng op smaak met zout en peper." / "vanbinnen niet meer roze" / "bak goudbruin"
 - GEEN kookblogtaal: niet "culinair", "smaakexplosie", "perfect gebalanceerd", "heerlijke bite"
 - GEEN mechanische opsommingen die klinken als AI-output
@@ -316,7 +319,7 @@ BADGES (alleen tonen als ze echt kloppen):
 - "Minste afwas": laagste pan-count in de set
 - Een recept met 3+ pannen mag NOOIT "Snelste keuze" of "Minste afwas" krijgen
 
-WAAROM DIT SLIM IS: alleen concrete, data-gedreven redenen.
+WAAROM DIT PAST: alleen concrete, begrijpelijke redenen.
 - Gebruik nooit "weinig afwas" als er 2+ pannen zijn
 - Gebruik nooit "snel" als totale tijd hoog is
 - Gebruik nooit "alles in huis" als er iets ontbreekt
@@ -385,7 +388,7 @@ Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
   "stappen": [{"titel": "Rijst koken", "uitleg": "Breng een pan water aan de kook. Voeg de rijst toe en kook 15 minuten."}],
   "smaakUpgrades": ["string"],
   "vervangingen": ["string"],
-  "waaromSlim": ["Klaar in 25 minuten", "Gebruikt 2 pannen", "Bevat 42g eiwit per portie"],
+  "waaromPast": ["Klaar in 25 minuten", "Gebruikt 2 pannen", "Bevat 42g eiwit per portie"],
   "restjes": {"idee": "string", "bewaren": "string", "invriezen": false},
   "badge": "gezond",
   "extraBadges": [],
@@ -393,7 +396,7 @@ Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
 }]`;
 
   const gebruikersBericht = `Voorraad: ${ingredienten}
-Tijd: ${tijd} min | Personen: ${personen} | Moeite: ${moeite} | Doel: ${doel}
+Tijd: ${tijd} min | Personen: ${personen} | Moeite: ${moeite} | Filters: ${actieveFilters.join(', ') || 'maakt niet uit'}
 Boodschappen: ${boodschappen || 'paar dingen oké'}
 Geen zin in: ${Array.isArray(geenZinIn) && geenZinIn.length > 0 ? geenZinIn.join(', ') : 'niets'}
 Allergieën: ${allergienen.join(', ') || 'geen'}
@@ -489,7 +492,8 @@ Beoordeel eerlijk. Geef JSON:
       // Grammatica: volledige zinnen krijgen punt
       if (s.korteBeschrijving) s.korteBeschrijving = metPunt(s.korteBeschrijving);
       if (s.matchUitleg) s.matchUitleg = metPunt(s.matchUitleg);
-      if (Array.isArray(s.waaromSlim)) s.waaromSlim = s.waaromSlim.map(metPunt);
+      if (Array.isArray(s.waaromSlim)) if (Array.isArray(s.waaromSlim)) s.waaromSlim = s.waaromSlim.map(metPunt);
+      if (Array.isArray(s.waaromPast)) s.waaromPast = s.waaromPast.map(metPunt);
       if (s.restjes?.idee) s.restjes.idee = metPunt(s.restjes.idee);
       if (s.restjes?.bewaren) s.restjes.bewaren = metPunt(s.restjes.bewaren);
 
@@ -558,8 +562,9 @@ Beoordeel eerlijk. Geef JSON:
       ])];
 
       // Corrigeer waaromSlim: verwijder claims die niet kloppen
-      if (Array.isArray(s.waaromSlim)) {
-        s.waaromSlim = s.waaromSlim.filter(w => {
+      const waarom = s.waaromPast || s.waaromSlim;
+      if (Array.isArray(waarom)) {
+        const gefilterd = waarom.filter(w => {
           const wl = w.toLowerCase();
           if (wl.includes('weinig afwas') && onderdelen.length >= 3) return false;
           if (wl.includes('1 pan') && panCount >= 2) return false;
