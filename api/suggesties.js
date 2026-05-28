@@ -149,19 +149,39 @@ NIET bij: droge rijst, pasta, blik, kruidenpotjes, olie, zout, diepvries.
 Veld: "versProduct": true/false
 Veld: "versProductItems": ["zalm", "broccoli"]
 
-MATCHSCORE (0-100) — realistisch, niet alleen op "alles in huis":
+MATCHSCORE (0-100) — realistisch, eerlijk, geen nep-perfectie:
 - ingrediënten in huis: max 35pt
 - past binnen tijd: max 20pt
-- past bij doel (gezond/comfort/protein): max 15pt
+- past bij doel: max 15pt
 - weinig afwas: max 10pt
 - gebruikt verse/bederfelijke items: max 10pt
-- goede voedingsbalans (eiwit + groente): max 10pt
+- goede voedingsbalans: max 10pt
 Verlaag score bij:
 - geen groente: -15pt
 - geen eiwit: -15pt
-- meer pannen dan gebruiker wil bij "bijna niks" of "minder afwas": -10pt
+- meer pannen bij "bijna niks": -10pt
 - recept buiten tijd: -20pt
-Labels: 90-100=Sterke match, 75-89=Goede match, 60-74=Redelijke match, 40-59=Noodoptie
+- niet bij gekozen doel: -20pt
+SCOREGRENZEN: Bijna nooit boven 92%. Gebruik realistische spreiding: 65-75=redelijk, 75-85=sterk, 85-92=zeer sterk.
+Labels: 85-92=Sterke match, 70-84=Goede match, 60-69=Redelijke match, 40-59=Noodoptie
+
+NEPPE PRECISIE VERBODEN:
+- Schrijf voedingswaarden altijd met "±": "±42g eiwit", "±480 kcal"
+- Matchscores nooit als schijnprecisie: 87% is beter dan 87.3%
+- Nooit exacte gram-waarden in matchRedenen: gebruik "veel eiwit" of "±40g eiwit"
+
+MATCHUITLEG: Kort en menselijk. Max 1-2 zinnen.
+- Niet: "Dit recept voldoet volledig aan je wensen en combineert optimaal..."
+- Wel: "Alles in huis, snel klaar en veel eiwit."
+- Wel: "Gebruikt 5 van je ingrediënten en klaar in 20 minuten."
+
+SLIMME REDEN (veld "slimmeReden"): Één korte zin onder de titel waarom dit recept past.
+Voorbeelden:
+- "Gebruikt 6 van je ingrediënten."
+- "Minste afwas van alle opties."
+- "Klaar terwijl de rijst kookt."
+- "Geen extra boodschappen nodig."
+Max 8 woorden, geen punt als het kort genoeg is.
 
 MOEITE "${moeite}": max ${maxStappen} stappen
 ${moeite === 'bijna niks' ? '- Max 1 pan, geen snijwerk, zo min mogelijk handelingen' : ''}
@@ -283,9 +303,9 @@ WAAROM DIT SLIM IS: alleen concrete, data-gedreven redenen.
 - Gebruik altijd concrete getallen: "Bevat 38g eiwit per portie", "Klaar in 20 minuten", "Gebruikt 1 pan"
 
 VARIATIE — KRITIEK: De 5 suggesties moeten TOTAAL verschillend zijn van elkaar.
-VERBODEN: 2+ suggesties met hetzelfde hoofdingrediënt EN bereiding (bijv. niet 2x kip met rijst).
-Forceer variatie in bereiding: kies uit pasta, wrap, rijstgerecht, ovenschotel, salade, bowl, roerbak, soep, loaded aardappels, noedelgerecht, omelet.
-Gerechtstijlen moeten onderling afwisselen: niet 3x "gebakken X met rijst".
+VERBODEN: 2+ suggesties met hetzelfde hoofdingrediënt EN bereiding.
+Forceer variatie: kies uit pasta, wrap, rijstgerecht, ovenschotel, salade, bowl, roerbak, soep, couscous, aardappel, traybake, stamppot, noedelgerecht, omelet.
+Gerechtstijlen onderling afwisselen. Niet 3x "gebakken X met rijst".
 
 1. hoofd rol "Snelste keuze" isExtra:false — echt snelste, zo min mogelijk stappen
 2. hoofd rol "Gezondste keuze" isExtra:false — meeste groente, goede balans
@@ -306,10 +326,11 @@ Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
   "rol": "Snelste keuze",
   "isExtra": false,
   "korteBeschrijving": "string",
-  "matchScore": 87,
+  "slimmeReden": "Gebruikt 5 van je ingrediënten",
+  "matchScore": 82,
   "matchLabel": "Goede match",
-  "matchUitleg": "string",
-  "matchRedenen": ["string"],
+  "matchUitleg": "Alles in huis en snel klaar.",
+  "matchRedenen": ["Alle ingrediënten in huis", "Klaar in 25 min"],
   "versProduct": false,
   "versProductItems": [],
   "negeerMeldingen": [],
@@ -320,7 +341,7 @@ Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
   "allesinHuis": true,
   "bereidingstijd": "25 minuten",
   "actieveKooktijd": "15 minuten",
-  "afwasNiveau": "2 pannen",
+  "afwasNiveau": "1 pan",
   "apparatuurGebruikt": ["kookplaat"],
   "porties": 2,
   "voeding": {
