@@ -958,6 +958,10 @@
             r = r.replace(/ruim binnen tijd/gi, 'Past binnen je gekozen tijd.');
             r = r.replace(/sterke voorraadbewegingen/gi, '');
         r = r.replace(/\bafkruid\b/gi, 'bestrooi met');
+        // Voorkomen dat noodles wordt gebruikt voor pasta
+        r = r.replace(/\bnoodles\b/gi, 'pasta');
+        r = r.replace(/\bnoedels van macaroni\b/gi, 'macaroni');
+        r = r.replace(/\bnoedels van penne\b/gi, 'penne');
         r = r.replace(/\bsqueeze\b/gi, 'scheutje');
         r = r.replace(/\bhigh protein\b/gi, 'eiwitrijk');
         r = r.replace(/\bcomfort\b/gi, 'makkelijk en vullend');
