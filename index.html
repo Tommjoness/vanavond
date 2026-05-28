@@ -690,7 +690,7 @@
         clearInterval(interval);
         if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
         toonScherm('screen-invoer');
-        errorEl.textContent = err.message || 'Er ging iets mis. Probeer het opnieuw.';
+        errorEl.textContent = 'Suggesties laden lukt niet. Controleer je verbinding en probeer opnieuw.';
         errorEl.style.display = 'block';
       }
     }
@@ -935,6 +935,17 @@
     function toonResultaten() {
       const container = document.getElementById('suggesties-container');
       container.innerHTML = '';
+
+      // Filter: toon alleen suggesties met matchScore >= 60
+      const goeie = state.suggesties.filter(s => !s.matchScore || s.matchScore >= 60);
+      if (goeie.length === 0) {
+        container.innerHTML = '<div class="warn-box">Geen sterke suggesties gevonden. Probeer andere filters of voeg meer ingrediënten toe.</div>';
+        toonScherm('screen-resultaten');
+        return;
+      }
+      // Vervang state.suggesties tijdelijk met gefilterde versie voor de kaarten
+      const origineel = state.suggesties;
+      state.suggesties = goeie;
       const hoofd = state.suggesties.filter(s => !s.isExtra);
       const extra = state.suggesties.filter(s => s.isExtra);
       hoofd.forEach((s, i) => container.appendChild(maakKaart(s, state.suggesties.indexOf(s), i === 0)));
@@ -949,6 +960,7 @@
         extra.forEach(s => kaarten.appendChild(maakKaart(s, state.suggesties.indexOf(s), false)));
         wrapper.appendChild(btn); wrapper.appendChild(kaarten); container.appendChild(wrapper);
       }
+      state.suggesties = origineel;
       toonScherm('screen-resultaten');
     }
 
