@@ -85,19 +85,24 @@
     .verfijn-btn:active{background:var(--bg3);}
 
     /* KAARTEN */
-    .result-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;transition:border-color 0.15s;}
+    .result-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;transition:border-color 0.15s,transform 0.15s;animation:fadeIn 0.3s ease;}
+    .result-card:active{transform:scale(0.99);}
     .result-card.top-keuze{border-color:rgba(232,193,112,0.3);}
     .result-card.gebruik-eerst{border-color:var(--amber);}
+    .kaart-foto{width:100%;height:160px;background:var(--bg3);background-size:cover;background-position:center;opacity:0;transition:opacity 0.5s ease;}
+    .kaart-foto.geladen{opacity:1;}
+    .kaart-body{padding:16px 18px 18px;}
     .result-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
     .result-badges-top{display:flex;gap:5px;flex-wrap:wrap;flex:1;}
     .gebruik-eerst-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;background:rgba(232,168,56,0.15);color:var(--amber);}
     .rol-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;background:rgba(155,127,212,0.15);color:var(--purple);}
     .match-score{font-size:13px;font-weight:700;white-space:nowrap;margin-left:8px;flex-shrink:0;}
-    .result-naam{font-size:17px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:5px;}
-    .result-beschrijving{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px;}
+    .result-naam{font-size:18px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:5px;letter-spacing:-0.3px;}
+    .result-beschrijving{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px;}
+    .kaart-mist{font-size:12px;color:var(--amber);margin-bottom:10px;background:rgba(232,168,56,0.08);padding:5px 10px;border-radius:var(--radius-xs);display:inline-block;}
     .result-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-    .result-btn{width:100%;background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px;color:var(--text);font-size:14px;font-weight:500;cursor:pointer;text-align:center;transition:all 0.15s;}
-    .result-btn:active{background:var(--bg3);}
+    .result-btn{width:100%;background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);padding:11px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.15s;}
+    .result-btn:active{background:var(--accent2);}
     .extra-btn{width:100%;background:transparent;border:1px solid var(--border);border-radius:var(--radius);padding:13px;color:var(--text2);font-size:14px;cursor:pointer;margin:4px 0 12px;text-align:center;}
     .extra-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;margin-top:4px;}
     .opnieuw-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;color:var(--text2);font-size:14px;cursor:pointer;margin-top:8px;}
@@ -123,8 +128,8 @@
     .match-score-groot{font-size:26px;font-weight:700;}
     .match-label-tekst{font-size:12px;color:var(--text2);line-height:1.4;}
     .match-uitleg{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:8px;}
-    .match-redenen{display:flex;flex-wrap:wrap;gap:6px;}
-    .match-reden{font-size:11px;color:var(--text3);background:var(--bg3);border-radius:100px;padding:3px 8px;}
+    .match-redenen{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .match-reden{font-size:12px;font-weight:500;color:#c8cdd4;background:#2a2f38;border:1px solid rgba(255,255,255,0.18);border-radius:100px;padding:5px 12px;line-height:1.4;}
     .gebruik-slim-blok{background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.2);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--amber);line-height:1.5;}
 
     /* NEGEER MELDINGEN */
@@ -161,9 +166,11 @@
 
     /* BEREIDING */
     .stap-list{list-style:none;}
-    .stap-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.7;color:var(--text2);}
+    .stap-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.7;}
     .stap-item:last-child{border-bottom:none;}
     .stap-num{width:26px;height:26px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text2);flex-shrink:0;margin-top:2px;}
+    .stap-titel{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+    .stap-uitleg{font-size:14px;color:var(--text2);line-height:1.7;}
 
     /* VOEDING */
     .voeding-disclaimer{font-size:11px;color:var(--text3);margin-bottom:12px;line-height:1.4;}
@@ -308,7 +315,24 @@
         <div class="pill" data-group="doel" data-value="comfort">Comfort</div>
         <div class="pill" data-group="doel" data-value="high protein">High protein</div>
         <div class="pill" data-group="doel" data-value="budget">Budget</div>
+        <div class="pill" data-group="doel" data-value="licht eten">Licht eten</div>
+        <div class="pill" data-group="doel" data-value="katerproof">Katerproof</div>
+        <div class="pill" data-group="doel" data-value="kindvriendelijk">Kindvriendelijk</div>
+        <div class="pill" data-group="doel" data-value="koolhydraatarm">Koolhydraatarm</div>
         <div class="pill" data-group="doel" data-value="restjes opmaken">Restjes opmaken</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="section-label">Geen zin in…</div>
+      <div class="pill-grid">
+        <div class="pill" data-group="geenZinIn" data-value="geen oven" data-multi="true">🚫 Oven</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen snijwerk" data-multi="true">🚫 Snijwerk</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen rijst" data-multi="true">🚫 Rijst</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen pasta" data-multi="true">🚫 Pasta</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen pittig" data-multi="true">🚫 Pittig</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen vis" data-multi="true">🚫 Vis</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen afwas" data-multi="true">🚫 Afwas</div>
       </div>
     </div>
 
@@ -428,7 +452,7 @@
   <script>
     const state = {
       tijd:null, personen:null, moeite:null, doel:null, boodschappen:'paar',
-      apparatuur:['kookplaat'], allergienen:[], kookniveau:null,
+      apparatuur:['kookplaat'], allergienen:[], kookniveau:null, geenZinIn:[],
       ingredientChips:[], suggesties:[], lastRequest:null
     };
 
@@ -574,6 +598,7 @@
         ingredientLijst: state.ingredientChips.length > 0 ? state.ingredientChips : null,
         tijd: state.tijd, personen: state.personen, moeite: state.moeite, doel: state.doel,
         boodschappen: state.boodschappen || 'paar',
+        geenZinIn: state.geenZinIn,
         profiel: {
           apparatuur: state.apparatuur, allergienen: state.allergienen,
           kookniveau: state.kookniveau || 'gemiddeld',
@@ -605,6 +630,8 @@
           return;
         }
 
+        // Foto's laden op de achtergrond
+        laadFotos(data.suggesties);
         toonResultaten();
       } catch (err) {
         clearInterval(interval);
@@ -616,6 +643,25 @@
     }
 
     let beperktData = null;
+    const fotoCache = {};
+
+    async function laadFotos(suggesties) {
+      for (const s of suggesties) {
+        if (!s.fotoZoekterm || fotoCache[s.naam]) continue;
+        try {
+          const r = await fetch(`/api/foto?q=${encodeURIComponent(s.fotoZoekterm)}`);
+          if (!r.ok) continue;
+          const d = await r.json();
+          fotoCache[s.naam] = d.urlSmall || d.url;
+          // Update kaart als die al zichtbaar is
+          const fotoEl = document.getElementById(`foto-${s.naam.replace(/\s/g,'_')}`);
+          if (fotoEl) {
+            fotoEl.style.backgroundImage = `url(${fotoCache[s.naam]})`;
+            fotoEl.classList.add('geladen');
+          }
+        } catch(e) {}
+      }
+    }
 
     function toonBeperktVoorraad(data) {
       beperktData = data;
@@ -684,26 +730,48 @@
       if (s.versProduct) cardClass += ' gebruik-eerst';
       else if (isFirst) cardClass += ' top-keuze';
       card.className = cardClass;
-      const extra = Array.isArray(s.extraBadges) ? s.extraBadges.slice(0, 2).map(b => `<span class="tag tag-gray">${b}</span>`).join('') : '';
+
+      const fotoId = `foto-${s.naam.replace(/\s/g,'_')}`;
+      const fotoBg = fotoCache[s.naam] ? `style="background-image:url(${fotoCache[s.naam]})"` : '';
+      const fotoKlasse = fotoCache[s.naam] ? 'geladen' : '';
+
+      const nog = Array.isArray(s.nogNodig) ? s.nogNodig : [];
+      const nogNamen = nog.map(i => typeof i === 'object' ? i.naam : i);
+      const mistTekst = nog.length === 0 ? '' :
+        nog.length === 1 ? `<div class="kaart-mist">Mist alleen: <strong>${nogNamen[0]}</strong></div>` :
+        nog.length === 2 ? `<div class="kaart-mist">Mist: <strong>${nogNamen[0]} en ${nogNamen[1]}</strong></div>` :
+        `<div class="kaart-mist">Mist: <strong>${nogNamen.slice(0,-1).join(', ')} en ${nogNamen[nogNamen.length-1]}</strong></div>`;
+
+      const kcal = s.voeding?.perPortie?.kcal;
+      const eiwit = s.voeding?.perPortie?.proteinen;
+      const voedingBadge = kcal ? `<span class="tag tag-gray">${kcal} kcal</span>${eiwit ? `<span class="tag tag-gray">${eiwit}g eiwit</span>` : ''}` : '';
+
+      const extra = Array.isArray(s.extraBadges) ? s.extraBadges.slice(0,1).map(b=>`<span class="tag tag-gray">${b}</span>`).join('') : '';
       const score = s.matchScore ? `<span class="match-score" style="color:${matchKleur(s.matchScore)}">Match ${s.matchScore}%</span>` : '';
+
       card.innerHTML = `
-        <div class="result-card-top">
-          <div class="result-badges-top">
-            ${s.versProduct ? '<span class="gebruik-eerst-badge">Versproduct • beperkt houdbaar</span>' : ''}
-            ${s.rol ? `<span class="rol-badge">${s.rol}</span>` : ''}
+        <div id="${fotoId}" class="kaart-foto ${fotoKlasse}" ${fotoBg}></div>
+        <div class="kaart-body">
+          <div class="result-card-top">
+            <div class="result-badges-top">
+              ${s.versProduct ? '<span class="gebruik-eerst-badge">Versproduct • beperkt houdbaar</span>' : ''}
+              ${s.rol ? `<span class="rol-badge">${s.rol}</span>` : ''}
+            </div>
+            ${score}
           </div>
-          ${score}
+          <div class="result-naam">${s.naam}</div>
+          <div class="result-beschrijving">${s.korteBeschrijving}</div>
+          ${mistTekst}
+          <div class="result-meta">
+            <span class="tag tag-gray">⏱ ${s.bereidingstijd}</span>
+            <span class="tag tag-gray">🍳 ${s.afwasNiveau}</span>
+            ${nog.length === 0 ? '<span class="tag tag-green">Alles in huis</span>' : `<span class="tag tag-amber">Nog ${nog.length} nodig</span>`}
+            ${badgeHtml(s.badge)}
+            ${voedingBadge}
+            ${extra}
+          </div>
+          <button class="result-btn" onclick="toonDetail(${index})">Bekijk recept →</button>
         </div>
-        <div class="result-naam">${s.naam}</div>
-        <div class="result-beschrijving">${s.korteBeschrijving}</div>
-        <div class="result-meta">
-          <span class="tag tag-gray">⏱ ${s.bereidingstijd}</span>
-          <span class="tag tag-gray">🍳 ${s.afwasNiveau}</span>
-          ${nogNodigBadge(s)}
-          ${badgeHtml(s.badge)}
-          ${extra}
-        </div>
-        <button class="result-btn" onclick="toonDetail(${index})">Bekijk recept →</button>
       `;
       return card;
     }
@@ -738,6 +806,13 @@
       </li>`;
     }
 
+
+    function lijstNaarZin(items) {
+      if (!items || items.length === 0) return '';
+      if (items.length === 1) return items[0];
+      if (items.length === 2) return items[0] + ' en ' + items[1];
+      return items.slice(0, -1).join(', ') + ' en ' + items[items.length - 1];
+    }
     function toonDetail(index) {
       const s = state.suggesties[index];
       const container = document.getElementById('detail-container');
@@ -789,12 +864,12 @@
 
         ${s.versProduct && Array.isArray(s.versProductItems) && s.versProductItems.length > 0 ? `
         <div class="gebruik-slim-blok">
-          🌿 Dit recept gebruikt verse ingrediënten die minder lang houdbaar zijn: <strong>${s.versProductItems.join(', ')}</strong>
+          🌿 Dit recept gebruikt verse ingrediënten die minder lang houdbaar zijn: <strong>${lijstNaarZin(s.versProductItems)}.</strong>
         </div>` : ''}
 
         ${nogNodig.length > 0 ? `
         <div class="nog-nodig-alert">
-          <strong>Nog nodig:</strong> ${nogNodig.map(i => typeof i === 'object' ? `${i.naam} (${i.hoeveelheid})` : i).join(', ')}
+          <strong>Nog nodig:</strong> ${lijstNaarZin(nogNodig.map(i => typeof i === 'object' ? i.hoeveelheid ? `${i.naam} (${i.hoeveelheid})` : i.naam : i))}.
         </div>` : ''}
 
         <!-- OVERZICHT GRID -->
@@ -829,9 +904,17 @@
 
         <!-- TAB: BEREIDING -->
         <div id="tab-ber-${index}" class="tab-content">
-          <ol class="stap-list">${Array.isArray(s.stappen) ? s.stappen.map((stap, i) =>
-            `<li class="stap-item"><div class="stap-num">${i + 1}</div><div>${stap}</div></li>`
-          ).join('') : ''}</ol>
+          <ol class="stap-list">${Array.isArray(s.stappen) ? s.stappen.map((stap, i) => {
+            const titel = typeof stap === 'object' && stap.titel ? stap.titel : '';
+            const uitleg = typeof stap === 'object' && stap.uitleg ? stap.uitleg : (typeof stap === 'string' ? stap : '');
+            return `<li class="stap-item">
+              <div class="stap-num">${i + 1}</div>
+              <div>
+                ${titel ? `<div class="stap-titel">${titel}</div>` : ''}
+                <div class="stap-uitleg">${uitleg}</div>
+              </div>
+            </li>`;
+          }).join('') : ''}</ol>
         </div>
 
         <!-- TAB: VOEDING -->
