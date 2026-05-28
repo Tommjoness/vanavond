@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { ingredienten, ingredientLijst, tijd, personen, moeite, doel, boodschappen, profiel, verfijn } = req.body;
+  const { ingredienten, ingredientLijst, tijd, personen, moeite, doel, boodschappen, geenZinIn, profiel, verfijn } = req.body;
 
   if (!ingredienten || !tijd || !personen || !moeite || !doel) {
     return res.status(400).json({ error: 'Verplichte velden ontbreken' });
@@ -37,7 +37,8 @@ export default async function handler(req, res) {
   const nooitGebruiken = profiel?.nooitGebruiken || '';
   const kookniveau = profiel?.kookniveau || 'gemiddeld';
   const verfijnInstructie = verfijn ? `\nVERFIJNING: ${verfijn}` : '';
-  const wilMindaAfwas = verfijn && verfijn.toLowerCase().includes('afwas');
+  const wilMindaAfwas = (verfijn && verfijn.toLowerCase().includes('afwas')) || (Array.isArray(geenZinIn) && geenZinIn.includes('geen afwas'));
+  const geenZinInRegel = Array.isArray(geenZinIn) && geenZinIn.length > 0 ? `\nGEEN ZIN IN (strikt vermijden): ${geenZinIn.join(', ')}` : '';
 
   const boodschappenRegel = boodschappen === 'nee' ? 'Geen ontbrekende hoofdingrediënten toegestaan. Alleen basisvoorraad.' :
     boodschappen === 'een' ? 'Maximaal 1 ontbrekend ingrediënt per recept.' :
@@ -63,6 +64,12 @@ ${allergienen.length > 0 ? allergienen.join(', ') : 'geen beperkingen'}
 - schaaldierenallergie: geen garnalen/kreeft/krab
 - ei-allergie: geen eieren
 NOOIT GEBRUIKEN: ${nooitGebruiken || 'niets'}
+${geenZinInRegel}
+
+FOTOZOEKTERM: Geef per recept een Engelse zoekterm voor een donkere, sfeervolle food foto.
+Formaat: "[gerecht in het Engels] dark moody food photography"
+Voorbeeld: "chicken rice bowl dark moody food photography"
+Veld: "fotoZoekterm": "string"
 
 APPARATUUR: ${apparatuur.join(', ')}
 STRIKTE REGEL: Stel geen recept voor dat apparatuur gebruikt die niet in de lijst staat.
@@ -111,8 +118,66 @@ MOEITE "${moeite}": max ${maxStappen} stappen
 ${moeite === 'bijna niks' ? '- Max 1 pan, geen snijwerk, zo min mogelijk handelingen' : ''}
 ${wilMindaAfwas ? '- PRIORITEER recepten met 0-1 pan, vermijd meerdere pannen' : ''}
 
-STAPPEN: altijd vuurstand + minuten + gaarheidcheck. Geen vage termen.
-FOOD SAFETY: kip="geen roze meer zichtbaar", gehakt="volledig bruin", vis="valt makkelijk uit elkaar"
+GRAMMATICA EN STIJL — VERPLICHT:
+- Volledige zinnen eindigen altijd met een punt.
+- Opsommingen met 2 items: gebruik "en" — nooit een komma. Correct: "kipfilet en paprika." Fout: "kipfilet, paprika"
+- Opsommingen met 3+ items: komma's tussen items, "en" voor het laatste. Correct: "kip, paprika en rijst."
+- Geen dubbele benamingen: nooit "kip, kipfilet" — kies één naam die overeenkomt met de ingrediëntenlijst.
+- Correct meervoud: champignon→champignons, tomaat→tomaten, ui→uien, wortel→wortelen, paprika→paprika's, aardappel→aardappelen.
+- Ingrediëntnamen in teksten moeten exact overeenkomen met de naam in de ingrediëntenlijst van datzelfde recept.
+- Geen zinnen zonder werkwoord.
+- Hoofdletters: alleen aan het begin van een zin, niet willekeurig midden in een zin.
+- matchUitleg, korteBeschrijving, waaromSlim en restjes.idee zijn volledige zinnen met punt aan het einde.
+- matchRedenen zijn korte fragmenten zonder punt (worden als chips getoond).
+
+TAALREGELS — KRITIEK:
+- Schrijf ALLEEN in het Nederlands. Geen Engelse woorden.
+- VERBODEN: "minced", "prep", "cook", "medium heat", "serve", "ready", "heat", "add", "stir", "garnish", "topping", "meal prep"
+- GOED: "fijngehakt", "voorbereiden", "koken", "middelhoog vuur", "serveren", "klaar", "verhit", "voeg toe", "roer", "werk af met", "bestrooi met"
+- FOUT: "Kip uit pan, even rustend." / "Zout en peper afmaken." / "gaar voelt" / "flinke snuf" / "bakken totdat bruin"
+- GOED: "Haal de kip uit de pan en laat kort rusten." / "Breng op smaak met zout en peper." / "vanbinnen niet meer roze" / "bak goudbruin"
+- GEEN kookblogtaal: niet "culinair", "smaakexplosie", "perfect gebalanceerd", "heerlijke bite"
+- GEEN mechanische opsommingen die klinken als AI-output
+
+SMAAKUPGRADES — max 3, alleen echt nuttige tips:
+- Schrijf als concrete, korte zinnen. Niet als kreten.
+- FOUT: "Voeg kruiden toe", "Gebruik peper", "Maak het lekkerder"
+- GOED: "Een theelepel grove mosterd geeft meer diepte.", "Een scheutje citroensap maakt het direct frisser.", "Rooster de champignons iets langer voor meer smaak."
+- Respecteer allergieën en nooit-gebruiken.
+
+VERVANGINGEN — max 3, alleen logische en realistische opties:
+- Geef korte, menselijke uitleg: "iets sneller klaar", "meer vezels", "mildere smaak", "goedkoper alternatief"
+- FOUT: "Rijst → volkoren pasta (gelijktijdig koken)", "Kip → tofu (proteïnebron)"
+- GOED: "Geen rijst? Couscous is 5 minuten sneller klaar.", "Geen kipfilet? Kalkoenfilet werkt prima.", "Geen broccoli? Sperziebonen zijn een goed alternatief."
+- Geen technische kookinstructies als vervanging. Geen rare combinaties.
+
+RESTJES — menselijk en praktisch, geen robotische opsomming:
+- FOUT: "door rest rijst met yoghurt mengen", "max 2 dagen", "invriezen: geschikt"
+- GOED: "Ook lekker als lunch de volgende dag.", "Bewaar afgesloten in de koelkast, tot 2 dagen.", "Kan worden ingevroren."
+- Geef een concreet idee wat je ermee kunt (wrap, salade, soep, omelet, bowl)
+- Bewaaradvies realistisch: kip/vis max 2 dagen, groente max 3 dagen, pasta/rijst max 2 dagen
+
+STAPPENFORMAT — VERPLICHT:
+Elke stap bestaat uit twee velden: "titel" en "uitleg".
+De UI toont al een getal in een cirkel. Zet GEEN "1.", "Stap 1:" of nummers in de tekst zelf.
+
+STAP FORMAT:
+{"titel": "Rijst koken", "uitleg": "Breng een pan water aan de kook. Voeg de rijst toe en kook 15 tot 18 minuten tot de korrels zacht zijn."}
+
+NIET: {"titel": "1. Rijst koken", "uitleg": "Stap 1: Kook rijst..."}
+
+Tijdplanning in stappen: als dingen parallel kunnen, benoem dat expliciet:
+"Terwijl de rijst kookt, verhit je een tweede pan en bak je de kip."
+
+FOOD SAFETY — natuurlijk formuleren:
+- Kip: "Bak de kip 6 tot 8 minuten tot deze goudbruin is en vanbinnen niet meer roze."
+- Gehakt: "Bak het gehakt rul en volledig gaar, geen roze meer zichtbaar."
+- Vis: "Bak de vis 3 tot 4 minuten per kant tot deze makkelijk uit elkaar valt."
+
+HOEVEELHEDEN CONSISTENT: hoeveelheden in stappen moeten optellen tot precies wat in de ingrediëntenlijst staat.
+Als ingrediëntenlijst "2 el olie" zegt: gebruik in stappen samen ook exact 2 el, niet meer.
+
+STAPPEN: altijd vuurstand + minuten + gaarheidcheck. Max ${maxStappen} stappen.
 
 HOEVEELHEDEN/persoon: pasta/rijst 75-100g droog, vlees/vis 150-180g, groente 150-250g
 EENHEDEN: g, ml, stuks, el (eetlepel), tl (theelepel)
@@ -140,9 +205,6 @@ VARIATIE:
 ${verfijnInstructie}
 
 VOEDINGSWAARDEN: realistisch. per100g = (perPortie / portieGewicht) * 100. Afronden.
-SMAAKUPGRADES: max 3, respecteer allergieën en nooit-gebruiken.
-VERVANGINGEN: max 3, logisch, respecteer dieet.
-RESTJES: kip/vis max 2 dagen, groente max 3 dagen.
 
 Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
 
@@ -174,18 +236,20 @@ Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
     "perPortie": {"kcal": 480, "proteinen": 42, "koolhydraten": 22, "vetten": 18},
     "per100g": {"kcal": 137, "proteinen": 12, "koolhydraten": 6.3, "vetten": 5.1}
   },
-  "stappen": ["Stap 1 concreet."],
+  "stappen": [{"titel": "Rijst koken", "uitleg": "Breng een pan water aan de kook. Voeg de rijst toe en kook 15 minuten."}],
   "smaakUpgrades": ["string"],
   "vervangingen": ["string"],
   "waaromSlim": ["Klaar in 25 minuten", "Gebruikt 2 pannen", "Bevat 42g eiwit per portie"],
   "restjes": {"idee": "string", "bewaren": "string", "invriezen": false},
   "badge": "gezond",
-  "extraBadges": []
+  "extraBadges": [],
+  "fotoZoekterm": "chicken rice bowl dark moody food photography"
 }]`;
 
   const gebruikersBericht = `Voorraad: ${ingredienten}
 Tijd: ${tijd} min | Personen: ${personen} | Moeite: ${moeite} | Doel: ${doel}
 Boodschappen: ${boodschappen || 'paar dingen oké'}
+Geen zin in: ${Array.isArray(geenZinIn) && geenZinIn.length > 0 ? geenZinIn.join(', ') : 'niets'}
 Allergieën: ${allergienen.join(', ') || 'geen'}
 Nooit: ${nooitGebruiken || 'niets'}
 Kookniveau: ${kookniveau}
@@ -246,28 +310,53 @@ Beoordeel eerlijk. Geef JSON:
     if (!jsonMatch) throw new Error('Geen geldige JSON ontvangen');
     const suggesties = JSON.parse(jsonMatch[0]);
 
+    // Grammatica helpers
+    const lijstNaarZin = (items) => {
+      if (!items || items.length === 0) return '';
+      if (items.length === 1) return items[0];
+      if (items.length === 2) return `${items[0]} en ${items[1]}`;
+      return `${items.slice(0, -1).join(', ')} en ${items[items.length - 1]}`;
+    };
+    const metPunt = (s) => {
+      if (!s || typeof s !== 'string') return s;
+      const t = s.trim();
+      return ['.','!','?'].includes(t[t.length-1]) ? t : t + '.';
+    };
+
     // Server-side validatie: afwasNiveau corrigeren op basis van stappen
     suggesties.forEach(s => {
-      if (!Array.isArray(s.stappen)) return;
-      const stappen = s.stappen.join(' ').toLowerCase();
+      // Grammatica: volledige zinnen krijgen punt
+      if (s.korteBeschrijving) s.korteBeschrijving = metPunt(s.korteBeschrijving);
+      if (s.matchUitleg) s.matchUitleg = metPunt(s.matchUitleg);
+      if (Array.isArray(s.waaromSlim)) s.waaromSlim = s.waaromSlim.map(metPunt);
+      if (s.restjes?.idee) s.restjes.idee = metPunt(s.restjes.idee);
+      if (s.restjes?.bewaren) s.restjes.bewaren = metPunt(s.restjes.bewaren);
 
-      const heeftOven = ['oven', 'bakplaat', 'ovenschaal', 'verwarm de oven'].some(w => stappen.includes(w));
-      const heeftAirfryer = stappen.includes('airfryer');
-      const heeftMagnetron = stappen.includes('magnetron');
-      const heeftPan = stappen.includes('pan') || stappen.includes('pot') || stappen.includes('wok');
+      // versProductItems: gebruik 'en' voor laatste item
+      if (Array.isArray(s.versProductItems) && s.versProductItems.length > 0) {
+        s.versProductItems = s.versProductItems.filter((v, i, a) => a.indexOf(v) === i); // dedup
+      }
+
+      if (!Array.isArray(s.stappen)) return;
+      const stappenTekst = s.stappen.map(st => typeof st === 'object' ? `${st.titel || ''} ${st.uitleg || ''}` : st).join(' ').toLowerCase();
+
+      const heeftOven = ['oven', 'bakplaat', 'ovenschaal', 'verwarm de oven'].some(w => stappenTekst.includes(w));
+      const heeftAirfryer = stappenTekst.includes('airfryer');
+      const heeftMagnetron = stappenTekst.includes('magnetron');
+      const heeftPan = stappenTekst.includes('pan') || stappenTekst.includes('pot') || stappenTekst.includes('wok');
 
       let panCount = 0;
       if (heeftPan) {
         panCount = 1;
         const extraSignalen = ['tweede pan','aparte pan','andere pan','apart koken','apart bakken','kook de rijst','kook de pasta','kook de noedels','kook de aardappel','in een andere','in een tweede'];
-        if (extraSignalen.some(w => stappen.includes(w))) panCount++;
+        if (extraSignalen.some(w => stappenTekst.includes(w))) panCount++;
         const derdeSignalen = ['derde pan','nog een pan','ook apart','derde kookmoment'];
-        if (derdeSignalen.some(w => stappen.includes(w))) panCount++;
+        if (derdeSignalen.some(w => stappenTekst.includes(w))) panCount++;
       }
 
       let gecorrigeerd = s.afwasNiveau;
       if (heeftOven && !s.afwasNiveau.toLowerCase().includes('oven')) {
-        gecorrigeerd = stappen.includes('bakplaat') ? 'Oven + bakplaat' : 'Oven + ovenschaal';
+        gecorrigeerd = stappenTekst.includes('bakplaat') ? 'Oven + bakplaat' : 'Oven + ovenschaal';
       } else if (heeftAirfryer && !s.afwasNiveau.toLowerCase().includes('airfryer')) {
         gecorrigeerd = 'Airfryer';
       } else if (panCount >= 2 && (s.afwasNiveau === '1 pan' || s.afwasNiveau === '1 pan + snijplank')) {
