@@ -89,7 +89,8 @@
     .result-card:active{transform:scale(0.99);}
     .result-card.top-keuze{border-color:rgba(232,193,112,0.3);}
     .result-card.gebruik-eerst{border-color:var(--amber);}
-    .kaart-foto{width:100%;height:160px;background:var(--bg3);background-size:cover;background-position:center;opacity:0;transition:opacity 0.5s ease;}
+    .kaart-foto{width:100%;height:180px;min-height:180px;background:var(--bg3) center/cover no-repeat;opacity:0;transition:opacity 0.6s ease;display:block;}
+    .kaart-foto-placeholder{width:100%;height:180px;background:linear-gradient(135deg,#1a1f28 0%,#242b35 100%);display:flex;align-items:center;justify-content:center;font-size:32px;}
     .kaart-foto.geladen{opacity:1;}
     .kaart-body{padding:16px 18px 18px;}
     .result-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
@@ -129,7 +130,7 @@
     .match-label-tekst{font-size:13px;color:#c8cdd4;line-height:1.5;}
     .match-uitleg{font-size:13px;color:#c0c6ce;line-height:1.6;margin-bottom:10px;}
     .match-redenen{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
-    .match-reden{font-size:12px;font-weight:500;color:#dde1e8;background:#2e3540;border:1px solid rgba(255,255,255,0.22);border-radius:100px;padding:6px 14px;line-height:1.4;letter-spacing:0.01em;}
+    .match-reden{font-size:13px;font-weight:500;color:#e8edf2;background:#333d4d;border:1px solid rgba(255,255,255,0.25);border-radius:100px;padding:7px 14px;line-height:1.3;letter-spacing:0.01em;}
     .gebruik-slim-blok{background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.2);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--amber);line-height:1.5;}
 
     /* NEGEER MELDINGEN */
@@ -630,9 +631,9 @@
           return;
         }
 
-        // Foto's laden op de achtergrond
-        laadFotos(data.suggesties);
+        // Eerst resultaten tonen, dan foto's laden (DOM moet bestaan)
         toonResultaten();
+        setTimeout(() => laadFotos(data.suggesties), 100);
       } catch (err) {
         clearInterval(interval);
         if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
@@ -663,8 +664,16 @@
           fotoCache[id] = url;
           const fotoEl = document.getElementById(`foto-${id}`);
           if (fotoEl) {
-            fotoEl.style.backgroundImage = `url(${url})`;
-            fotoEl.classList.add('geladen');
+            // Verwijder placeholder
+            const placeholder = fotoEl.querySelector('.kaart-foto-placeholder');
+            if (placeholder) placeholder.remove();
+            // Laad foto
+            const img = new Image();
+            img.onload = () => {
+              fotoEl.style.backgroundImage = `url(${url})`;
+              fotoEl.classList.add('geladen');
+            };
+            img.src = url;
           }
         } catch(e) { console.warn('Foto error:', e); }
       }
@@ -758,7 +767,9 @@
       const score = s.matchScore ? `<span class="match-score" style="color:${matchKleur(s.matchScore)}">Match ${s.matchScore}%</span>` : '';
 
       card.innerHTML = `
-        <div id="${fotoId}" class="kaart-foto ${fotoKlasse}" ${fotoBg}></div>
+        <div id="${fotoId}" class="kaart-foto ${fotoKlasse}" ${fotoBg}>
+          ${!fotoCache[fotoKey] ? '<div class="kaart-foto-placeholder">🍽️</div>' : ''}
+        </div>
         <div class="kaart-body">
           <div class="result-card-top">
             <div class="result-badges-top">
@@ -843,7 +854,7 @@
         ? s.negeerMeldingen.map(m => `<div class="negeer-melding">ℹ️ ${m}</div>`).join('') : '';
 
       container.innerHTML = `
-        ${fotoCache[veiligId(s.naam)] ? `<div style="width:100%;height:200px;background-image:url(${fotoCache[veiligId(s.naam)]});background-size:cover;background-position:center;border-radius:var(--radius-sm);margin-bottom:20px;"></div>` : ''}
+        ${fotoCache[veiligId(s.naam)] ? `<div style="width:100%;height:240px;background-image:url(${fotoCache[veiligId(s.naam)]});background-size:cover;background-position:center;border-radius:var(--radius);margin-bottom:24px;position:relative;overflow:hidden;"><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(15,15,15,0.8) 100%);"></div></div>` : ''}
         <div style="margin-bottom:8px;">
           ${s.versProduct ? '<span class="gebruik-eerst-badge" style="display:inline-flex;margin-bottom:6px;">Versproduct • beperkt houdbaar</span>' : ''}
           ${s.rol ? `<span class="rol-badge" style="display:inline-flex;margin-bottom:6px;">${s.rol}</span>` : ''}
@@ -867,7 +878,7 @@
             <div class="match-label-tekst"><strong>${s.matchLabel || 'Match'}</strong><br>${s.matchUitleg || ''}</div>
           </div>
           <div class="match-redenen">
-            ${Array.isArray(s.matchRedenen) ? s.matchRedenen.map(r => `<span class="match-reden">${r}</span>`).join('') : ''}
+            ${Array.isArray(s.matchRedenen) ? s.matchRedenen.slice(0,3).map(r => `<span class="match-reden">${r}</span>`).join('') : ''}
           </div>
         </div>` : ''}
 
