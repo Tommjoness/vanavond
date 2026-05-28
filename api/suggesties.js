@@ -284,12 +284,19 @@ ${verfijnInstructie}
 
 KWALITEITSDREMPEL: Geef een suggestie alleen als matchScore >= 60. Liever 3 sterke suggesties dan 5 middelmatige.
 
-FOTOZOEKTERM: Geef een korte Engelse zoekterm voor een donkere food foto.
-Gebruik max 3 woorden op basis van hoofdingrediënten.
-Fout: "Gegrilde kipfilet met broccoli en rijst dark moody food photography"
-Goed: "chicken broccoli rice"
-Ander voorbeeld: "pasta tomato basil" of "wrap vegetables" of "salmon rice bowl"
-Veld: "fotoZoekterm": "chicken rice bowl"
+FOTOZOEKTERM: Geef een korte Engelse zoekterm die het gerecht herkenbaar beschrijft.
+Regels:
+- Max 3-4 woorden, alleen ingrediënten en gerechtstype
+- Geen stijltermen zoals "dark", "moody", "gourmet", "plating"
+- Geen "food photography"
+- Huiselijk en herkenbaar, niet restaurantstijl
+- Fout: "chicken broccoli rice dark moody food photography"
+- Goed: "chicken broccoli rice bowl"
+- Goed: "pasta tomato sauce"
+- Goed: "egg fried rice"
+- Goed: "salmon vegetables"
+- Goed: "beef stir fry noodles"
+Veld: "fotoZoekterm": "chicken spinach rice"
 
 VOEDINGSWAARDEN: realistisch. per100g = (perPortie / portieGewicht) * 100. Afronden.
 
