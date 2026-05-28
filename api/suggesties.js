@@ -163,7 +163,22 @@ VERBODEN COPY (nooit gebruiken, ook niet in matchRedenen of waaromSlim):
 - "perfect gebalanceerd"
 - "ideale combinatie"
 - "uitstekende keuze"
+- "afkruid" (gebruik: "bestrooi met", "werk af met")
+- "moeite 'normaal': X concrete stappen" of elke combinatie hiervan
+- "breng aan de kook op hoog" (gebruik: "breng aan de kook op hoog vuur" of gewoon "breng aan de kook")
+- "luchtfriet" (gebruik: "airfryer")
+- "airtight container" (gebruik: "afgesloten bakje" of "afgesloten container")
 - Engelstalige marketingtermen
+- Zinnen die gehaast of telegrafisch klinken
+- Zinnen zonder werkwoord
+
+SCHRIJFSTIJL:
+- Schrijf rustig, volledig en menselijk. Geen telegramstijl.
+- Elke zin heeft een onderwerp en een werkwoord.
+- Niet: "Slechts 2 pannen: rijstpan + afwasbak broccoli"
+- Wel: "Je hebt maar 2 pannen nodig: één voor de rijst en één voor de broccoli."
+- Niet: "48g eiwit per portie = zeer voedzaam"
+- Wel: "Dit recept bevat 48g eiwit per portie."
 
 Gebruik in plaats daarvan:
 - "Veel eiwitten" of "48g eiwit per portie"
@@ -395,6 +410,21 @@ Beoordeel eerlijk. Geef JSON:
       return ['.','!','?'].includes(t[t.length-1]) ? t : t + '.';
     };
 
+    // Helper: dedupliceer lijst op basis van specificiteit
+    function dedupIngredients(items) {
+      if (!Array.isArray(items)) return items;
+      const namen = items.map(i => (typeof i === 'object' ? i.naam : i).toLowerCase().trim());
+      const behoud = namen.map((naam, idx) => {
+        // Verwijder als een langere variant van dezelfde stam aanwezig is
+        return !namen.some((ander, andereIdx) =>
+          andereIdx !== idx &&
+          ander.includes(naam) &&
+          ander.length > naam.length
+        );
+      });
+      return items.filter((_, idx) => behoud[idx]);
+    }
+
     // Server-side validatie: afwasNiveau corrigeren op basis van stappen
     suggesties.forEach(s => {
       // Grammatica: volledige zinnen krijgen punt
@@ -403,6 +433,11 @@ Beoordeel eerlijk. Geef JSON:
       if (Array.isArray(s.waaromSlim)) s.waaromSlim = s.waaromSlim.map(metPunt);
       if (s.restjes?.idee) s.restjes.idee = metPunt(s.restjes.idee);
       if (s.restjes?.bewaren) s.restjes.bewaren = metPunt(s.restjes.bewaren);
+
+      // Dedupliceer ingrediëntenlijsten
+      if (Array.isArray(s.inHuis)) s.inHuis = dedupIngredients(s.inHuis);
+      if (Array.isArray(s.nogNodig)) s.nogNodig = dedupIngredients(s.nogNodig);
+      if (Array.isArray(s.optioneel)) s.optioneel = dedupIngredients(s.optioneel);
 
       if (!Array.isArray(s.stappen)) return;
       const stappenTekst = s.stappen.map(st => typeof st === 'object' ? `${st.titel || ''} ${st.uitleg || ''}` : st).join(' ').toLowerCase();
