@@ -118,6 +118,26 @@ MOEITE "${moeite}": max ${maxStappen} stappen
 ${moeite === 'bijna niks' ? '- Max 1 pan, geen snijwerk, zo min mogelijk handelingen' : ''}
 ${wilMindaAfwas ? '- PRIORITEER recepten met 0-1 pan, vermijd meerdere pannen' : ''}
 
+VERBODEN COPY (nooit gebruiken, ook niet in matchRedenen of waaromSlim):
+- "excellent high protein"
+- "goede voedingsbalans"
+- "topkeuze voor high protein"
+- "optimale maaltijd"
+- "perfect gebalanceerd"
+- "ideale combinatie"
+- "uitstekende keuze"
+- Engelstalige marketingtermen
+
+Gebruik in plaats daarvan:
+- "Veel eiwitten" of "48g eiwit per portie"
+- "Vullende maaltijd"
+- "Comfort food"
+- "Snel en voedzaam"
+- "Ideaal na sporten"
+- "Weinig afwas: 1 pan"
+- "Klaar in 25 minuten"
+- "Alles al in huis"
+
 GRAMMATICA EN STIJL — VERPLICHT:
 - Volledige zinnen eindigen altijd met een punt.
 - Opsommingen met 2 items: gebruik "en" — nooit een komma. Correct: "kipfilet en paprika." Fout: "kipfilet, paprika"
