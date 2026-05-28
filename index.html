@@ -214,6 +214,56 @@
     .feedback-sub-btn{background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;}
     .feedback-sub-btn.selected{border-color:var(--red);color:var(--red);}
 
+
+    /* SMART MODE & KOELKAST */
+    .btn-smart{width:100%;background:transparent;border:1px solid rgba(232,193,112,0.3);border-radius:var(--radius);padding:14px;font-size:15px;color:var(--accent);cursor:pointer;margin-top:10px;transition:all 0.2s;letter-spacing:-0.1px;}
+    .btn-smart:active{background:rgba(232,193,112,0.08);}
+    .koelkast-row{display:flex;gap:8px;margin-top:10px;}
+    .btn-koelkast,.btn-koelkast-opslaan{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-size:12px;color:var(--text2);cursor:pointer;transition:all 0.15s;text-align:center;}
+    .btn-koelkast:active,.btn-koelkast-opslaan:active{background:var(--bg4);}
+
+    /* KOOKMODUS */
+    .kookmodus-overlay{position:fixed;inset:0;background:#0a0a0a;z-index:200;display:flex;flex-direction:column;animation:fadeIn 0.3s ease;}
+    .kookmodus-header{padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
+    .kookmodus-titel{font-size:15px;font-weight:600;color:var(--text);}
+    .kookmodus-stap-teller{font-size:13px;color:var(--text2);}
+    .kookmodus-sluit{background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer;padding:0;}
+    .kookmodus-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px;overflow-y:auto;}
+    .kookmodus-stap-num{width:48px;height:48px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#000;margin:0 auto 24px;}
+    .kookmodus-stap-titel{font-size:22px;font-weight:700;color:var(--text);text-align:center;margin-bottom:16px;letter-spacing:-0.3px;}
+    .kookmodus-stap-uitleg{font-size:16px;color:#c8cdd4;line-height:1.8;text-align:center;max-width:400px;margin:0 auto;}
+    .kookmodus-timer{text-align:center;margin:28px 0;}
+    .kookmodus-timer-display{font-size:48px;font-weight:700;color:var(--accent);letter-spacing:-1px;font-variant-numeric:tabular-nums;}
+    .kookmodus-timer-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 20px;font-size:14px;color:var(--text2);cursor:pointer;margin-top:12px;}
+    .kookmodus-footer{padding:20px 24px;border-top:1px solid var(--border);display:flex;gap:12px;}
+    .kookmodus-vorige{flex:0 0 auto;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-size:15px;color:var(--text2);cursor:pointer;}
+    .kookmodus-volgende{flex:1;background:var(--accent);border:none;border-radius:var(--radius);padding:16px;font-size:16px;font-weight:700;color:#000;cursor:pointer;transition:all 0.15s;}
+    .kookmodus-volgende:active{background:var(--accent2);}
+    .kookmodus-progress{height:3px;background:var(--bg3);}
+    .kookmodus-progress-bar{height:100%;background:var(--accent);transition:width 0.4s ease;}
+
+    /* VISUELE HIËRARCHIE VERBETERINGEN */
+    .match-score-groot{font-size:32px;font-weight:800;text-shadow:0 0 20px currentColor;letter-spacing:-1px;}
+    
+
+    .btn-kookmodus{width:100%;background:var(--accent);border:none;border-radius:var(--radius);padding:16px;font-size:16px;font-weight:700;color:#000;cursor:pointer;margin-bottom:16px;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn-kookmodus:active{background:var(--accent2);transform:scale(0.99);}
+
+    /* FOTO FALLBACK */
+    .kaart-foto-placeholder{width:100%;height:180px;background:linear-gradient(135deg,#1a1f28 0%,#242b35 50%,#1e2530 100%);display:flex;align-items:center;justify-content:center;font-size:40px;opacity:0.6;}
+
+    /* MATCHSCORE GLOW */
+    .match-score-groot{font-size:32px;font-weight:800;letter-spacing:-1px;filter:drop-shadow(0 0 8px currentColor);}
+
+    /* TABS DUIDELIJKER */
+    .tab{flex:1;padding:9px 4px;font-size:12px;font-weight:500;text-align:center;border-radius:6px;cursor:pointer;color:#555e6e;transition:all 0.15s;}
+    .tab.active{background:var(--bg2);color:var(--text);font-weight:600;}
+
+    /* TYPOGRAFIE CONTRAST */
+    .result-naam{font-size:18px;font-weight:700;color:#f4f4f4;line-height:1.25;margin-bottom:5px;letter-spacing:-0.3px;}
+    .detail-naam{font-size:26px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2;color:#f4f4f4;}
+    .ing-section-title{font-size:11px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#6b7585;margin-bottom:10px;}
+    
     /* BOODSCHAPPEN MODAL */
     .boodschappen-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:flex-end;z-index:100;animation:fadeIn 0.2s ease;}
     .boodschappen-sheet{background:var(--bg2);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:540px;margin:0 auto;}
@@ -275,6 +325,10 @@
       <div class="section-label">Wat heb je in huis?</div>
       <textarea id="ingredienten-input" class="input-field" rows="3" placeholder="Bijv. kipfilet, paprika, rijst, tomaten, eieren, kaas…" oninput="verwerkInvoer()"></textarea>
       <div class="helper-text">Typ wat je in huis hebt. Wij doen de rest.</div>
+      <div class="koelkast-row">
+        <button class="btn-koelkast" onclick="laadKoelkast()" id="btn-koelkast-laden" style="display:none;">🧊 Laad opgeslagen koelkast</button>
+        <button class="btn-koelkast-opslaan" onclick="slaKoelkastOp()">💾 Koelkast onthouden</button>
+      </div>
       <div id="chips-container" class="chips-container"></div>
     </div>
 
@@ -389,6 +443,7 @@
 
     <div id="error-invoer" class="error-box" style="display:none;"></div>
     <button class="btn-primary" onclick="haalSuggesties()">Geef suggesties →</button>
+    <button class="btn-smart" onclick="smartMode()">🎲 Kies gewoon iets voor me</button>
   </div>
 
   <!-- LADEN -->
@@ -768,7 +823,7 @@
 
       card.innerHTML = `
         <div id="${fotoId}" class="kaart-foto ${fotoKlasse}" ${fotoBg}>
-          ${!fotoCache[fotoKey] ? '<div class="kaart-foto-placeholder">🍽️</div>' : ''}
+          ${!fotoCache[fotoKey] ? `<div class="kaart-foto-placeholder">${['🍝','🥘','🍗','🥗','🍜','🥩','🍛','🥙'][Math.floor(Math.random()*8)]}</div>` : ''}
         </div>
         <div class="kaart-body">
           <div class="result-card-top">
@@ -982,6 +1037,7 @@
 
         <!-- FEEDBACK -->
         <div class="divider"></div>
+        <button class="btn-kookmodus" onclick="startKookmodus(${index})">🍳 Start kookmodus</button>
         <div class="feedback-sectie">
           <div class="feedback-titel">Hoe was dit recept?</div>
           <div class="feedback-grid" id="feedback-grid-${index}">
@@ -1078,6 +1134,155 @@
     function geefSubFeedback(btn) {
       document.querySelectorAll('.feedback-sub-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
+    }
+
+    // KOELKAST OPSLAAN
+    function slaKoelkastOp() {
+      const val = document.getElementById('ingredienten-input').value.trim();
+      if (!val) { alert('Vul eerst je ingrediënten in.'); return; }
+      try {
+        localStorage.setItem('vanavond_koelkast', val);
+        const btn = document.querySelector('.btn-koelkast-opslaan');
+        if (btn) { btn.textContent = '✅ Opgeslagen!'; setTimeout(() => btn.textContent = '💾 Koelkast onthouden', 2000); }
+        document.getElementById('btn-koelkast-laden').style.display = 'block';
+      } catch(e) {}
+    }
+
+    function laadKoelkast() {
+      try {
+        const opgeslagen = localStorage.getItem('vanavond_koelkast');
+        if (opgeslagen) {
+          document.getElementById('ingredienten-input').value = opgeslagen;
+          verwerkInvoer();
+        }
+      } catch(e) {}
+    }
+
+    // Check bij laden of er een opgeslagen koelkast is
+    try {
+      if (localStorage.getItem('vanavond_koelkast')) {
+        document.getElementById('btn-koelkast-laden').style.display = 'block';
+      }
+    } catch(e) {}
+
+    // SMART MODE
+    function smartMode() {
+      const ingredienten = document.getElementById('ingredienten-input').value.trim();
+      if (!ingredienten && state.ingredientChips.length === 0) {
+        document.getElementById('error-invoer').textContent = 'Vul eerst in wat je in huis hebt.';
+        document.getElementById('error-invoer').style.display = 'block';
+        return;
+      }
+      // Selecteer automatisch redelijke defaults
+      if (!state.tijd) { document.querySelector('.pill[data-group="tijd"][data-value="30"]')?.click(); }
+      if (!state.personen) { document.querySelector('.pill[data-group="personen"][data-value="2"]')?.click(); }
+      if (!state.moeite) { document.querySelector('.pill[data-group="moeite"][data-value="normaal"]')?.click(); }
+      if (!state.doel) { document.querySelector('.pill[data-group="doel"][data-value="maakt niet uit"]')?.click(); }
+      haalSuggesties('Geef de ultieme beste keuze voor vanavond op basis van de voorraad. Slechts 1 topkeuze als eerste suggestie, daarna 2 alternatieven.');
+    }
+
+    // KOOKMODUS
+    let kookmodusActief = false;
+    let kookmodusStap = 0;
+    let kookmodusStappen = [];
+    let kookmodusNaam = '';
+    let timerInterval = null;
+    let timerSeconden = 0;
+    let timerLoopt = false;
+
+    function startKookmodus(index) {
+      const s = state.suggesties[index];
+      if (!s || !Array.isArray(s.stappen) || s.stappen.length === 0) return;
+      kookmodusStappen = s.stappen;
+      kookmodusNaam = s.naam;
+      kookmodusStap = 0;
+      kookmodusActief = true;
+      toonKookmodusStap();
+    }
+
+    function toonKookmodusStap() {
+      const stap = kookmodusStappen[kookmodusStap];
+      const titel = typeof stap === 'object' ? stap.titel : '';
+      const uitleg = typeof stap === 'object' ? stap.uitleg : (typeof stap === 'string' ? stap : '');
+      const totaal = kookmodusStappen.length;
+      const progress = ((kookmodusStap + 1) / totaal) * 100;
+      const isLaatste = kookmodusStap === totaal - 1;
+
+      // Reset timer
+      clearInterval(timerInterval);
+      timerLoopt = false;
+      timerSeconden = 0;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'kookmodus-overlay';
+      overlay.id = 'kookmodus-overlay';
+      overlay.innerHTML = `
+        <div class="kookmodus-progress"><div class="kookmodus-progress-bar" style="width:${progress}%"></div></div>
+        <div class="kookmodus-header">
+          <div>
+            <div class="kookmodus-titel">${kookmodusNaam}</div>
+            <div class="kookmodus-stap-teller">Stap ${kookmodusStap + 1} van ${totaal}</div>
+          </div>
+          <button class="kookmodus-sluit" onclick="sluitKookmodus()">×</button>
+        </div>
+        <div class="kookmodus-body">
+          <div class="kookmodus-stap-num">${kookmodusStap + 1}</div>
+          ${titel ? `<div class="kookmodus-stap-titel">${titel}</div>` : ''}
+          <div class="kookmodus-stap-uitleg">${uitleg}</div>
+          <div class="kookmodus-timer">
+            <div class="kookmodus-timer-display" id="km-timer">0:00</div>
+            <div><button class="kookmodus-timer-btn" onclick="toggleTimer()" id="km-timer-btn">⏱ Start timer</button></div>
+          </div>
+        </div>
+        <div class="kookmodus-footer">
+          ${kookmodusStap > 0 ? `<button class="kookmodus-vorige" onclick="kookmodusNavigeer(-1)">←</button>` : ''}
+          <button class="kookmodus-volgende" onclick="${isLaatste ? 'sluitKookmodus()' : 'kookmodusNavigeer(1)'}">
+            ${isLaatste ? '✅ Klaar!' : 'Volgende stap →'}
+          </button>
+        </div>
+      `;
+
+      // Verwijder bestaande overlay
+      const bestaand = document.getElementById('kookmodus-overlay');
+      if (bestaand) bestaand.remove();
+      document.body.appendChild(overlay);
+
+      // Scherm wakker houden
+      if ('wakeLock' in navigator) {
+        navigator.wakeLock.request('screen').catch(() => {});
+      }
+    }
+
+    function kookmodusNavigeer(richting) {
+      clearInterval(timerInterval);
+      timerLoopt = false;
+      kookmodusStap = Math.max(0, Math.min(kookmodusStappen.length - 1, kookmodusStap + richting));
+      toonKookmodusStap();
+    }
+
+    function sluitKookmodus() {
+      clearInterval(timerInterval);
+      const overlay = document.getElementById('kookmodus-overlay');
+      if (overlay) overlay.remove();
+      kookmodusActief = false;
+    }
+
+    function toggleTimer() {
+      if (timerLoopt) {
+        clearInterval(timerInterval);
+        timerLoopt = false;
+        document.getElementById('km-timer-btn').textContent = '▶ Hervat';
+      } else {
+        timerLoopt = true;
+        document.getElementById('km-timer-btn').textContent = '⏸ Pauzeer';
+        timerInterval = setInterval(() => {
+          timerSeconden++;
+          const min = Math.floor(timerSeconden / 60);
+          const sec = timerSeconden % 60;
+          const el = document.getElementById('km-timer');
+          if (el) el.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+        }, 1000);
+      }
     }
   </script>
 </body>
