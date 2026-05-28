@@ -23,7 +23,7 @@
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
     /* BASIS */
-    .app-header{padding:52px 0 20px;text-align:center;}
+    .app-header{padding:56px 0 28px;text-align:center;}
     .app-name{font-size:30px;font-weight:700;letter-spacing:-0.5px;color:var(--accent);}
     .app-tagline{font-size:14px;color:var(--text2);margin-top:4px;line-height:1.5;}
     .app-sub{font-size:12px;color:var(--text3);margin-top:6px;}
@@ -76,9 +76,9 @@
     .loading-tip-label{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
 
     /* RESULTATEN */
-    .results-header{padding:36px 0 14px;}
-    .results-title{font-size:22px;font-weight:700;color:var(--accent);margin-bottom:4px;}
-    .results-sub{font-size:13px;color:var(--text2);margin-bottom:14px;}
+    .results-header{padding:32px 0 18px;}
+    .results-title{font-size:26px;font-weight:700;color:var(--accent);margin-bottom:6px;letter-spacing:-0.5px;}
+    .results-sub{font-size:14px;color:var(--text2);margin-bottom:18px;line-height:1.5;}
     .verfijn-row{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
     .verfijn-row::-webkit-scrollbar{display:none;}
     .verfijn-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:7px 14px;font-size:12px;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
@@ -108,28 +108,28 @@
     .opnieuw-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;color:var(--text2);font-size:14px;cursor:pointer;margin-top:8px;}
 
     /* TAGS */
-    .tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:4px 10px;border-radius:100px;white-space:nowrap;}
-    .tag-green{background:rgba(76,175,125,0.15);color:var(--green);}
-    .tag-amber{background:rgba(232,168,56,0.15);color:var(--amber);}
-    .tag-gray{background:var(--bg3);color:var(--text2);}
-    .tag-blue{background:rgba(91,155,213,0.15);color:var(--blue);}
-    .tag-accent{background:rgba(232,193,112,0.15);color:var(--accent);}
-    .tag-purple{background:rgba(155,127,212,0.15);color:var(--purple);}
+    .tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 11px;border-radius:100px;white-space:nowrap;line-height:1.3;}
+    .tag-green{background:rgba(76,175,125,0.18);color:#5dcf92;}
+    .tag-amber{background:rgba(232,168,56,0.18);color:#f0b84a;}
+    .tag-gray{background:#252b34;color:#bec4cc;border:1px solid rgba(255,255,255,0.1);}
+    .tag-blue{background:rgba(91,155,213,0.18);color:#7ab3e0;}
+    .tag-accent{background:rgba(232,193,112,0.18);color:var(--accent);}
+    .tag-purple{background:rgba(155,127,212,0.18);color:#b89fe8;}
 
     /* DETAIL */
     .detail-header-area{padding:36px 0 0;}
-    .detail-naam{font-size:24px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2;}
+    .detail-naam{font-size:26px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2;}
     .detail-beschrijving{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:14px;}
     .detail-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
 
     /* MATCHSCORE DETAIL */
-    .match-blok{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:20px;}
+    .match-blok{background:var(--bg2);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:16px;margin-bottom:20px;}
     .match-blok-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
     .match-score-groot{font-size:26px;font-weight:700;}
-    .match-label-tekst{font-size:12px;color:var(--text2);line-height:1.4;}
-    .match-uitleg{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:8px;}
-    .match-redenen{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
-    .match-reden{font-size:12px;font-weight:500;color:#c8cdd4;background:#2a2f38;border:1px solid rgba(255,255,255,0.18);border-radius:100px;padding:5px 12px;line-height:1.4;}
+    .match-label-tekst{font-size:13px;color:#c8cdd4;line-height:1.5;}
+    .match-uitleg{font-size:13px;color:#c0c6ce;line-height:1.6;margin-bottom:10px;}
+    .match-redenen{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+    .match-reden{font-size:12px;font-weight:500;color:#dde1e8;background:#2e3540;border:1px solid rgba(255,255,255,0.22);border-radius:100px;padding:6px 14px;line-height:1.4;letter-spacing:0.01em;}
     .gebruik-slim-blok{background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.2);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--amber);line-height:1.5;}
 
     /* NEGEER MELDINGEN */
@@ -645,21 +645,28 @@
     let beperktData = null;
     const fotoCache = {};
 
+    function veiligId(naam) {
+      return naam.replace(/[^a-zA-Z0-9]/g, '_');
+    }
+
     async function laadFotos(suggesties) {
       for (const s of suggesties) {
-        if (!s.fotoZoekterm || fotoCache[s.naam]) continue;
+        if (!s.fotoZoekterm) continue;
+        const id = veiligId(s.naam);
+        if (fotoCache[id]) continue;
         try {
           const r = await fetch(`/api/foto?q=${encodeURIComponent(s.fotoZoekterm)}`);
-          if (!r.ok) continue;
+          if (!r.ok) { console.warn('Foto mislukt voor', s.naam, r.status); continue; }
           const d = await r.json();
-          fotoCache[s.naam] = d.urlSmall || d.url;
-          // Update kaart als die al zichtbaar is
-          const fotoEl = document.getElementById(`foto-${s.naam.replace(/\s/g,'_')}`);
+          const url = d.urlSmall || d.url;
+          if (!url) continue;
+          fotoCache[id] = url;
+          const fotoEl = document.getElementById(`foto-${id}`);
           if (fotoEl) {
-            fotoEl.style.backgroundImage = `url(${fotoCache[s.naam]})`;
+            fotoEl.style.backgroundImage = `url(${url})`;
             fotoEl.classList.add('geladen');
           }
-        } catch(e) {}
+        } catch(e) { console.warn('Foto error:', e); }
       }
     }
 
@@ -731,9 +738,10 @@
       else if (isFirst) cardClass += ' top-keuze';
       card.className = cardClass;
 
-      const fotoId = `foto-${s.naam.replace(/\s/g,'_')}`;
-      const fotoBg = fotoCache[s.naam] ? `style="background-image:url(${fotoCache[s.naam]})"` : '';
-      const fotoKlasse = fotoCache[s.naam] ? 'geladen' : '';
+      const fotoId = `foto-${veiligId(s.naam)}`;
+      const fotoKey = veiligId(s.naam);
+      const fotoBg = fotoCache[fotoKey] ? `style="background-image:url(${fotoCache[fotoKey]})"` : '';
+      const fotoKlasse = fotoCache[fotoKey] ? 'geladen' : '';
 
       const nog = Array.isArray(s.nogNodig) ? s.nogNodig : [];
       const nogNamen = nog.map(i => typeof i === 'object' ? i.naam : i);
@@ -835,6 +843,7 @@
         ? s.negeerMeldingen.map(m => `<div class="negeer-melding">ℹ️ ${m}</div>`).join('') : '';
 
       container.innerHTML = `
+        ${fotoCache[veiligId(s.naam)] ? `<div style="width:100%;height:200px;background-image:url(${fotoCache[veiligId(s.naam)]});background-size:cover;background-position:center;border-radius:var(--radius-sm);margin-bottom:20px;"></div>` : ''}
         <div style="margin-bottom:8px;">
           ${s.versProduct ? '<span class="gebruik-eerst-badge" style="display:inline-flex;margin-bottom:6px;">Versproduct • beperkt houdbaar</span>' : ''}
           ${s.rol ? `<span class="rol-badge" style="display:inline-flex;margin-bottom:6px;">${s.rol}</span>` : ''}
