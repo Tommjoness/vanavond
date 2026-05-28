@@ -235,7 +235,7 @@ SCHRIJFSTIJL:
 Gebruik in plaats daarvan:
 - "Veel eiwitten" of "48g eiwit per portie"
 - "Vullende maaltijd"
-- "Comfort food"
+- "Makkelijk en vullend"
 - "Snel en voedzaam"
 - "Ideaal na sporten"
 - "Weinig afwas: 1 pan"
