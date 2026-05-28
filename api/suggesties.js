@@ -106,9 +106,9 @@ ${geenZinInRegel}
 FILTERLOGICA — VASTE DREMPELWAARDEN (altijd toepassen, niet optioneel):
 Gekozen doel: "${doel}"
 - "gezond": min 120g groente per portie, geen frituur, gebalanceerde macros
-- "comfort": warm/vullend, pasta/rijst/aardappel/romige saus of ovengerecht
-- "high protein": minimaal 30g eiwit per portie, duidelijke eiwitbron
-- "budget": goedkope supermarktproducten, weinig ingrediënten, geen luxe
+- "makkelijk en vullend": warm/vullend, pasta/rijst/aardappel/romige saus of ovengerecht
+- "eiwitrijk": minimaal 30g eiwit per portie, duidelijke eiwitbron
+- "goedkoop": goedkope supermarktproducten, weinig ingrediënten, geen luxe
 - "licht eten": lager in kcal, minder vet, veel groente of lichte bereiding
 - "kindvriendelijk": milde smaken, herkenbaar, niet pittig of bitter
 - "koolhydraatarm": weinig/geen rijst/pasta/brood/aardappel
@@ -163,7 +163,7 @@ Verlaag score bij:
 - recept buiten tijd: -20pt
 - niet bij gekozen doel: -20pt
 SCOREGRENZEN: Bijna nooit boven 92%. Gebruik realistische spreiding: 65-75=redelijk, 75-85=sterk, 85-92=zeer sterk.
-Labels: 85-92=Sterke match, 70-84=Goede match, 60-69=Redelijke match, 40-59=Noodoptie
+Labels: 85-92="Sterke keuze", 70-84="Goede keuze", 60-69="Redelijke keuze", 40-59="Noodoptie"
 
 NEPPE PRECISIE VERBODEN:
 - Schrijf voedingswaarden altijd met "±": "±42g eiwit", "±480 kcal"
@@ -199,6 +199,12 @@ VERBODEN COPY (nooit gebruiken, ook niet in matchRedenen of waaromSlim):
 - "moeite 'normaal': X concrete stappen" of elke combinatie hiervan
 - "breng aan de kook op hoog" (gebruik: "breng aan de kook op hoog vuur" of gewoon "breng aan de kook")
 - "luchtfriet" (gebruik: "airfryer")
+- "serveer onmiddellijk" (gebruik: "serveer direct")
+- "eet onmiddellijk" (gebruik: "eet direct")
+- "pantry" (gebruik: "voorraadkast")
+- "katerproof"
+- "squeeze" (gebruik: "scheutje")
+- "incl." (schrijf voluit: "inclusief")
 - "airtight container" (gebruik: "afgesloten bakje" of "afgesloten container")
 - Engelstalige marketingtermen
 - Zinnen die gehaast of telegrafisch klinken
@@ -299,7 +305,7 @@ WAAROM DIT SLIM IS: alleen concrete, data-gedreven redenen.
 - Gebruik nooit "weinig afwas" als er 2+ pannen zijn
 - Gebruik nooit "snel" als totale tijd hoog is
 - Gebruik nooit "alles in huis" als er iets ontbreekt
-- Gebruik nooit "high protein" als eiwit laag is
+- Gebruik nooit "eiwitrijk" als eiwit laag is
 - Gebruik altijd concrete getallen: "Bevat 38g eiwit per portie", "Klaar in 20 minuten", "Gebruikt 1 pan"
 
 VARIATIE — KRITIEK: De 5 suggesties moeten TOTAAL verschillend zijn van elkaar.
