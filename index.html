@@ -43,6 +43,13 @@
 
     /* PILLS */
     .pill-grid{display:flex;flex-wrap:wrap;gap:8px;}
+    /* Scrollbare filterbalk voor doel-filters */
+    .filter-balk-wrapper{position:relative;margin-bottom:4px;}
+    .filter-balk{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;}
+    .filter-balk::-webkit-scrollbar{display:none;}
+    .filter-balk-fade{position:absolute;right:0;top:0;bottom:6px;width:48px;background:linear-gradient(to right,transparent,var(--bg));pointer-events:none;border-radius:0 100px 100px 0;}
+    .filter-balk .pill{flex-shrink:0;white-space:nowrap;}
+    .filter-hint{font-size:11px;color:var(--text3);margin-top:8px;margin-bottom:4px;}
     .pill{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 15px;font-size:13px;color:var(--text2);cursor:pointer;transition:all 0.15s;user-select:none;}
     .pill:active{transform:scale(0.96);}
     .pill.selected{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600;}
@@ -79,10 +86,13 @@
     .results-header{padding:32px 0 18px;}
     .results-title{font-size:26px;font-weight:700;color:var(--accent);margin-bottom:6px;letter-spacing:-0.5px;}
     .results-sub{font-size:14px;color:var(--text2);margin-bottom:18px;line-height:1.5;}
-    .verfijn-row{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+    .verfijn-row-wrapper{position:relative;margin-bottom:20px;}
+    .verfijn-row{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;}
     .verfijn-row::-webkit-scrollbar{display:none;}
-    .verfijn-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:7px 14px;font-size:12px;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
+    .verfijn-row-fade{position:absolute;right:0;top:0;bottom:4px;width:48px;background:linear-gradient(to right,transparent,var(--bg));pointer-events:none;}
+    .verfijn-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 16px;font-size:12px;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
     .verfijn-btn:active{background:var(--bg3);}
+    .verfijn-btn.actief{background:var(--bg3);border-color:var(--border2);color:var(--text);}
 
     /* KAARTEN */
     .result-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;transition:border-color 0.15s,transform 0.15s;animation:fadeIn 0.3s ease;}
@@ -376,20 +386,24 @@
       <div class="section-label">Wat wil je vanavond?</div>
       <div class="helper-text" style="margin-bottom:10px;">Kies een richting. We zoeken recepten die daar echt bij passen.</div>
       <div id="filter-uitleg" class="filter-uitleg" style="display:none;"></div>
-      <div class="pill-grid">
-        <div class="pill" data-group="doel" data-value="maakt niet uit" data-multi="true" data-exclusief="true">Maakt niet uit</div>
-        <div class="pill" data-group="doel" data-value="gezond" data-multi="true">Gezond</div>
-        <div class="pill" data-group="doel" data-value="makkelijk en vullend" data-multi="true">Makkelijk en vullend</div>
-        <div class="pill" data-group="doel" data-value="eiwitrijk" data-multi="true">Eiwitrijk</div>
-        <div class="pill" data-group="doel" data-value="goedkoop" data-multi="true">Goedkoop</div>
-        <div class="pill" data-group="doel" data-value="licht eten" data-multi="true">Licht</div>
-        <div class="pill" data-group="doel" data-value="kindvriendelijk" data-multi="true">Kindvriendelijk</div>
-        <div class="pill" data-group="doel" data-value="koolhydraatarm" data-multi="true">Koolhydraatarm</div>
-        <div class="pill" data-group="doel" data-value="restjes opmaken" data-multi="true">Restjes opmaken</div>
-        <div class="pill" data-group="doel" data-value="minder afwas" data-multi="true">Minder afwas</div>
-        <div class="pill" data-group="doel" data-value="snel klaar" data-multi="true">Snel klaar</div>
-        <div class="pill" data-group="doel" data-value="veel groente" data-multi="true">Veel groente</div>
+      <div class="filter-balk-wrapper">
+        <div class="filter-balk" id="doel-balk">
+          <div class="pill" data-group="doel" data-value="maakt niet uit" data-multi="true" data-exclusief="true">Maakt niet uit</div>
+          <div class="pill" data-group="doel" data-value="gezond" data-multi="true">Gezond</div>
+          <div class="pill" data-group="doel" data-value="makkelijk en vullend" data-multi="true">Makkelijk en vullend</div>
+          <div class="pill" data-group="doel" data-value="eiwitrijk" data-multi="true">Eiwitrijk</div>
+          <div class="pill" data-group="doel" data-value="goedkoop" data-multi="true">Goedkoop</div>
+          <div class="pill" data-group="doel" data-value="licht eten" data-multi="true">Licht</div>
+          <div class="pill" data-group="doel" data-value="kindvriendelijk" data-multi="true">Kindvriendelijk</div>
+          <div class="pill" data-group="doel" data-value="koolhydraatarm" data-multi="true">Koolhydraatarm</div>
+          <div class="pill" data-group="doel" data-value="restjes opmaken" data-multi="true">Restjes opmaken</div>
+          <div class="pill" data-group="doel" data-value="minder afwas" data-multi="true">Minder afwas</div>
+          <div class="pill" data-group="doel" data-value="snel klaar" data-multi="true">Snel klaar</div>
+          <div class="pill" data-group="doel" data-value="veel groente" data-multi="true">Veel groente</div>
+        </div>
+        <div class="filter-balk-fade" id="doel-fade"></div>
       </div>
+      <div class="filter-hint">Meerdere keuzes tegelijk mogelijk.</div>
     </div>
 
     <div class="form-group">
@@ -499,12 +513,15 @@
       <div class="results-title">Vanavond</div>
       <div class="results-sub">Op basis van je voorraad, tijd en voorkeuren.</div>
     </div>
+    <div class="verfijn-row-wrapper">
     <div class="verfijn-row">
       <button class="verfijn-btn" onclick="verfijn('Maak het sneller, minder stappen')">⚡ Sneller</button>
       <button class="verfijn-btn" onclick="verfijn('Maak het gezonder, meer groente')">🥗 Gezonder</button>
       <button class="verfijn-btn" onclick="verfijn('Zo min mogelijk afwas')">🍳 Minder afwas</button>
       <button class="verfijn-btn" onclick="verfijn('Goedkoopste opties met wat ik heb')">💶 Goedkoper</button>
       <button class="verfijn-btn" onclick="verfijn('Geef andere opties')">🔄 Andere opties</button>
+    </div>
+    <div class="verfijn-row-fade"></div>
     </div>
     <div id="suggesties-container"></div>
     <button class="opnieuw-btn" onclick="toonScherm('screen-invoer')">↺ Opnieuw zoeken</button>
@@ -519,6 +536,24 @@
   </div>
 
   <script>
+    // Fade-effect verbergen als niet meer nodig
+    function updateFade(balkId, fadeId) {
+      const balk = document.getElementById(balkId);
+      const fade = document.getElementById(fadeId);
+      if (!balk || !fade) return;
+      const scrollbaar = balk.scrollWidth > balk.clientWidth;
+      const bijEinde = balk.scrollLeft + balk.clientWidth >= balk.scrollWidth - 10;
+      fade.style.display = (scrollbaar && !bijEinde) ? 'block' : 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const balk = document.getElementById('doel-balk');
+      if (balk) {
+        updateFade('doel-balk', 'doel-fade');
+        balk.addEventListener('scroll', () => updateFade('doel-balk', 'doel-fade'));
+      }
+    });
+
     const state = {
       tijd:null, personen:null, moeite:null, doel:[], boodschappen:'paar',
       apparatuur:['kookplaat'], allergienen:[], kookniveau:null, geenZinIn:[],
