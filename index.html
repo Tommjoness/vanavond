@@ -990,10 +990,7 @@
         r = r.replace(/ovenschaal\s*\+\s*/gi, 'ovenschaal en ');
         r = r.replace(/bakplaat\s*\+\s*/gi, 'bakplaat en ');
         r = r.replace(/eenpans\(schaal\)gerecht/gi, '1 pan');
-        r = r.replace(/\bMatch\b/g, 'Score');
-        r = r.replace(/Sterke match/gi, 'Sterke keuze');
-        r = r.replace(/Goede match/gi, 'Goede keuze');
-        r = r.replace(/Redelijke match/gi, 'Redelijke keuze');
+        // Match is toegestaan als app-label
         r = r.replace(/incl\./gi, 'inclusief');
         r = r.replace(/serveer direct\./gi, 'Lekkerst als je het meteen eet.');
         r = r.replace(/serveer direct/gi, 'lekkerst warm gegeten');
@@ -1129,7 +1126,7 @@
         <div class="match-blok">
           <div class="match-blok-top">
             <div class="match-score-groot" style="color:${matchKleur(s.matchScore)}">${s.matchScore}%</div>
-            <div class="match-label-tekst"><strong>${s.matchLabel || 'Keuze'}</strong><br>${s.matchUitleg || ''}</div>
+            <div class="match-label-tekst"><strong>${s.matchLabel || 'Match'}</strong><br>${s.matchUitleg || ''}</div>
           </div>
           <div class="match-redenen">
             ${Array.isArray(s.matchRedenen) ? s.matchRedenen.slice(0,3).map(r => `<span class="match-reden">${r}</span>`).join('') : ''}
