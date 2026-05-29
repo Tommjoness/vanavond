@@ -177,7 +177,7 @@ Verlaag score bij:
 - recept buiten tijd: -20pt
 - niet bij gekozen doel: -20pt
 SCOREGRENZEN: Bijna nooit boven 92%. Gebruik realistische spreiding: 65-75=redelijk, 75-85=sterk, 85-92=zeer sterk.
-Labels: 85-92="Sterke keuze", 70-84="Goede keuze", 60-69="Redelijke keuze", 40-59="Noodoptie"
+Labels: 85-92="Sterke match", 70-84="Goede match", 60-69="Redelijke match", 40-59="Noodoptie"
 
 NEPPE PRECISIE VERBODEN:
 - Schrijf voedingswaarden altijd met "±": "±42g eiwit", "±480 kcal"
