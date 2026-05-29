@@ -387,6 +387,15 @@
     </div>
 
     <div class="form-group">
+      <div class="section-label">Kookniveau</div>
+      <div class="pill-grid">
+        <div class="pill" data-group="kookniveau" data-value="beginner">Beginner</div>
+        <div class="pill" data-group="kookniveau" data-value="gemiddeld">Gemiddeld</div>
+        <div class="pill" data-group="kookniveau" data-value="gevorderd">Gevorderd</div>
+      </div>
+    </div>
+
+    <div class="form-group">
       <div class="section-label">Wat wil je vanavond?</div>
       <div class="helper-text" style="margin-bottom:10px;">Kies een richting. We zoeken recepten die daar echt bij passen.</div>
       <div id="filter-uitleg" class="filter-uitleg" style="display:none;"></div>
@@ -458,15 +467,6 @@
           <div class="section-label">Nooit gebruiken</div>
           <input type="text" id="nooitGebruiken" class="input-field" placeholder="bijv. koriander, champignons, tonijn…">
           <div class="helper-text">Deze ingrediënten gebruiken we nergens, ook niet als vervanging.</div>
-        </div>
-
-        <div class="form-group">
-          <div class="section-label">Kookniveau</div>
-          <div class="pill-grid">
-            <div class="pill" data-group="kookniveau" data-value="beginner">Beginner</div>
-            <div class="pill" data-group="kookniveau" data-value="gemiddeld">Gemiddeld</div>
-            <div class="pill" data-group="kookniveau" data-value="gevorderd">Gevorderd</div>
-          </div>
         </div>
 
         <div class="privacy-text">Je gegevens worden alleen gebruikt om recepten voor te stellen.</div>
@@ -624,18 +624,32 @@
       clearTimeout(chipTimer);
       chipTimer = setTimeout(() => {
         const val = document.getElementById('ingredienten-input').value;
-        // Splits op komma, newline én " en "
-        const delen = val
+
+        // Haal huidige ingrediënten op uit de tekst
+        const huidigeIngredients = val
           .split(/[,\n]|\s+en\s+/i)
-          .map(s => s.trim().replace(/\s+en\s*$/i, '').replace(/^\s*en\s+/i, '').trim())
+          .map(s => s.trim().replace(/\s+en\s*$/i, '').replace(/^\s*en\s+/i, '').trim().toLowerCase())
           .filter(s => s.length > 1);
-        const nieuweChips = delen.filter(d => !state.ingredientChips.map(c => c.toLowerCase()).includes(d.toLowerCase()));
+
+        // Verwijder chips die niet meer in de tekst staan
+        state.ingredientChips = state.ingredientChips.filter(chip =>
+          huidigeIngredients.some(ing =>
+            ing.includes(chip.toLowerCase()) || chip.toLowerCase().includes(ing)
+          )
+        );
+
+        // Voeg nieuwe chips toe
+        const nieuweChips = huidigeIngredients.filter(d =>
+          !state.ingredientChips.map(c => c.toLowerCase()).includes(d.toLowerCase())
+        );
+
         if (nieuweChips.length > 0) {
           state.ingredientChips = [...new Set([...state.ingredientChips, ...nieuweChips])];
           state.ingredientChips = dedupChips(state.ingredientChips);
-          renderChips();
         }
-      }, 800);
+
+        renderChips();
+      }, 600);
     }
 
     function dedupChips(chips) {
