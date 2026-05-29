@@ -1061,7 +1061,27 @@
         r = r.replace(/geen resultaat/gi, 'Geen goede match gevonden');
         // Veelvoorkomende spelfouten uit AI-output
         r = r.replace(/geroostedrde/gi, 'geroosterde');
+        r = r.replace(/\bgiet af\b\.?/gi, 'Als de pasta gaar is, giet je deze af.');
+        r = r.replace(/voeg de .* en gare kip terug in de pan/gi, 'doe alles terug in de pan');
+        r = r.replace(/gare kip terug in/gi, 'gebakken kip terug in');
+        r = r.replace(/\bleg zur zijde\b/gi, 'zet even apart');
+        r = r.replace(/\bserveer direct\b\.?/gi, 'Schep het op en eet het meteen.');
+        r = r.replace(/spuit yoghurtsaus/gi, 'verdeel de yoghurtsaus');
+        r = r.replace(/snipper de kip in beten/gi, 'snijd de kip in kleine stukjes');
+        r = r.replace(/fijner de knoflook/gi, 'hak de knoflook fijn');
+        r = r.replace(/fijngeraaspte/gi, 'fijngehakte');
+        r = r.replace(/\boven\b(?= en)/gi, '');  // "oven en snijplank" bij afwas → verwijder oven
         r = r.replace(/geroostedrde/gi, 'geroosterde');
+        r = r.replace(/\bgiet af\b\.?/gi, 'Als de pasta gaar is, giet je deze af.');
+        r = r.replace(/voeg de .* en gare kip terug in de pan/gi, 'doe alles terug in de pan');
+        r = r.replace(/gare kip terug in/gi, 'gebakken kip terug in');
+        r = r.replace(/\bleg zur zijde\b/gi, 'zet even apart');
+        r = r.replace(/\bserveer direct\b\.?/gi, 'Schep het op en eet het meteen.');
+        r = r.replace(/spuit yoghurtsaus/gi, 'verdeel de yoghurtsaus');
+        r = r.replace(/snipper de kip in beten/gi, 'snijd de kip in kleine stukjes');
+        r = r.replace(/fijner de knoflook/gi, 'hak de knoflook fijn');
+        r = r.replace(/fijngeraaspte/gi, 'fijngehakte');
+        r = r.replace(/\boven\b(?= en)/gi, '');  // "oven en snijplank" bij afwas → verwijder oven
         r = r.replace(/knappige/gi, 'knapperige');
         r = r.replace(/knapperig\b/gi, 'knapperige');
         r = r.replace(/goudbruin\b(?!e)/gi, 'goudbruine');
@@ -1251,7 +1271,7 @@
           <div class="overzicht-item"><div class="overzicht-label">Porties</div><div class="overzicht-waarde">${s.porties || state.personen}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '±' + v.portieGewicht + 'g' : 'onbekend'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) && s.apparatuurGebruikt.length > 0 ? s.apparatuurGebruikt.join(', ') : 'kookplaat'}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${(s.afwasNiveau || '').replace(/\+/g, 'en')}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${(s.afwasNiveau || '').replace(/\+/g, 'en').replace(/\boven\b\s*(en\s*)?/gi, '').replace(/^\s*(en\s*)/gi, '').trim() || '—'}</div></div>
         </div>
 
         <!-- TABS -->
@@ -1316,7 +1336,7 @@
           ${s.restjes ? `
           <div class="restjes-blok">
             <div class="restjes-titel">🥡 Morgen met restjes</div>
-            ${s.restjes.idee ? `<div class="restjes-item"><span>💡</span> ${s.restjes.idee}</div>` : ''}
+            ${s.restjes.idee ? `<div class="restjes-item"><span>💡</span> ${s.restjes.idee}</div>` : '<div class="restjes-item"><span>💡</span> Als je wat overhoudt, kun je het morgen koud of kort opgewarmd eten.</div>'}
             ${s.restjes.bewaren ? `<div class="restjes-item"><span>🧊</span> ${s.restjes.bewaren}</div>` : ''}
             ${s.restjes.invriezen !== undefined ? `<div class="restjes-item"><span>${s.restjes.invriezen ? '✅' : '⚠️'}</span> Invriezen: ${s.restjes.invriezen ? 'geschikt' : 'minder geschikt'}</div>` : ''}
           </div>` : ''}
