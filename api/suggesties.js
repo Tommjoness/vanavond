@@ -473,101 +473,126 @@ Beoordeel eerlijk. Geef JSON:
     if (!jsonMatch) throw new Error('Geen geldige JSON ontvangen');
     const suggesties = JSON.parse(jsonMatch[0]);
 
-    // Grammatica helpers
+    // ============================================================
+    // CENTRALE RECEPT-VALIDATIE PIPELINE
+    // ============================================================
+
     const lijstNaarZin = (items) => {
       if (!items || items.length === 0) return '';
       if (items.length === 1) return items[0];
       if (items.length === 2) return `${items[0]} en ${items[1]}`;
       return `${items.slice(0, -1).join(', ')} en ${items[items.length - 1]}`;
     };
+
     const metPunt = (s) => {
       if (!s || typeof s !== 'string') return s;
       const t = s.trim();
       return ['.','!','?'].includes(t[t.length-1]) ? t : t + '.';
     };
 
-    // Helper: dedupliceer lijst op basis van specificiteit
+    const TAALPROBLEMEN = [
+      [/snipper de kip/gi, 'snijd de kip in stukjes'],
+      [/\bin beten\b/gi, 'in blokjes'],
+      [/leg zur zijde/gi, 'leg apart'],
+      [/gare kip terug/gi, 'gebakken kip terug'],
+      [/spuit yoghurtsaus/gi, 'lepel de yoghurtsaus'],
+      [/fijner de knoflook/gi, 'hak de knoflook fijn'],
+      [/fijngeraaspte/gi, 'fijngehakte'],
+      [/reisbowl/gi, 'rijstbowl'],
+      [/geeft meer frisse smaak/gi, 'maakt het gerecht frisser'],
+      [/serveer direct\./gi, 'Je kunt het daarna meteen opscheppen.'],
+      [/serveer direct/gi, 'schep het op'],
+      [/\bnoodles\b/gi, 'pasta'],
+      [/sterke voorraadbewegingen/gi, ''],
+      [/normaal moeite niveau/gi, ''],
+      [/\bsqueeze\b/gi, 'scheutje'],
+      [/\bhigh protein\b/gi, 'eiwitrijk'],
+      [/airtight container/gi, 'afgesloten bakje'],
+      [/luchtfriet/gi, 'airfryer'],
+      [/geroostedrde/gi, 'geroosterde'],
+      [/knappige/gi, 'knapperige'],
+      [/eenpans\(schaal\)gerecht/gi, '1 pan'],
+    ];
+
+    function normalizeerTekst(tekst) {
+      if (!tekst || typeof tekst !== 'string') return tekst;
+      let r = tekst.trim();
+      TAALPROBLEMEN.forEach(([zoek, verv]) => { r = r.replace(zoek, verv); });
+      return r.replace(/\s+/g, ' ').trim();
+    }
+
     function dedupIngredients(items) {
       if (!Array.isArray(items)) return items;
       const namen = items.map(i => (typeof i === 'object' ? i.naam : i).toLowerCase().trim());
-      const behoud = namen.map((naam, idx) => {
-        // Verwijder als een langere variant van dezelfde stam aanwezig is
-        return !namen.some((ander, andereIdx) =>
-          andereIdx !== idx &&
-          ander.includes(naam) &&
-          ander.length > naam.length
-        );
-      });
-      return items.filter((_, idx) => behoud[idx]);
+      return items.filter((_, idx) =>
+        !namen.some((ander, andereIdx) => andereIdx !== idx && ander.includes(namen[idx]) && ander.length > namen[idx].length)
+      );
     }
 
-    // Server-side validatie: afwasNiveau corrigeren op basis van stappen
-    suggesties.forEach(s => {
-      // Grammatica: volledige zinnen krijgen punt
-      if (s.korteBeschrijving) s.korteBeschrijving = metPunt(s.korteBeschrijving);
-      if (s.matchUitleg) s.matchUitleg = metPunt(s.matchUitleg);
-      if (Array.isArray(s.waaromSlim)) if (Array.isArray(s.waaromSlim)) s.waaromSlim = s.waaromSlim.map(metPunt);
-      if (Array.isArray(s.waaromPast)) s.waaromPast = s.waaromPast.map(metPunt);
-      if (s.restjes?.idee) s.restjes.idee = metPunt(s.restjes.idee);
-      if (s.restjes?.bewaren) s.restjes.bewaren = metPunt(s.restjes.bewaren);
+    function verwerkRecept(s) {
+      // STAP 1: normaliseer alle tekstvelden
+      if (s.naam) s.naam = normalizeerTekst(s.naam);
+      if (s.korteBeschrijving) s.korteBeschrijving = metPunt(normalizeerTekst(s.korteBeschrijving));
+      if (s.matchUitleg) s.matchUitleg = metPunt(normalizeerTekst(s.matchUitleg));
+      if (s.slimmeReden) s.slimmeReden = normalizeerTekst(s.slimmeReden);
+      const waarom = s.waaromPast || s.waaromSlim || [];
+      if (s.restjes?.idee) s.restjes.idee = metPunt(normalizeerTekst(s.restjes.idee));
+      if (s.restjes?.bewaren) s.restjes.bewaren = metPunt(normalizeerTekst(s.restjes.bewaren));
+      if (Array.isArray(s.smaakUpgrades)) s.smaakUpgrades = s.smaakUpgrades.map(u => metPunt(normalizeerTekst(u))).filter(Boolean);
+      if (Array.isArray(s.stappen)) {
+        s.stappen = s.stappen.map(st => {
+          if (typeof st === 'object') return { titel: st.titel ? st.titel.replace(/^\d+\.\s*|^Stap \d+:?\s*/i, '').trim() : st.titel, uitleg: metPunt(normalizeerTekst(st.uitleg)) };
+          return metPunt(normalizeerTekst(st));
+        });
+      }
 
-      // Dedupliceer ingrediëntenlijsten
+      // STAP 2: dedupliceer ingrediënten
       if (Array.isArray(s.inHuis)) s.inHuis = dedupIngredients(s.inHuis);
       if (Array.isArray(s.nogNodig)) s.nogNodig = dedupIngredients(s.nogNodig);
       if (Array.isArray(s.optioneel)) s.optioneel = dedupIngredients(s.optioneel);
 
-      if (!Array.isArray(s.stappen)) return;
-      const stappenTekst = s.stappen.map(st => typeof st === 'object' ? `${st.titel || ''} ${st.uitleg || ''}` : st).join(' ').toLowerCase();
+      // STAP 3: tips valideren — verwijder tips over ingrediënten die er niet in zitten
+      const alleIng = [...(s.inHuis || []), ...(s.basisvoorraad || []), ...(s.optioneel || [])]
+        .map(i => (typeof i === 'object' ? i.naam : i).toLowerCase().trim());
+      if (Array.isArray(s.smaakUpgrades)) {
+        s.smaakUpgrades = s.smaakUpgrades.filter(tip => {
+          const t = tip.toLowerCase();
+          const gecontroleerd = ['yoghurt', 'citroen', 'kaas', 'knoflook', 'chilisaus', 'pesto', 'mosterd'];
+          return !gecontroleerd.some(ing => t.includes(ing) && !alleIng.some(n => n.includes(ing)));
+        });
+      }
 
-      // Detecteer alle gebruikte hulpmiddelen
-      const heeftOven = ['oven', 'verwarm de oven', 'zet de oven'].some(w => stappenTekst.includes(w));
-      const heeftBakplaat = stappenTekst.includes('bakplaat');
-      const heeftOvenschaal = stappenTekst.includes('ovenschaal');
-      const heeftAirfryer = stappenTekst.includes('airfryer');
-      const heeftMagnetron = stappenTekst.includes('magnetron');
-      const heeftKom = ['in een kom', 'in een schaal', 'in een mengkom', 'meng in'].some(w => stappenTekst.includes(w));
-      const heeftSnijplank = ['snijplank', 'snijden', 'hakken', 'snipper', 'in stukken', 'in blokjes', 'in plakjes', 'in reepjes'].some(w => stappenTekst.includes(w));
-      const heeftPan = ['pan', 'pot', 'wok', 'koekenpan', 'steelpan', 'hapjespan'].some(w => stappenTekst.includes(w));
+      // STAP 4: apparatuur en afwas afleiden uit stappen
+      if (!Array.isArray(s.stappen)) return s;
+      const st = s.stappen.map(x => typeof x === 'object' ? `${x.titel||''} ${x.uitleg||''}` : x).join(' ').toLowerCase();
 
-      // Tel pannen
+      const heeftOven = ['oven', 'verwarm de oven'].some(w => st.includes(w));
+      const heeftBakplaat = st.includes('bakplaat');
+      const heeftOvenschaal = st.includes('ovenschaal');
+      const heeftAirfryer = st.includes('airfryer');
+      const heeftMagnetron = st.includes('magnetron');
+      const heeftKom = ['in een kom', 'mengkom', 'klop de eieren', 'klop het ei'].some(w => st.includes(w));
+      const heeftSnijplank = ['snijden', 'hakken', 'in blokjes', 'in plakjes', 'in reepjes', 'in stukjes'].some(w => st.includes(w));
+      const heeftPan = ['pan', 'pot', 'wok', 'koekenpan', 'steelpan', 'hapjespan'].some(w => st.includes(w));
+
       let panCount = 0;
       if (heeftPan) {
         panCount = 1;
-        const extraSignalen = [
-          'tweede pan', 'aparte pan', 'andere pan', 'in een andere pan',
-          'apart koken', 'apart bakken', 'kook de rijst', 'kook de pasta',
-          'kook de noedels', 'kook de aardappel', 'zet een pan op', 'zet een pot op'
-        ];
-        if (extraSignalen.some(w => stappenTekst.includes(w))) panCount++;
-        const derdeSignalen = ['derde pan', 'nog een pan', 'ook in een pan', 'derde kookmoment'];
-        if (derdeSignalen.some(w => stappenTekst.includes(w))) panCount++;
+        if (['tweede pan', 'aparte pan', 'andere pan', 'apart koken', 'apart bakken', 'kook de rijst', 'kook de pasta', 'kook de aardappel', 'zet een pan op'].some(w => st.includes(w))) panCount++;
+        if (['derde pan', 'nog een pan'].some(w => st.includes(w))) panCount++;
       }
 
-      // Bouw een eerlijke afwasbeschrijving op
-      const onderdelen = [];
+      const afwas = [];
+      if (panCount === 1) afwas.push('1 pan');
+      else if (panCount === 2) afwas.push('2 pannen');
+      else if (panCount >= 3) afwas.push(`${panCount} pannen`);
+      if (heeftOven) afwas.push(heeftBakplaat ? 'bakplaat' : heeftOvenschaal ? 'ovenschaal' : 'oven');
+      if (heeftAirfryer && !heeftOven) afwas.push('airfryer');
+      if (heeftMagnetron && !heeftPan && !heeftOven) afwas.push('magnetron');
+      if (heeftKom) afwas.push('kom');
+      if (heeftSnijplank) afwas.push('snijplank');
 
-      if (panCount === 1) onderdelen.push('1 pan');
-      else if (panCount === 2) onderdelen.push('2 pannen');
-      else if (panCount >= 3) onderdelen.push(`${panCount} pannen`);
-
-      if (heeftOven) {
-        if (heeftBakplaat) onderdelen.push('bakplaat');
-        else if (heeftOvenschaal) onderdelen.push('ovenschaal');
-        else onderdelen.push('oven');
-      }
-      if (heeftAirfryer) onderdelen.push('airfryer');
-      if (heeftMagnetron) onderdelen.push('magnetron');
-      if (heeftKom) onderdelen.push('kom');
-      if (heeftSnijplank) onderdelen.push('snijplank');
-
-      let gecorrigeerd;
-      if (onderdelen.length === 0) {
-        gecorrigeerd = '0 pannen';
-      } else {
-        gecorrigeerd = onderdelen.join(' + ');
-      }
-
-      s.afwasNiveau = gecorrigeerd;
+      s.afwasNiveau = afwas.length > 0 ? afwas.join(' en ') : '0 pannen';
       s.apparatuurGebruikt = [...new Set([
         ...(heeftOven ? ['oven'] : []),
         ...(heeftAirfryer ? ['airfryer'] : []),
@@ -575,55 +600,38 @@ Beoordeel eerlijk. Geef JSON:
         ...(panCount > 0 ? ['kookplaat'] : []),
       ])];
 
-      // Corrigeer waaromSlim: verwijder claims die niet kloppen
-      const waarom = s.waaromPast || s.waaromSlim;
-      if (Array.isArray(waarom)) {
-        const gefilterd = waarom.filter(w => {
-          const wl = w.toLowerCase();
-          if (wl.includes('weinig afwas') && onderdelen.length >= 3) return false;
-          if (wl.includes('1 pan') && panCount >= 2) return false;
-          if (wl.includes('alles in huis') && Array.isArray(s.nogNodig) && s.nogNodig.length > 0) return false;
-          if (wl.includes('eiwitrijk') && s.voeding?.perPortie?.proteinen < 20) return false;
-          return true;
-        });
-      }
-
-      // Corrigeer matchRedenen
-      if (Array.isArray(s.matchRedenen)) {
-        s.matchRedenen = s.matchRedenen.filter(r => {
-          const rl = r.toLowerCase();
-          if (rl.includes('weinig afwas') && onderdelen.length >= 3) return false;
-          if (rl.includes('1 pan') && panCount >= 2) return false;
-          return true;
-        });
-      }
-
-      // Versproduct badge corrigeren op basis van inHuis
-      const versItems = ['kipfilet','kipdijfilet','gehakt','zalm','vis','tonijn','sla','ijsbergsla','rucola','andijvie','spinazie','broccoli','courgette','paprika','tomaat','champignon','garnalen','kip'];
-      const inHuisNamen = Array.isArray(s.inHuis) ? s.inHuis.map(i => (typeof i === 'object' ? i.naam : i).toLowerCase().trim()) : [];
-
-      // Match: gebruik de exacte inHuis naam als die in de versItems lijst past
-      let gebruikteVersItems = [];
-      inHuisNamen.forEach(naam => {
-        const match = versItems.find(v => naam.includes(v) || v.includes(naam));
-        if (match) {
-          // Gebruik de meest specifieke: inHuis naam als die langer is
-          const beste = naam.length >= match.length ? naam : match;
-          gebruikteVersItems.push(beste);
-        }
+      // STAP 5: waaromPast corrigeren
+      s.waaromPast = waarom.map(w => metPunt(normalizeerTekst(w))).filter(w => {
+        const wl = w.toLowerCase();
+        if (wl.includes('weinig afwas') && afwas.length >= 3) return false;
+        if (wl.includes('1 pan') && panCount >= 2) return false;
+        if (wl.includes('alles in huis') && Array.isArray(s.nogNodig) && s.nogNodig.length > 0) return false;
+        return Boolean(w);
       });
 
-      // Dedupliceer: verwijder kortere als langere variant al aanwezig is
-      gebruikteVersItems = [...new Set(gebruikteVersItems)];
-      gebruikteVersItems = gebruikteVersItems.filter((item, _, arr) =>
-        !arr.some(other => other !== item && other.includes(item) && other.length > item.length)
-      );
+      // STAP 6: matchRedenen opschonen
+      if (Array.isArray(s.matchRedenen)) {
+        const vb = ['eenpans(schaal)', 'normaal moeite', 'ruim binnen tijd', 'sterke voorraad', 'voorraadbewegingen'];
+        s.matchRedenen = s.matchRedenen.map(r => normalizeerTekst(r?.trim())).filter(r => r && r.length > 2 && !vb.some(v => r.toLowerCase().includes(v))).slice(0, 3);
+      }
 
-      s.versProduct = gebruikteVersItems.length > 0;
-      s.versProductItems = gebruikteVersItems;
-    });
+      // STAP 7: versProductItems
+      const versLijst = ['kipfilet','kipdijfilet','gehakt','zalm','vis','tonijn','sla','ijsbergsla','rucola','andijvie','spinazie','broccoli','courgette','paprika','tomaat','champignon','garnalen','kip'];
+      const inHuisNamen = (s.inHuis || []).map(i => (typeof i === 'object' ? i.naam : i).toLowerCase().trim());
+      let versItems = [];
+      inHuisNamen.forEach(naam => {
+        const match = versLijst.find(v => naam.includes(v) || v.includes(naam));
+        if (match) versItems.push(naam.length >= match.length ? naam : match);
+      });
+      versItems = [...new Set(versItems)].filter((item, _, arr) => !arr.some(a => a !== item && a.includes(item) && a.length > item.length));
+      s.versProduct = versItems.length > 0;
+      s.versProductItems = versItems;
 
-    return res.status(200).json({ suggesties });
+      return s;
+    }
+
+    const verwerkteSuggesties = suggesties.map(verwerkRecept).filter(s => !s.matchScore || s.matchScore >= 60);
+    return res.status(200).json({ suggesties: verwerkteSuggesties });
 
   } catch (err) {
     console.error('API fout:', err.message);
