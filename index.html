@@ -320,7 +320,7 @@
 
     /* ERRORS */
     .error-box{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--red);font-size:14px;margin-bottom:16px;line-height:1.5;}
-    .warn-box{background:rgba(232,168,56,0.1);border:1px solid rgba(232,168,56,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--amber);font-size:14px;margin-bottom:16px;line-height:1.5;}
+    .warn-box{background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.25);border-radius:var(--radius);padding:16px 18px;color:#d4a843;font-size:14px;margin-bottom:16px;line-height:1.6;display:flex;align-items:flex-start;gap:4px;}
     .info-box{background:rgba(91,155,213,0.1);border:1px solid rgba(91,155,213,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--blue);font-size:14px;margin-bottom:16px;line-height:1.5;}
   </style>
 </head>
@@ -801,7 +801,18 @@
           else { errorEl.textContent = data.error || 'Er is iets misgegaan. Probeer het opnieuw.'; errorEl.style.display = 'block'; }
           return;
         }
-        state.suggesties = data.suggesties.map(reinigSuggestie);
+        state.suggesties = data.suggesties?.map(reinigSuggestie) || [];
+
+        // Onmogelijke combinatie: toon bericht, geen crash
+        if (data.is_mogelijk === false) {
+          clearInterval(interval);
+          if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
+          toonScherm('screen-invoer');
+          errorEl.className = 'warn-box';
+          errorEl.innerHTML = `<span style="font-size:18px;margin-right:8px;">🤔</span>${data.bericht_aan_gebruiker || 'Met deze combinatie kan ik helaas geen recept maken. Voeg een ander ingrediënt toe of pas je keuze aan.'}`;
+          errorEl.style.display = 'block';
+          return;
+        }
 
         // Beperkte voorraad flow
         if (data.beperktVoorraad) {
