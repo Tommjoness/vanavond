@@ -510,6 +510,12 @@ Beoordeel eerlijk. Geef JSON:
       [/airtight container/gi, 'afgesloten bakje'],
       [/luchtfriet/gi, 'airfryer'],
       [/geroostedrde/gi, 'geroosterde'],
+      [/\bgiet af\b\.?/gi, 'Als de pasta gaar is, giet je deze af.'],
+      [/gare kip terug in/gi, 'gebakken kip terug in'],
+      [/\bleg zur zijde\b/gi, 'zet even apart'],
+      [/spuit yoghurtsaus/gi, 'verdeel de yoghurtsaus'],
+      [/snipper de kip in beten/gi, 'snijd de kip in kleine stukjes'],
+      [/fijngeraaspte/gi, 'fijngehakte'],
       [/knappige/gi, 'knapperige'],
       [/eenpans\(schaal\)gerecht/gi, '1 pan'],
     ];
@@ -586,7 +592,9 @@ Beoordeel eerlijk. Geef JSON:
       if (panCount === 1) afwas.push('1 pan');
       else if (panCount === 2) afwas.push('2 pannen');
       else if (panCount >= 3) afwas.push(`${panCount} pannen`);
-      if (heeftOven) afwas.push(heeftBakplaat ? 'bakplaat' : heeftOvenschaal ? 'ovenschaal' : 'oven');
+      // Oven zelf is GEEN afwas, alleen wat erin gaat
+      if (heeftOven && heeftBakplaat) afwas.push('bakplaat');
+      else if (heeftOven && heeftOvenschaal) afwas.push('ovenschaal');
       if (heeftAirfryer && !heeftOven) afwas.push('airfryer');
       if (heeftMagnetron && !heeftPan && !heeftOven) afwas.push('magnetron');
       if (heeftKom) afwas.push('kom');
