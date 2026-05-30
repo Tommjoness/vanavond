@@ -885,20 +885,26 @@
         const id = veiligId(s.naam);
         if (fotoCache[id]) continue;
 
-        // Prioriteit: pexels_zoekterm (Engels, door AI gegenereerd) > fotoZoekterm > naam
-        const zoekterm = s.pexels_zoekterm || s.fotoZoekterm || null;
-        if (!zoekterm) continue;
+        // Prioriteit: pexels_zoekterm > fotoZoekterm > naam
+        const primair = s.pexels_zoekterm || s.fotoZoekterm || null;
+        const backup = s.pexels_backup_zoekterm || null;
+        if (!primair) continue;
 
         try {
-          // Eerste poging: met specifieke zoekterm
-          let url = await haalFotoUrl(zoekterm);
+          // Poging 1: primaire zoekterm
+          let url = await haalFotoUrl(primair);
 
-          // Fallback 1: kortere versie van de zoekterm (eerste woord)
-          if (!url && zoekterm.includes(' ')) {
-            url = await haalFotoUrl(zoekterm.split(' ')[0] + ' food');
+          // Poging 2: AI-gegenereerde backup zoekterm
+          if (!url && backup) {
+            url = await haalFotoUrl(backup);
           }
 
-          // Fallback 2: generieke term
+          // Poging 3: eerste woord + "food photography"
+          if (!url) {
+            url = await haalFotoUrl(primair.split(' ')[0] + ' food photography');
+          }
+
+          // Poging 4: generieke keukenfoto
           if (!url) {
             url = await haalFotoUrl('homemade dinner');
           }
