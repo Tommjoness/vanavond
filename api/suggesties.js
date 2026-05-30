@@ -274,6 +274,18 @@ SPELLING — controleer elk woord vóór je het schrijft:
 - Geen dubbele letters die er niet horen: "geroostedrde" → "geroosterde"
 
 TAALREGELS — KRITIEK:
+VERBODEN ZINNEN EN CONSTRUCTIES (nooit gebruiken):
+- "tot een glad dressing" → schrijf "tot een gladde dressing"
+- "Gebruikt veel ingrediënten en heel snel" → schrijf "Gebruikt veel van je ingrediënten en is snel klaar"
+- "0 pannen voorbereiding, gezond en anders" → schrijf nooit zo iets
+- "Plaats het warme vlees erover" → schrijf "Leg het warme vlees erop"
+- "geeft meer diepte" → schrijf "maakt de smaak rijker"
+- "bestrooi met bosui" → schrijf "verdeel de bosui erover"
+- "crunchier" → schrijf "knapperiger"
+- Meervoudsfouten: "2 teentje" → "2 teentjes", "4 takken bosui" is correct, "1 tak" is correct
+- Hoeveelheden altijd controleren op correct Nederlands meervoud
+- Geen telegramstijl in matchUitleg of slimmeReden
+- slimmeReden mag nooit "0 pannen" of vage samenstellingen bevatten
 - Schrijf ALLEEN in het Nederlands. Geen Engelse woorden.
 - VERBODEN: "minced", "prep", "cook", "medium heat", "serve", "ready", "heat", "add", "stir", "garnish", "topping", "meal prep"
 - GOED: "fijngehakt", "voorbereiden", "koken", "middelhoog vuur", "serveren", "klaar", "verhit", "voeg toe", "roer", "werk af met", "bestrooi met"
@@ -547,34 +559,66 @@ Beoordeel eerlijk. Geef JSON:
     };
 
     const TAALPROBLEMEN = [
+      // Slechte kooktermen
+      [/snipper de kip in beten/gi, 'snijd de kip in kleine stukjes'],
       [/snipper de kip/gi, 'snijd de kip in stukjes'],
       [/\bin beten\b/gi, 'in blokjes'],
       [/leg zur zijde/gi, 'leg apart'],
-      [/gare kip terug/gi, 'gebakken kip terug'],
-      [/spuit yoghurtsaus/gi, 'lepel de yoghurtsaus'],
+      [/zet zur zijde/gi, 'zet apart'],
+      [/gare kip terug in/gi, 'gebakken kip terug in'],
+      [/gare kip/gi, 'gebakken kip'],
+      [/spuit yoghurtsaus/gi, 'verdeel de yoghurtsaus'],
+      [/spuit de saus/gi, 'verdeel de saus'],
       [/fijner de knoflook/gi, 'hak de knoflook fijn'],
       [/fijngeraaspte/gi, 'fijngehakte'],
-      [/reisbowl/gi, 'rijstbowl'],
-      [/geeft meer frisse smaak/gi, 'maakt het gerecht frisser'],
-      [/serveer direct\./gi, 'Je kunt het daarna meteen opscheppen.'],
+      [/geroostedrde/gi, 'geroosterde'],
+      [/knappige/gi, 'knapperige'],
+      [/\bgiet af\b\.?/gi, 'laat even uitlekken'],
+      [/serveer direct\./gi, 'Schep het op en eet het meteen.'],
       [/serveer direct/gi, 'schep het op'],
+      [/eenpans\(schaal\)gerecht/gi, '1 pan'],
+      [/reisbowl/gi, 'rijstbowl'],
       [/\bnoodles\b/gi, 'pasta'],
-      [/sterke voorraadbewegingen/gi, ''],
-      [/normaal moeite niveau/gi, ''],
+      [/luchtfriet/gi, 'airfryer'],
+      [/airtight container/gi, 'afgesloten bakje'],
       [/\bsqueeze\b/gi, 'scheutje'],
       [/\bhigh protein\b/gi, 'eiwitrijk'],
-      [/airtight container/gi, 'afgesloten bakje'],
-      [/luchtfriet/gi, 'airfryer'],
-      [/geroostedrde/gi, 'geroosterde'],
-      [/\bgiet af\b\.?/gi, 'Als de pasta gaar is, giet je deze af.'],
-      [/gare kip terug in/gi, 'gebakken kip terug in'],
-      [/\bleg zur zijde\b/gi, 'zet even apart'],
-      [/spuit yoghurtsaus/gi, 'verdeel de yoghurtsaus'],
-      [/snipper de kip in beten/gi, 'snijd de kip in kleine stukjes'],
-      [/fijngeraaspte/gi, 'fijngehakte'],
-      [/knappige/gi, 'knapperige'],
-      [/eenpans\(schaal\)gerecht/gi, '1 pan'],
+      [/sterke voorraadbewegingen/gi, ''],
+      [/normaal moeite niveau/gi, ''],
+      [/\bgeeft meer diepte\b/gi, 'maakt de smaak rijker'],
+      [/geeft diepte/gi, 'verrijkt de smaak'],
+      [/tot een glad dressing/gi, 'tot een gladde dressing'],
+      [/tot een glad saus/gi, 'tot een gladde saus'],
+      [/tot een glad mengsel/gi, 'tot een glad mengsel'],
+      [/place the/gi, 'leg het'],
+      [/plaats het warme vlees erover/gi, 'leg het warme vlees erop'],
+      [/\bcrunchier\b/gi, 'knapperiger'],
+      [/\bcrunch\b/gi, 'bite'],
+
+      // Meervoudsfouten
+      [/(\d+)\s+teentje\b/g, '$1 teentjes'],
+      [/(\d+)\s+takken\b/g, (_, n) => n === '1' ? '1 tak' : `${n} takken`],
+      [/1\s+teentjes/g, '1 teentje'],
+      [/1\s+takken/g, '1 tak'],
+      [/(\d+)\s+stuks?\b/g, (_, n) => n === '1' ? '1 stuk' : `${n} stuks`],
+      [/(\d)\s+vrucht\b/g, (_, n) => n === '1' ? '1 vrucht' : `${n} vruchten`],
+
+      // Vage of rare zinnen
+      [/gebruikt veel ingrediënten en heel snel/gi, 'Gebruikt veel van je ingrediënten en is snel klaar'],
+      [/0 pannen voorbereiding/gi, 'Geen pan nodig voor voorbereiding'],
+      [/0 pannen.*?[,\.]/gi, 'Minimale afwas.'],
+      [/bestrooi met bosui en paprika/gi, 'verdeel de bosui en paprika erover'],
+      [/bestrooi met bosui/gi, 'verdeel de bosui erover'],
     ];
+
+    // Meervoud correctie voor hoeveelheden
+    function corrigeerMeervoud(tekst) {
+      if (!tekst || typeof tekst !== 'string') return tekst;
+      return tekst
+        .replace(/^(\d+)\s+teentje$/i, (_, n) => n === '1' ? '1 teentje' : `${n} teentjes`)
+        .replace(/^(\d+)\s+tak$/i, (_, n) => n === '1' ? '1 tak' : `${n} takken`)
+        .replace(/^(\d+)\s+stuks$/i, (_, n) => n === '1' ? '1 stuk' : `${n} stuks`);
+    }
 
     function normalizeerTekst(tekst) {
       if (!tekst || typeof tekst !== 'string') return tekst;
@@ -588,7 +632,12 @@ Beoordeel eerlijk. Geef JSON:
       const namen = items.map(i => (typeof i === 'object' ? i.naam : i).toLowerCase().trim());
       return items.filter((_, idx) =>
         !namen.some((ander, andereIdx) => andereIdx !== idx && ander.includes(namen[idx]) && ander.length > namen[idx].length)
-      );
+      ).map(i => {
+        if (typeof i === 'object' && i.hoeveelheid) {
+          i.hoeveelheid = corrigeerMeervoud(i.hoeveelheid);
+        }
+        return i;
+      });
     }
 
     function verwerkRecept(s) {
@@ -597,6 +646,13 @@ Beoordeel eerlijk. Geef JSON:
       if (s.korteBeschrijving) s.korteBeschrijving = metPunt(normalizeerTekst(s.korteBeschrijving));
       if (s.matchUitleg) s.matchUitleg = metPunt(normalizeerTekst(s.matchUitleg));
       if (s.slimmeReden) s.slimmeReden = normalizeerTekst(s.slimmeReden);
+      // Blokkeer vage slimmeReden zinnen
+      if (s.slimmeReden) {
+        const vaag = ['0 pannen', 'voorbereiding', 'en anders', 'heel snel en', 'en heel snel'];
+        if (vaag.some(v => s.slimmeReden.toLowerCase().includes(v))) {
+          s.slimmeReden = '';
+        }
+      }
       const waarom = s.waaromPast || s.waaromSlim || [];
       if (s.restjes?.idee) s.restjes.idee = metPunt(normalizeerTekst(s.restjes.idee));
       if (s.restjes?.bewaren) s.restjes.bewaren = metPunt(normalizeerTekst(s.restjes.bewaren));
