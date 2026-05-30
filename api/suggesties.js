@@ -109,7 +109,6 @@ Gekozen filters (combineer als voorkeuren, niet als harde eisen): "${actieveFilt
 - "gezond": min 120g groente per portie, geen frituur, gebalanceerde macros
 - "makkelijk en vullend": warm/vullend, pasta/rijst/aardappel/romige saus of ovengerecht
 - "eiwitrijk": minimaal 30g eiwit per portie, duidelijke eiwitbron
-- "goedkoop": goedkope supermarktproducten, weinig ingrediënten, geen luxe
 - "licht eten": lager in kcal, minder vet, veel groente of lichte bereiding
 - "kindvriendelijk": milde smaken, herkenbaar, niet pittig of bitter
 - "koolhydraatarm": weinig/geen rijst/pasta/brood/aardappel
