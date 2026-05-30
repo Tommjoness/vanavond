@@ -17,7 +17,7 @@
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
     html{background:var(--bg);}
-    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;max-width:540px;margin:0 auto;padding-bottom:80px;}
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;max-width:540px;margin:0 auto;padding-bottom:160px;}
     .screen{display:none;padding:0 20px 24px;}
     .screen.active{display:block;}
     #screen-favorieten.active{display:flex;}
@@ -31,13 +31,13 @@
     .app-name{font-size:30px;font-weight:700;letter-spacing:-0.5px;color:var(--accent);}
     .app-tagline{font-size:14px;color:var(--text2);margin-top:4px;line-height:1.5;}
     .app-sub{font-size:12px;color:var(--text3);margin-top:6px;}
-    .section-label{font-size:11px;font-weight:600;letter-spacing:0.03em;color:var(--text3);margin-bottom:10px;}
-    .helper-text{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.4;}
-    .privacy-text{font-size:11px;color:var(--text3);margin-top:16px;text-align:center;line-height:1.5;}
+    .section-label{font-size:11px;font-weight:600;letter-spacing:0.04em;color:#a0a8b4;margin-bottom:10px;}
+    .helper-text{font-size:12px;color:#7a8494;margin-top:8px;line-height:1.5;}
+    .privacy-text{font-size:11px;color:#6a7280;margin-top:16px;text-align:center;line-height:1.5;}
     .form-group{margin-bottom:26px;}
     .input-field{width:100%;background:#1e1e1e;border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius);padding:14px 16px;color:var(--text);font-size:15px;outline:none;resize:none;font-family:inherit;transition:border-color 0.2s;-webkit-appearance:none;line-height:1.5;}
     .input-field:focus{border-color:rgba(255,255,255,0.22);background:#222;}
-    .input-field::placeholder{color:#555;}
+    .input-field::placeholder{color:#6a7280;}
 
     /* INGREDIENT CHIPS */
     .chips-container{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:0;}
@@ -51,7 +51,7 @@
     .filter-balk-wrapper{position:relative;margin-bottom:4px;}
     .filter-balk{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:2px;}
     .filter-balk .pill{white-space:nowrap;}
-    .filter-hint{font-size:11px;color:var(--text3);margin-top:6px;margin-bottom:4px;}
+    .filter-hint{font-size:10px;color:#565e6e;margin-top:6px;margin-bottom:4px;}
     /* Scroll pijlen */
     .scroll-pijl{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;background:rgba(26,26,26,0.92);border:1px solid rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;transition:opacity 0.2s,transform 0.15s;color:rgba(255,255,255,0.7);font-size:13px;line-height:1;pointer-events:auto;user-select:none;}
     .scroll-pijl:hover{background:rgba(40,40,40,0.98);color:#fff;transform:translateY(-50%) scale(1.08);}
@@ -62,6 +62,9 @@
     .pill:hover{background:var(--bg3);color:#dde4ee;border-color:#505050;}
     .pill:active{transform:scale(0.96);}
     .pill.selected{background:var(--accent);border-color:var(--accent);color:#0f0f0f;font-weight:700;}
+    .pill[data-value="maakt niet uit"]{color:#7a8494;border-color:#2e2e2e;font-style:italic;}
+    .pill[data-value="maakt niet uit"].selected{background:var(--bg3);border-color:#505050;color:#a0a8b4;font-weight:500;font-style:normal;}
+    .pill[data-group="geenZinIn"]{color:#a0a8b4;}
 
     /* BUTTONS */
     .btn-primary{width:100%;background:var(--accent);color:#000;border:none;border-radius:var(--radius);padding:17px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s;}
@@ -372,11 +375,13 @@
     .fav-acties{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 12px 10px 0;}
     .fav-delete{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px;line-height:1;}
     .fav-delete:hover{color:var(--red);}
-    .nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;background:rgba(15,15,15,0.92);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;z-index:100;}
-    .nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 0 14px;cursor:pointer;background:none;border:none;color:var(--text3);font-size:10px;font-weight:500;transition:color 0.15s;position:relative;}
+    .nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;background:rgba(15,15,15,0.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;z-index:100;}
+    .nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 12px;cursor:pointer;background:none;border:none;color:var(--text3);font-size:9px;font-weight:500;transition:color 0.15s;position:relative;}
     .nav-tab.actief{color:var(--accent);}
-    .nav-tab-icon{font-size:20px;line-height:1;}
-    .nav-badge{position:absolute;top:6px;right:calc(50% - 16px);background:var(--accent);color:#000;font-size:9px;font-weight:700;border-radius:100px;padding:1px 5px;min-width:16px;text-align:center;}
+    .nav-tab-icon{font-size:18px;line-height:1;}
+    .nav-badge{position:absolute;top:5px;right:calc(50% - 16px);background:var(--accent);color:#000;font-size:9px;font-weight:700;border-radius:100px;padding:1px 5px;min-width:16px;text-align:center;}
+    .sticky-cta{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:508px;z-index:99;padding-bottom:env(safe-area-inset-bottom,0px);}
+    .sticky-cta .btn-primary{box-shadow:0 4px 24px rgba(0,0,0,0.5);}
   </style>
 </head>
 <body>
@@ -404,10 +409,10 @@
       <div class="section-label">Wat heb je in huis?</div>
       <textarea id="ingredienten-input" class="input-field" rows="3" placeholder="Bijv. kipfilet, paprika, rijst, tomaten, eieren, kaas…" oninput="verwerkInvoer()"></textarea>
       <div class="helper-text">Typ wat je in huis hebt. Wij doen de rest.</div>
-      <div class="helper-text" style="margin-top:4px;opacity:0.75;">Kruiden, olie en basis-voorraadartikelen nemen we automatisch mee.</div>
+      <div class="helper-text" style="margin-top:4px;">Kruiden, olie en basisvoorraad tellen automatisch mee.</div>
       <div class="koelkast-row">
         <button class="btn-koelkast" onclick="laadKoelkast()" id="btn-koelkast-laden" style="display:none;">🧊 Laad opgeslagen koelkast</button>
-        <button class="btn-koelkast-opslaan" onclick="slaKoelkastOp()">💾 Koelkast onthouden</button>
+        <button class="btn-koelkast-opslaan" onclick="slaKoelkastOp()">💾 Voorraad onthouden</button>
       </div>
       <div id="chips-container" class="chips-container"></div>
     </div>
@@ -453,7 +458,7 @@
 
     <div class="form-group">
       <div class="section-label">Wat wil je vanavond?</div>
-      <div class="helper-text" style="margin-bottom:10px;">Kies een richting. We zoeken recepten die daar echt bij passen.</div>
+      <div class="helper-text" style="margin-bottom:10px;">Kies één of meer richtingen.</div>
       <div id="filter-uitleg" class="filter-uitleg" style="display:none;"></div>
       <div class="filter-balk-wrapper" style="padding:0 4px;">
         <div class="filter-balk" id="doel-balk">
@@ -477,12 +482,12 @@
     <div class="form-group">
       <div class="section-label">Vandaag liever geen…</div>
       <div class="pill-grid">
-        <div class="pill" data-group="geenZinIn" data-value="geen oven" data-multi="true">🚫 Oven gebruiken</div>
-        <div class="pill" data-group="geenZinIn" data-value="geen snijwerk" data-multi="true">🚫 Veel snijwerk</div>
-        <div class="pill" data-group="geenZinIn" data-value="geen rijst" data-multi="true">🚫 Rijst</div>
-        <div class="pill" data-group="geenZinIn" data-value="geen pasta" data-multi="true">🚫 Pasta</div>
-        <div class="pill" data-group="geenZinIn" data-value="geen pittig" data-multi="true">🚫 Pittig eten</div>
-        <div class="pill" data-group="geenZinIn" data-value="geen vis" data-multi="true">🚫 Vis</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen oven" data-multi="true"><span style="opacity:0.5;font-size:11px;margin-right:4px;">✕</span> Oven gebruiken</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen snijwerk" data-multi="true"><span style="opacity:0.5;font-size:11px;margin-right:4px;">✕</span> Veel snijwerk</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen rijst" data-multi="true"><span style="opacity:0.5;font-size:11px;margin-right:4px;">✕</span> Rijst</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen pasta" data-multi="true"><span style="opacity:0.5;font-size:11px;margin-right:4px;">✕</span> Pasta</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen pittig" data-multi="true"><span style="opacity:0.5;font-size:11px;margin-right:4px;">✕</span> Pittig eten</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen vis" data-multi="true"><span style="opacity:0.5;font-size:11px;margin-right:4px;">✕</span> Vis</div>
       </div>
     </div>
 
@@ -506,7 +511,7 @@
           <div class="pill-grid">
             <div class="pill" data-group="boodschappen" data-value="nee">Nee, alleen wat ik heb</div>
             <div class="pill" data-group="boodschappen" data-value="een">Max 1 ding kopen</div>
-            <div class="pill" data-group="boodschappen" data-value="paar">Paar dingen is oké</div>
+            <div class="pill" data-group="boodschappen" data-value="paar">Een paar dingen is oké</div>
           </div>
         </div>
 
@@ -531,12 +536,16 @@
           <div class="helper-text">Deze ingrediënten gebruiken we nergens, ook niet als vervanging.</div>
         </div>
 
-        <div class="privacy-text" style="margin-top:16px;">Je gegevens worden alleen gebruikt om recepten voor te stellen.</div>
+        <div class="privacy-text" style="margin-top:16px;">Deze voorkeuren gebruiken we alleen voor receptsuggesties.</div>
         <button class="voorkeuren-opslaan" onclick="sluitVoorkeuren()">Voorkeuren opslaan</button>
       </div>
     </div>
 
-    <div id="error-invoer" class="error-box" style="display:none;"></div>
+    <div id="error-invoer" class="error-box" style="display:none;margin:0 0 8px;"></div>
+  </div>
+
+  <!-- STICKY CTA — altijd zichtbaar boven nav-bar -->
+  <div class="sticky-cta" id="sticky-cta">
     <button class="btn-primary" onclick="haalSuggesties()">Geef suggesties →</button>
     <button class="btn-smart" onclick="smartMode()">🎲 Kies gewoon iets voor me</button>
   </div>
@@ -1735,7 +1744,7 @@
       try {
         localStorage.setItem('vanavond_koelkast', val);
         const btn = document.querySelector('.btn-koelkast-opslaan');
-        if (btn) { btn.textContent = '✅ Opgeslagen!'; setTimeout(() => btn.textContent = '💾 Koelkast onthouden', 2000); }
+        if (btn) { btn.textContent = '✅ Opgeslagen!'; setTimeout(() => btn.textContent = '💾 Voorraad onthouden', 2000); }
         document.getElementById('btn-koelkast-laden').style.display = 'block';
       } catch(e) {}
     }
@@ -2057,6 +2066,9 @@
     const _origToonScherm = toonScherm;
     toonScherm = function(id, animatie) {
       _origToonScherm(id, animatie);
+      // Sticky CTA alleen op invoerscherm
+      const cta = document.getElementById('sticky-cta');
+      if (cta) cta.style.display = id === 'screen-invoer' ? '' : 'none';
       // Markeer juiste nav-tab
       const map = { 'screen-invoer': 'nav-zoek', 'screen-resultaten': 'nav-zoek', 'screen-beperkt': 'nav-zoek', 'screen-favorieten': 'nav-fav' };
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('actief'));
