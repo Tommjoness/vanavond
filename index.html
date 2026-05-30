@@ -118,20 +118,25 @@
     .result-beschrijving{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px;}
     .kaart-mist{font-size:12px;color:var(--amber);margin-bottom:10px;background:rgba(232,168,56,0.08);padding:5px 10px;border-radius:var(--radius-xs);display:inline-block;}
     .result-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-    .result-btn{width:100%;background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);padding:11px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.15s;}
+    .result-btn{width:100%;background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);padding:11px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
     .result-btn:active{background:var(--accent2);}
     .extra-btn{width:100%;background:transparent;border:1px solid var(--border);border-radius:var(--radius);padding:13px;color:var(--text2);font-size:14px;cursor:pointer;margin:4px 0 12px;text-align:center;}
     .extra-label{font-size:11px;font-weight:600;letter-spacing:0.03em;color:var(--text3);margin-bottom:12px;margin-top:4px;}
-    .opnieuw-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;color:var(--text2);font-size:14px;cursor:pointer;margin-top:8px;}
+    .opnieuw-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:transparent;border:1px solid rgba(232,193,112,0.4);border-radius:var(--radius);padding:14px;color:var(--accent);font-size:14px;font-weight:500;cursor:pointer;margin-top:8px;transition:all 0.15s;}
+    .opnieuw-btn:hover{background:rgba(232,193,112,0.06);border-color:rgba(232,193,112,0.65);}
+    .opnieuw-btn:active{background:rgba(232,193,112,0.1);}
 
-    /* TAGS */
+    /* TAGS — 3 groepen voor visuele rust */
     .tag{display:inline-flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:500;padding:5px 11px;border-radius:100px;white-space:nowrap;line-height:1.2;}
-    .tag-green{background:rgba(76,175,125,0.18);color:#5dcf92;}
-    .tag-amber{background:rgba(232,168,56,0.18);color:#f0b84a;}
-    .tag-gray{background:#252b34;color:#bec4cc;border:1px solid rgba(255,255,255,0.1);}
-    .tag-blue{background:rgba(91,155,213,0.18);color:#7ab3e0;}
-    .tag-accent{background:rgba(232,193,112,0.18);color:var(--accent);}
-    .tag-purple{background:rgba(155,127,212,0.18);color:#b89fe8;}
+    /* Neutraal: tijd, pan, afwas */
+    .tag-gray{background:#1e2229;color:#c2c8d0;border:1px solid rgba(255,255,255,0.08);}
+    /* Status: alles in huis, nog nodig */
+    .tag-green{background:rgba(76,175,125,0.12);color:#5dcf92;border:1px solid rgba(76,175,125,0.2);}
+    .tag-amber{background:rgba(232,168,56,0.12);color:#e8a838;border:1px solid rgba(232,168,56,0.18);}
+    /* Macro/voeding: kcal, eiwit, eiwitrijk — allemaal zelfde blauwtint */
+    .tag-blue{background:rgba(91,155,213,0.12);color:#7ab3e0;border:1px solid rgba(91,155,213,0.2);}
+    .tag-accent{background:rgba(91,155,213,0.12);color:#7ab3e0;border:1px solid rgba(91,155,213,0.2);}
+    .tag-purple{background:rgba(91,155,213,0.12);color:#7ab3e0;border:1px solid rgba(91,155,213,0.2);}
 
     /* DETAIL */
     .detail-header-area{padding:36px 0 0;}
@@ -1066,9 +1071,9 @@
 
       const kcal = s.voeding?.perPortie?.kcal;
       const eiwit = s.voeding?.perPortie?.proteinen;
-      const voedingBadge = kcal ? `<span class="tag tag-gray">±${kcal} kcal</span>${eiwit ? `<span class="tag tag-gray">±${eiwit}g eiwit</span>` : ''}` : '';
+      const voedingBadge = kcal ? `<span class="tag tag-blue">±${kcal} kcal</span>${eiwit ? `<span class="tag tag-blue">±${eiwit}g eiwit</span>` : ''}` : '';
 
-      const extra = Array.isArray(s.extraBadges) ? s.extraBadges.slice(0,1).map(b=>`<span class="tag tag-gray">${b}</span>`).join('') : '';
+      const extra = Array.isArray(s.extraBadges) ? s.extraBadges.slice(0,1).map(b=>`<span class="tag tag-blue">${b}</span>`).join('') : '';
       const score = s.matchScore ? `<span class="match-score" style="color:${matchKleur(s.matchScore)}">Match ${s.matchScore}%</span>` : '';
 
       card.innerHTML = `
@@ -1159,6 +1164,19 @@
             r = r.replace(/ruim binnen tijd/gi, 'Past binnen je gekozen tijd.');
             r = r.replace(/sterke voorraadbewegingen/gi, '');
         r = r.replace(/\bafkruid\b/gi, 'bestrooi met');
+        r = r.replace(/tot een glad dressing/gi, 'tot een gladde dressing');
+        r = r.replace(/tot een glad saus/gi, 'tot een gladde saus');
+        r = r.replace(/geeft meer diepte/gi, 'maakt de smaak rijker');
+        r = r.replace(/geeft diepte/gi, 'verrijkt de smaak');
+        r = r.replace(/\bcrunchier\b/gi, 'knapperiger');
+        r = r.replace(/\bcrunch\b/gi, 'bite');
+        r = r.replace(/gebruikt veel ingrediënten en heel snel/gi, 'Gebruikt veel van je ingrediënten en is snel klaar');
+        r = r.replace(/0 pannen voorbereiding/gi, '');
+        r = r.replace(/0 pannen.*?gezond en anders/gi, '');
+        r = r.replace(/plaats het warme vlees erover/gi, 'Leg het warme vlees erop');
+        r = r.replace(/bestrooi met bosui en paprika/gi, 'verdeel de bosui en paprika erover');
+        r = r.replace(/bestrooi met bosui/gi, 'verdeel de bosui erover');
+        r = r.replace(/(\d+)\s+teentje(?!s)/gi, (_, n) => n === '1' ? '1 teentje' : n + ' teentjes');
         r = r.replace(/snipper de kip/gi, 'snijd de kip in stukjes');
         r = r.replace(/in beten/gi, 'in blokjes');
         r = r.replace(/leg zur zijde/gi, 'leg apart');
