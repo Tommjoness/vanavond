@@ -162,18 +162,18 @@
 
     /* OVERZICHT GRID */
     .overzicht-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-    .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 16px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:72px;}
+    .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:72px;text-align:center;}
     .portie-selector{display:flex;align-items:center;gap:10px;margin-top:2px;}
     .portie-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:var(--text);cursor:pointer;transition:background 0.15s;line-height:1;}
     .portie-btn:hover{background:var(--bg4);}
     .portie-waarde{font-size:15px;font-weight:700;color:#f0f0f0;min-width:20px;text-align:center;}
-    .overzicht-label{font-size:10px;color:#6b7585;letter-spacing:0.03em;margin-bottom:5px;font-weight:600;}
-    .overzicht-waarde{font-size:15px;font-weight:600;color:#f0f0f0;line-height:1.3;}
+    .overzicht-label{font-size:10px;color:var(--text3);letter-spacing:0.05em;margin-bottom:5px;font-weight:600;text-transform:uppercase;}
+    .overzicht-waarde{font-size:15px;font-weight:600;color:var(--text);line-height:1.3;font-variant-numeric:tabular-nums;}
 
     /* TABS */
     .tabs{display:flex;gap:2px;background:var(--bg3);border-radius:var(--radius-sm);padding:3px;margin-bottom:24px;position:sticky;top:0;z-index:10;}
-    .tab{flex:1;padding:9px 4px;font-size:12px;font-weight:500;text-align:center;border-radius:6px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
-    .tab.active{background:var(--bg2);color:var(--text);}
+    .tab{flex:1;padding:10px 4px;font-size:13px;font-weight:500;text-align:center;border-radius:6px;cursor:pointer;color:var(--text2);transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
+    .tab.active{background:var(--bg3);color:var(--text);font-weight:600;border:1px solid rgba(255,255,255,0.1);}
     .tab-content{display:none;}
     .tab-content.active{display:block;}
 
@@ -285,8 +285,7 @@
     .match-score-groot{font-size:32px;font-weight:800;letter-spacing:-1px;filter:drop-shadow(0 0 8px currentColor);}
 
     /* TABS DUIDELIJKER */
-    .tab{flex:1;padding:10px 4px;font-size:12px;font-weight:500;text-align:center;border-radius:6px;cursor:pointer;color:#9aa3b0;transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
-    .tab.active{background:var(--bg2);color:#f4f4f4;font-weight:600;border:1px solid rgba(255,255,255,0.08);}
+    /* tab-stijl is gedefinieerd bij recepttabs hierboven */
 
     /* TYPOGRAFIE CONTRAST */
     .result-naam{font-size:18px;font-weight:700;color:#f4f4f4;line-height:1.25;margin-bottom:3px;letter-spacing:-0.3px;}
@@ -897,6 +896,9 @@
       if (tipEl) tipEl.style.display = 'none';
     }
 
+    let _retryTeller = 0;
+    const MAX_RETRIES = 2;
+
     async function haalSuggesties(verfijnParam) {
       const rawInvoer = document.getElementById('ingredienten-input').value.trim();
       const ingredienten = rawInvoer || state.ingredientChips.join(', ');
@@ -953,16 +955,35 @@
         if (data.is_mogelijk === false) {
           clearInterval(interval);
           if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
+          _retryTeller = 0;
           toonEmptyState('no_results');
           return;
         }
 
         // Beperkte voorraad flow
         if (data.beperktVoorraad) {
+          _retryTeller = 0;
           toonBeperktVoorraad(data);
           return;
         }
 
+        // 0 resultaten na quality gate: retry met harde limiet
+        if (state.suggesties.length === 0) {
+          if (_retryTeller < MAX_RETRIES) {
+            _retryTeller++;
+            clearInterval(interval);
+            if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
+            return haalSuggesties(verfijnParam);
+          } else {
+            _retryTeller = 0;
+            clearInterval(interval);
+            if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
+            toonEmptyState('no_results');
+            return;
+          }
+        }
+
+        _retryTeller = 0;
         // Eerst resultaten tonen, dan foto's laden (DOM moet bestaan)
         toonResultaten();
         setTimeout(() => laadFotos(data.suggesties), 100);
@@ -1340,22 +1361,22 @@
       const scenarios = {
         no_results: {
           icon: '🍳',
-          title: 'Geen recepten gevonden',
-          message: 'Met deze combinatie kon er helaas geen passend recept worden samengesteld. Voeg een extra ingrediënt toe of pas je filters aan.',
+          title: 'Geen passend recept gevonden',
+          message: 'Met deze combinatie van ingrediënten en filters lukt het niet om een sterk recept samen te stellen. Voeg een extra ingrediënt toe of pas je filters aan.',
           btnText: 'Pas je ingrediënten aan',
           actie: () => toonScherm('screen-invoer')
         },
         api_error: {
-          icon: '🤯',
+          icon: '⚠️',
           title: 'Er ging iets mis',
-          message: 'De verbinding met de AI-receptenstudio is even verbroken. Geen zorgen, je ingrediënten zijn bewaard. Probeer het opnieuw.',
+          message: 'De verbinding met de receptenservice is even verbroken. Je ingrediënten zijn bewaard. Probeer het opnieuw.',
           btnText: 'Opnieuw proberen',
           actie: () => haalSuggesties()
         },
         network_error: {
           icon: '🌐',
           title: 'Geen verbinding',
-          message: 'Het lijkt erop dat je internetverbinding er even tussenuit is. Controleer je wifi of mobiele data en probeer het daarna opnieuw.',
+          message: 'Controleer je internetverbinding en probeer het opnieuw.',
           btnText: 'Opnieuw proberen',
           actie: () => haalSuggesties()
         }
@@ -1438,6 +1459,20 @@
     }
 
 
+    function formatAfwas(afwas) {
+      if (!afwas) return '—';
+      // Verwijder apparaten die nooit afwas zijn
+      return afwas
+        .replace(/\boven\b\s*(en\s*)?/gi, '')
+        .replace(/\bkookplaat\b\s*(en\s*)?/gi, '')
+        .replace(/\bfornuis\b\s*(en\s*)?/gi, '')
+        .replace(/\+/g, ' en ')
+        .replace(/^\s*en\s*/i, '')
+        .replace(/\s*en\s*$/i, '')
+        .replace(/\s+/g, ' ')
+        .trim() || '—';
+    }
+
     function lijstNaarZin(items) {
       if (!items || items.length === 0) return '';
       if (items.length === 1) return items[0];
@@ -1518,7 +1553,7 @@
           </div>
           <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '±' + v.portieGewicht + 'g' : 'onbekend'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) && s.apparatuurGebruikt.length > 0 ? s.apparatuurGebruikt.join(', ') : 'kookplaat'}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${(s.afwasNiveau || '').replace(/\+/g, 'en').replace(/\boven\b\s*(en\s*)?/gi, '').replace(/^\s*(en\s*)/gi, '').trim() || '—'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${formatAfwas(s.afwasNiveau)}</div></div>
         </div>
 
         <!-- TABS -->
@@ -1582,10 +1617,10 @@
 
           ${s.restjes ? `
           <div class="restjes-blok">
-            <div class="restjes-titel">Heb je restanten?</div>
-            ${s.restjes.idee ? `<div class="restjes-item"><span>💡</span> ${s.restjes.idee}</div>` : '<div class="restjes-item"><span>💡</span> Als je wat overhoudt, kun je het morgen koud of kort opgewarmd eten.</div>'}
+            <div class="restjes-titel">Heb je wat over?</div>
+            ${s.restjes.idee ? `<div class="restjes-item"><span>💡</span> ${s.restjes.idee}</div>` : '<div class="restjes-item"><span>💡</span> Je kunt het morgen koud eten of kort opwarmen.</div>'}
             ${s.restjes.bewaren ? `<div class="restjes-item"><span>🧊</span> ${s.restjes.bewaren}</div>` : ''}
-            ${s.restjes.invriezen !== undefined ? `<div class="restjes-item"><span>${s.restjes.invriezen ? '✅' : '⚠️'}</span> Invriezen: ${s.restjes.invriezen ? 'geschikt' : 'minder geschikt'}</div>` : ''}
+            ${s.restjes.invriezen !== undefined ? `<div class="restjes-item"><span>${s.restjes.invriezen ? '✅' : '⚠️'}</span> Invriezen: ${s.restjes.invriezen ? 'prima' : 'minder geschikt'}</div>` : ''}
           </div>` : ''}
           ${(Array.isArray(s.waaromPast || s.waaromSlim)) && (s.waaromPast || s.waaromSlim).length > 0 ? `
           <div style="margin-bottom:24px;">
