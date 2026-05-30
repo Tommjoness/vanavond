@@ -113,7 +113,6 @@ Gekozen filters (combineer als voorkeuren, niet als harde eisen): "${actieveFilt
 - "licht eten": lager in kcal, minder vet, veel groente of lichte bereiding
 - "kindvriendelijk": milde smaken, herkenbaar, niet pittig of bitter
 - "koolhydraatarm": weinig/geen rijst/pasta/brood/aardappel
-- "restjes opmaken": maximaal gebruik bestaande ingrediënten, hoge ingredient-match
 - "minder afwas": max 1 pan of 1 ovenschaal, geen meerdere pannen
 - "snel klaar": bereidingstijd maximaal 20 minuten
 - "veel groente": minimaal 200g groente per portie, duidelijk aanwezig in recept
