@@ -430,11 +430,11 @@
     <div class="form-group">
       <div class="section-label">Vandaag liever geen…</div>
       <div class="pill-grid">
-        <div class="pill" data-group="geenZinIn" data-value="geen oven" data-multi="true">🚫 Oven</div>
-        <div class="pill" data-group="geenZinIn" data-value="geen snijwerk" data-multi="true">🚫 Snijwerk</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen oven" data-multi="true">🚫 Oven gebruiken</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen snijwerk" data-multi="true">🚫 Veel snijwerk</div>
         <div class="pill" data-group="geenZinIn" data-value="geen rijst" data-multi="true">🚫 Rijst</div>
         <div class="pill" data-group="geenZinIn" data-value="geen pasta" data-multi="true">🚫 Pasta</div>
-        <div class="pill" data-group="geenZinIn" data-value="geen pittig" data-multi="true">🚫 Pittig</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen pittig" data-multi="true">🚫 Pittig eten</div>
         <div class="pill" data-group="geenZinIn" data-value="geen vis" data-multi="true">🚫 Vis</div>
       </div>
     </div>
@@ -1376,7 +1376,7 @@
 
           ${s.restjes ? `
           <div class="restjes-blok">
-            <div class="restjes-titel">🥡 Morgen met restjes</div>
+            <div class="restjes-titel">Heb je restanten?</div>
             ${s.restjes.idee ? `<div class="restjes-item"><span>💡</span> ${s.restjes.idee}</div>` : '<div class="restjes-item"><span>💡</span> Als je wat overhoudt, kun je het morgen koud of kort opgewarmd eten.</div>'}
             ${s.restjes.bewaren ? `<div class="restjes-item"><span>🧊</span> ${s.restjes.bewaren}</div>` : ''}
             ${s.restjes.invriezen !== undefined ? `<div class="restjes-item"><span>${s.restjes.invriezen ? '✅' : '⚠️'}</span> Invriezen: ${s.restjes.invriezen ? 'geschikt' : 'minder geschikt'}</div>` : ''}
