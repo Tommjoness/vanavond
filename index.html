@@ -1421,7 +1421,7 @@
               <button class="portie-btn" onclick="pasPortiesAan(${index}, 1)">+</button>
             </div>
           </div>
-          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '±' + v.portieGewicht + 'g p.p.' : 'onbekend'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '±' + v.portieGewicht + 'g' : 'onbekend'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) && s.apparatuurGebruikt.length > 0 ? s.apparatuurGebruikt.join(', ') : 'kookplaat'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${(s.afwasNiveau || '').replace(/\+/g, 'en').replace(/\boven\b\s*(en\s*)?/gi, '').replace(/^\s*(en\s*)/gi, '').trim() || '—'}</div></div>
         </div>
@@ -1467,7 +1467,7 @@
           ${v.totaalGewicht ? `
           <div class="overzicht-grid" style="margin-bottom:16px;">
             <div class="overzicht-item"><div class="overzicht-label">Totaalgewicht</div><div class="overzicht-waarde">±${v.totaalGewicht}g</div></div>
-            <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">±${v.portieGewicht}g p.p.</div></div>
+            <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">±${v.portieGewicht}g</div></div>
           </div>` : ''}
           <div class="voeding-tabs">
             <div class="voeding-tab active" onclick="wisselVoeding(${index}, 'portie', event)">Per portie</div>
