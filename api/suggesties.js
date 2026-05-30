@@ -133,6 +133,13 @@ Wees zo specifiek mogelijk op het hoofdingrediënt van het recept.
 - Salade + kip: "chicken salad"
 NOOIT een ingredient meegeven dat niet in het recept zit.
 Veld: "fotoZoekterm": "salmon pasta"
+Specifieke regels per gerechtstype:
+- Wrap → "tortilla wrap" of "chicken wrap" — nooit "salad", "bowl" of "plate"
+- Pasta → "pasta plate" of "spaghetti" — nooit "noodles" of "rice"
+- Rijst → "rice dish" of "fried rice" — nooit "pasta"
+- Soep → "soup bowl" — nooit "stew plate"
+- Omelet → "omelette pan" — nooit "fried egg"
+- Salade → "salad bowl" — nooit "wrap" of "sandwich"
 
 APPARATUUR: ${apparatuur.join(', ')}
 STRIKTE REGEL: Stel geen recept voor dat apparatuur gebruikt die niet in de lijst staat.

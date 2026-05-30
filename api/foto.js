@@ -5,9 +5,14 @@ export default async function handler(req, res) {
   if (!q) return res.status(400).json({ error: 'Geen zoekterm' });
 
   function schoonMaken(term) {
-    return term
+    let r = term
       .replace(/dark moody food photography|food photography|moody|dark|plating|gourmet|restaurant|homemade/gi, '')
       .trim().replace(/\s+/g, ' ');
+    // Vervang vage termen door specifiekere voor betere Pexels resultaten
+    r = r.replace(/\bwrap\b/gi, 'tortilla wrap');
+    r = r.replace(/\bnoodles\b/gi, 'pasta');
+    r = r.replace(/\bbowl\b/gi, 'dish');
+    return r;
   }
 
   async function zoekPexels(zoekterm) {
