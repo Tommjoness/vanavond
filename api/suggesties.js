@@ -282,6 +282,7 @@ VERBODEN ZINNEN EN CONSTRUCTIES (nooit gebruiken):
 - "geeft meer diepte" → schrijf "maakt de smaak rijker"
 - "bestrooi met bosui" → schrijf "verdeel de bosui erover"
 - "crunchier" → schrijf "knapperiger"
+- "geraspte cheddar" of "geraspte kaas" → schrijf gewoon "cheddar" of "kaas". Neem nooit aan of iemand een blok, plakjes of geraspte kaas heeft. Gebruik alleen de naam van de kaas zonder vorm.
 - Meervoudsfouten: "2 teentje" → "2 teentjes", "4 takken bosui" is correct, "1 tak" is correct
 - Hoeveelheden altijd controleren op correct Nederlands meervoud
 - Geen telegramstijl in matchUitleg of slimmeReden
@@ -571,7 +572,9 @@ Beoordeel eerlijk. Geef JSON:
       [/spuit de saus/gi, 'verdeel de saus'],
       [/fijner de knoflook/gi, 'hak de knoflook fijn'],
       [/fijngeraaspte/gi, 'fijngehakte'],
-      [/geroostedrde/gi, 'geroosterde'],
+      [/geraspte cheddar/gi, 'cheddar'],
+      [/geraspt cheddar/gi, 'cheddar'],
+      [/geraspte kaas/gi, 'kaas naar keuze'],
       [/knappige/gi, 'knapperige'],
       [/\bgiet af\b\.?/gi, 'laat even uitlekken'],
       [/serveer direct\./gi, 'Schep het op en eet het meteen.'],
