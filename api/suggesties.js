@@ -282,7 +282,16 @@ VERBODEN ZINNEN EN CONSTRUCTIES (nooit gebruiken):
 - "geeft meer diepte" → schrijf "maakt de smaak rijker"
 - "bestrooi met bosui" → schrijf "verdeel de bosui erover"
 - "crunchier" → schrijf "knapperiger"
-- "geraspte cheddar" of "geraspte kaas" → schrijf gewoon "cheddar" of "kaas". Neem nooit aan of iemand een blok, plakjes of geraspte kaas heeft. Gebruik alleen de naam van de kaas zonder vorm.
+- "geraspte cheddar" of "geraspte kaas" → schrijf gewoon "cheddar" of "kaas". Neem nooit aan welke vorm de kaas heeft.
+- "perfect handhaving" of varianten → verwijder altijd
+- "in zeer fijne blokjes" → schrijf "in kleine blokjes"
+- "tot deze goudbruin is" → schrijf "tot ze aan beide kanten goudbruin zijn" bij vlees/kip
+- "de restante [ingrediënt]" → schrijf "de overgebleven [ingrediënt]"
+- "voor onderweg" of "verpak in folie voor onderweg" → verwijder. De app is voor avondeten thuis.
+- "edge" → schrijf "smaak" of "pit"
+- "zak in folie gewikkeld" → schrijf "in folie gewikkeld" of "in een afgesloten bakje"
+- "Geen pannen nodig" → klopt zelden, schrijf "Minimale afwas" als het echt weinig is
+- Bij vlees of kip bakken: altijd vermelden dat het aan beide kanten gaar/goudbruin moet zijn
 - Meervoudsfouten: "2 teentje" → "2 teentjes", "4 takken bosui" is correct, "1 tak" is correct
 - Hoeveelheden altijd controleren op correct Nederlands meervoud
 - Geen telegramstijl in matchUitleg of slimmeReden
@@ -560,6 +569,23 @@ Beoordeel eerlijk. Geef JSON:
     };
 
     const TAALPROBLEMEN = [
+      // Nieuwe gevonden problemen
+      [/perfect handhaving/gi, ''],
+      [/en perfect handhaving/gi, ''],
+      [/in zeer fijne blokjes/gi, 'in kleine blokjes'],
+      [/in heel fijne blokjes/gi, 'in kleine blokjes'],
+      [/tot deze goudbruin is/gi, 'tot ze aan beide kanten goudbruin zijn'],
+      [/tot het goudbruin is/gi, 'tot het aan beide kanten goudbruin is'],
+      [/de restante /gi, 'de overgebleven '],
+      [/of verpak in folie voor onderweg/gi, ''],
+      [/verpak in folie voor onderweg/gi, ''],
+      [/voor onderweg/gi, ''],
+      [/\\bedge\\b/gi, 'pit'],
+      [/lichte pittige edge/gi, 'lichte pittige smaak'],
+      [/zak in folie gewikkeld/gi, 'in folie gewikkeld'],
+      [/Geen pannen nodig\\./gi, 'Minimale afwas.'],
+      [/geen pannen nodig/gi, 'minimale afwas'],
+      [/0 pannen nodig/gi, 'minimale afwas'],
       // Slechte kooktermen
       [/snipper de kip in beten/gi, 'snijd de kip in kleine stukjes'],
       [/snipper de kip/gi, 'snijd de kip in stukjes'],
