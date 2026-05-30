@@ -347,6 +347,18 @@ WAAROM DIT PAST: alleen concrete, begrijpelijke redenen.
 - Gebruik nooit "eiwitrijk" als eiwit laag is
 - Gebruik altijd concrete getallen: "Bevat 38g eiwit per portie", "Klaar in 20 minuten", "Gebruikt 1 pan"
 
+INGREDIËNTEN — HARDE REGELS (nooit negeren):
+1. Verwerk ALLE door de gebruiker ingevoerde ingrediënten in het recept, tenzij een combinatie echt oneetbaar of gevaarlijk is.
+2. Introduceer NOOIT willekeurige nieuwe ingrediënten die de gebruiker niet heeft ingevoerd.
+3. Uitzondering: je mag ALLEEN de volgende basisvoorraadkastartikelen toevoegen zonder dat de gebruiker ze heeft ingevoerd:
+   - Olijfolie, zonnebloemolie of boter
+   - Zout en peper
+   - Water of bouillon
+   - Bloem (alleen als noodzakelijk als bindmiddel)
+   - Suiker (maximaal een snufje)
+4. Alles buiten deze lijst is verboden tenzij de gebruiker het heeft opgegeven.
+5. Als een ingrediënt in "inHuis" staat maar niet logisch in het recept past, leg het dan in "optioneel" — maar verwijder het niet zonder reden.
+
 VARIATIE — KRITIEK: De 5 suggesties moeten TOTAAL verschillend zijn van elkaar.
 VERBODEN: 2+ suggesties met hetzelfde hoofdingrediënt EN bereiding.
 Forceer variatie: kies uit pasta, wrap, rijstgerecht, ovenschotel, salade, bowl, roerbak, soep, couscous, aardappel, traybake, stamppot, noedelgerecht, omelet.
