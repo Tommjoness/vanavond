@@ -119,27 +119,20 @@ Gekozen filters (combineer als voorkeuren, niet als harde eisen): "${actieveFilt
 - "veel groente": minimaal 200g groente per portie, duidelijk aanwezig in recept
 Als recept NIET voldoet aan drempelwaarden van gekozen doel: verlaag matchScore met 20pt.
 
-FOTOZOEKTERM: Geef een Engelse zoekterm van max 3 woorden voor Pexels.
-Gebruik het hoofdingrediënt als eerste woord, dan eventueel een tweede hoofdingrediënt.
-Geen "bowl", "dinner", "plate", "food", "homemade" toevoegen — dat doet de fotodienst zelf.
-Wees zo specifiek mogelijk op het hoofdingrediënt van het recept.
+FOTOZOEKTERM: Geef een Engelse zoekterm van max 2-3 woorden voor Pexels. ALTIJD Engels — Nederlandse termen geven 0 resultaten.
+Gebruik hoofdingrediënt + gerechtstype. Zo kort en specifiek mogelijk.
 - Kip + rijst: "chicken rice"
-- Gehakt + rijst + mais: "minced beef rice"
+- Gehakt + rijst: "minced beef rice"
 - Zalm + pasta: "salmon pasta"
-- Tonijn + pasta + tomaat: "tuna pasta tomato"
-- Ei + aardappel: "egg potato"
-- Groente wrap: "vegetable wrap"
+- Tonijn + pasta: "tuna pasta"
+- Ei + aardappel: "potato omelette"
+- Wrap met kip: "chicken tortilla wrap"
 - Kipsoep: "chicken soup"
 - Salade + kip: "chicken salad"
-NOOIT een ingredient meegeven dat niet in het recept zit.
-Veld: "fotoZoekterm": "salmon pasta"
-Specifieke regels per gerechtstype:
-- Wrap → "tortilla wrap" of "chicken wrap" — nooit "salad", "bowl" of "plate"
-- Pasta → "pasta plate" of "spaghetti" — nooit "noodles" of "rice"
-- Rijst → "rice dish" of "fried rice" — nooit "pasta"
-- Soep → "soup bowl" — nooit "stew plate"
-- Omelet → "omelette pan" — nooit "fried egg"
-- Salade → "salad bowl" — nooit "wrap" of "sandwich"
+- Roerbak groente: "vegetable stir fry"
+NOOIT de Nederlandse titel gebruiken. NOOIT meer dan 3 woorden.
+Veld 1: "fotoZoekterm": "salmon pasta"
+Veld 2: "pexels_zoekterm": "salmon pasta"  ← altijd hetzelfde als fotoZoekterm, beide invullen
 
 APPARATUUR: ${apparatuur.join(', ')}
 STRIKTE REGEL: Stel geen recept voor dat apparatuur gebruikt die niet in de lijst staat.
@@ -413,7 +406,8 @@ Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
   "restjes": {"idee": "string", "bewaren": "string", "invriezen": false},
   "badge": "gezond",
   "extraBadges": [],
-  "fotoZoekterm": "chicken rice bowl dark moody food photography"
+  "fotoZoekterm": "chicken rice",
+  "pexels_zoekterm": "chicken rice"
 }]`;
 
   const gebruikersBericht = `Voorraad: ${ingredienten}
