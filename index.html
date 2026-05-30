@@ -45,17 +45,17 @@
     .pill-grid{display:flex;flex-wrap:wrap;gap:8px;}
     /* Scrollbare filterbalk voor doel-filters */
     .filter-balk-wrapper{position:relative;margin-bottom:4px;}
-    .filter-balk{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;}
-    .filter-balk::-webkit-scrollbar{display:none;}
-    .filter-balk .pill{flex-shrink:0;white-space:nowrap;}
-    .filter-hint{font-size:11px;color:var(--text3);margin-top:8px;margin-bottom:4px;}
+    .filter-balk{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:2px;}
+    .filter-balk .pill{white-space:nowrap;}
+    .filter-hint{font-size:11px;color:var(--text3);margin-top:6px;margin-bottom:4px;}
     /* Scroll pijlen */
     .scroll-pijl{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;background:rgba(26,26,26,0.92);border:1px solid rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;transition:opacity 0.2s,transform 0.15s;color:rgba(255,255,255,0.7);font-size:13px;line-height:1;pointer-events:auto;user-select:none;}
     .scroll-pijl:hover{background:rgba(40,40,40,0.98);color:#fff;transform:translateY(-50%) scale(1.08);}
     .scroll-pijl.links{left:-8px;}
     .scroll-pijl.rechts{right:-8px;}
     .scroll-pijl.verborgen{opacity:0;pointer-events:none;}
-    .pill{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 15px;font-size:13px;color:var(--text2);cursor:pointer;transition:all 0.15s;user-select:none;display:inline-flex;align-items:center;justify-content:center;line-height:1.3;}
+    .pill{background:var(--bg2);border:1px solid #3a3a3a;border-radius:100px;padding:8px 15px;font-size:13px;color:#a0a8b4;cursor:pointer;transition:all 0.15s;user-select:none;display:inline-flex;align-items:center;justify-content:center;line-height:1.3;}
+    .pill:hover{background:var(--bg3);color:#d0d8e4;}
     .pill:active{transform:scale(0.96);}
     .pill.selected{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600;}
 
@@ -400,7 +400,6 @@
       <div class="helper-text" style="margin-bottom:10px;">Kies een richting. We zoeken recepten die daar echt bij passen.</div>
       <div id="filter-uitleg" class="filter-uitleg" style="display:none;"></div>
       <div class="filter-balk-wrapper" style="padding:0 4px;">
-        <button class="scroll-pijl links verborgen" id="doel-pijl-links" onclick="scrollBalk('doel-balk','links')" aria-label="Scroll naar links">‹</button>
         <div class="filter-balk" id="doel-balk">
           <div class="pill" data-group="doel" data-value="maakt niet uit" data-multi="true" data-exclusief="true">Maakt niet uit</div>
           <div class="pill" data-group="doel" data-value="gezond" data-multi="true">Gezond</div>
@@ -415,13 +414,13 @@
           <div class="pill" data-group="doel" data-value="snel klaar" data-multi="true">Snel klaar</div>
           <div class="pill" data-group="doel" data-value="veel groente" data-multi="true">Veel groente</div>
         </div>
-        <button class="scroll-pijl rechts" id="doel-pijl-rechts" onclick="scrollBalk('doel-balk','rechts')" aria-label="Scroll naar rechts">›</button>
+
       </div>
       <div class="filter-hint">Meerdere keuzes tegelijk mogelijk.</div>
     </div>
 
     <div class="form-group">
-      <div class="section-label">Geen zin in…</div>
+      <div class="section-label">Vandaag liever geen…</div>
       <div class="pill-grid">
         <div class="pill" data-group="geenZinIn" data-value="geen oven" data-multi="true">🚫 Oven</div>
         <div class="pill" data-group="geenZinIn" data-value="geen snijwerk" data-multi="true">🚫 Snijwerk</div>
@@ -433,11 +432,10 @@
     </div>
 
     <div class="form-group">
-      <div class="profiel-toggle" onclick="toggleProfiel()">
+      <div class="profiel-toggle" onclick="openVoorkeuren()">
         <span class="profiel-toggle-label">Voorkeuren instellen (optioneel)</span>
-        <span class="profiel-icon" id="profiel-icon">›</span>
+        <span style="color:var(--accent);font-size:18px;">›</span>
       </div>
-      <div class="profiel-content" id="profiel-content">
 
         <div class="form-group">
           <div class="section-label">Boodschappen doen toegestaan?</div>
@@ -470,6 +468,18 @@
         </div>
 
         <div class="privacy-text">Je gegevens worden alleen gebruikt om recepten voor te stellen.</div>
+      <button class="voorkeuren-opslaan" onclick="sluitVoorkeuren()">Voorkeuren opslaan</button>
+    </div>
+  </div>
+
+    <!-- Voorkeuren Modal -->
+    <div class="voorkeuren-modal-overlay" id="voorkeuren-overlay" style="display:none;" onclick="sluitVoorkeurenBuitenKlik(event)">
+      <div class="voorkeuren-modal" id="voorkeuren-modal">
+        <div class="voorkeuren-modal-header">
+          <span class="voorkeuren-modal-titel">⚙️ Voorkeuren instellen</span>
+          <button class="voorkeuren-sluit" onclick="sluitVoorkeuren()">×</button>
+        </div>
+        <div id="voorkeuren-inhoud"></div>
       </div>
     </div>
 
@@ -682,7 +692,32 @@
       window.scrollTo(0, 0);
     }
 
+    function openVoorkeuren() {
+      const overlay = document.getElementById('voorkeuren-overlay');
+      const inhoud = document.getElementById('voorkeuren-inhoud');
+      // Verplaats de voorkeuren-inhoud naar de modal
+      const bron = document.getElementById('profiel-content-bron');
+      if (bron && inhoud && !inhoud.hasChildNodes()) {
+        while (bron.firstChild) inhoud.appendChild(bron.firstChild);
+      }
+      overlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function sluitVoorkeuren() {
+      document.getElementById('voorkeuren-overlay').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    function sluitVoorkeurenBuitenKlik(e) {
+      if (e.target === document.getElementById('voorkeuren-overlay')) sluitVoorkeuren();
+    }
+
     function toggleProfiel() {
+      openVoorkeuren();
+    }
+
+    function _oud_toggleProfiel() {
       const c = document.getElementById('profiel-content');
       const i = document.getElementById('profiel-icon');
       c.classList.toggle('open'); i.classList.toggle('open');
