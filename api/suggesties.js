@@ -779,8 +779,80 @@ Beoordeel eerlijk. Geef JSON:
       return s;
     }
 
-    const verwerkteSuggesties = suggesties.map(verwerkRecept).filter(s => !s.matchScore || s.matchScore >= 60);
-    return res.status(200).json({ suggesties: verwerkteSuggesties });
+    // ============================================================
+    // FINAL QUALITY GATE
+    // ============================================================
+
+    const VERBODEN_WOORDEN_ZICHTBAAR = [
+      'high protein', 'healthy', 'budget meal', 'comfort food', 'meal prep',
+      'minced', 'prep', 'medium heat', 'serve', 'garnish', 'topping',
+      'crunchier', 'finishing touch', 'pantry', 'airtight', 'reisbowl',
+      'perfect handhaving', 'sterke voorraadbewegingen', 'normaal moeite niveau',
+      'voor onderweg', 'eenpans(schaal)', 'ruim binnen tijd',
+    ];
+
+    function zichtbareNlTekst(s) {
+      // Verzamel alle zichtbare tekstvelden
+      const velden = [
+        s.naam, s.korteBeschrijving, s.matchUitleg, s.slimmeReden,
+        ...(s.matchRedenen || []),
+        ...(s.waaromPast || s.waaromSlim || []),
+        ...(s.smaakUpgrades || []),
+        ...(Array.isArray(s.stappen) ? s.stappen.map(st => typeof st === 'object' ? `${st.titel||''} ${st.uitleg||''}` : st) : []),
+        s.restjes?.idee, s.restjes?.bewaren,
+        s.afwasNiveau,
+      ].filter(Boolean).join(' ').toLowerCase();
+      return velden;
+    }
+
+    function finalQualityGate(s) {
+      const fouten = [];
+
+      // Verplichte velden
+      if (!s.naam) fouten.push('naam ontbreekt');
+      if (!s.korteBeschrijving) fouten.push('beschrijving ontbreekt');
+      if (!Array.isArray(s.stappen) || s.stappen.length === 0) fouten.push('stappen ontbreken');
+      if (!Array.isArray(s.inHuis) || s.inHuis.length === 0) fouten.push('ingrediënten ontbreken');
+
+      // Matchscore
+      if (s.matchScore && s.matchScore < 60) fouten.push(`matchScore te laag: ${s.matchScore}`);
+
+      // Verboden zichtbare woorden
+      const tekst = zichtbareNlTekst(s);
+      const gevonden = VERBODEN_WOORDEN_ZICHTBAAR.filter(w => tekst.includes(w.toLowerCase()));
+      if (gevonden.length > 0) fouten.push(`verboden woorden: ${gevonden.join(', ')}`);
+
+      // Afwas mag geen oven/kookplaat bevatten
+      const afwas = (s.afwasNiveau || '').toLowerCase();
+      if (afwas.includes('oven') || afwas.includes('kookplaat') || afwas.includes('fornuis')) {
+        fouten.push('afwas bevat apparaat');
+      }
+
+      // Restjesblok alleen als meer porties dan personen
+      if (s.restjes && s.porties && s.porties <= (req.body.personen || 2)) {
+        // Waarschuwing maar geen blokkade — restjes is optioneel
+        delete s.restjes;
+      }
+
+      if (fouten.length > 0) {
+        console.warn(`[QualityGate] Recept '${s.naam}' gefilterd:`, fouten.join(' | '));
+        return false;
+      }
+      return true;
+    }
+
+    const verwerkteSuggesties = suggesties
+      .map(verwerkRecept)
+      .filter(s => s.matchScore >= 60)
+      .filter(finalQualityGate);
+
+    // Retry-limiet: als er 0 recepten door quality gate komen, terugvallen op gefilterde set zonder QG
+    // (liever iets tonen dan niets na 1 poging — retry is aan de client)
+    const fallback = verwerkteSuggesties.length === 0
+      ? suggesties.map(verwerkRecept).filter(s => s.matchScore >= 60)
+      : verwerkteSuggesties;
+
+    return res.status(200).json({ suggesties: fallback });
 
   } catch (err) {
     console.error('API fout:', err.message);
