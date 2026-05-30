@@ -891,10 +891,10 @@
         if (!primair) continue;
 
         try {
-          // Poging 1: primaire zoekterm
-          let url = await haalFotoUrl(primair);
+          // Poging 1: primaire zoekterm + backup als parameter (foto.js handelt de cascade af)
+          let url = await haalFotoUrl(primair, backup);
 
-          // Poging 2: AI-gegenereerde backup zoekterm
+          // Poging 2: backup direct als primair (als poging 1 niets opleverde)
           if (!url && backup) {
             url = await haalFotoUrl(backup);
           }
@@ -931,9 +931,11 @@
       }
     }
 
-    async function haalFotoUrl(zoekterm) {
+    async function haalFotoUrl(zoekterm, backupZoekterm) {
       try {
-        const r = await fetch(`/api/foto?q=${encodeURIComponent(zoekterm)}`);
+        const params = new URLSearchParams({ q: zoekterm });
+        if (backupZoekterm) params.append('backup', backupZoekterm);
+        const r = await fetch(`/api/foto?${params.toString()}`);
         if (!r.ok) return null;
         const d = await r.json();
         return d.urlSmall || d.url || null;
