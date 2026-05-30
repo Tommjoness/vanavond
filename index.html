@@ -155,6 +155,10 @@
     /* OVERZICHT GRID */
     .overzicht-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
     .overzicht-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 16px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:72px;}
+    .portie-selector{display:flex;align-items:center;gap:10px;margin-top:2px;}
+    .portie-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:var(--text);cursor:pointer;transition:background 0.15s;line-height:1;}
+    .portie-btn:hover{background:var(--bg4);}
+    .portie-waarde{font-size:15px;font-weight:700;color:#f0f0f0;min-width:20px;text-align:center;}
     .overzicht-label{font-size:10px;color:#6b7585;letter-spacing:0.03em;margin-bottom:5px;font-weight:600;}
     .overzicht-waarde{font-size:15px;font-weight:600;color:#f0f0f0;line-height:1.3;}
 
@@ -357,6 +361,7 @@
       <div class="section-label">Wat heb je in huis?</div>
       <textarea id="ingredienten-input" class="input-field" rows="3" placeholder="Bijv. kipfilet, paprika, rijst, tomaten, eieren, kaas…" oninput="verwerkInvoer()"></textarea>
       <div class="helper-text">Typ wat je in huis hebt. Wij doen de rest.</div>
+      <div class="helper-text" style="margin-top:4px;opacity:0.75;">Kruiden, olie en basis-voorraadartikelen nemen we automatisch mee.</div>
       <div class="koelkast-row">
         <button class="btn-koelkast" onclick="laadKoelkast()" id="btn-koelkast-laden" style="display:none;">🧊 Laad opgeslagen koelkast</button>
         <button class="btn-koelkast-opslaan" onclick="slaKoelkastOp()">💾 Koelkast onthouden</button>
@@ -696,6 +701,20 @@
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       window.scrollTo(0, 0);
+
+      // Wake Lock: activeren op receptpagina, loslaten bij andere schermen
+      if (id === 'screen-detail') {
+        if ('wakeLock' in navigator && !window._wakeLockDetail) {
+          navigator.wakeLock.request('screen')
+            .then(lock => { window._wakeLockDetail = lock; })
+            .catch(() => {});
+        }
+      } else {
+        if (window._wakeLockDetail) {
+          window._wakeLockDetail.release().catch(() => {});
+          window._wakeLockDetail = null;
+        }
+      }
     }
 
     function openVoorkeuren() {
@@ -1263,10 +1282,17 @@
     function ingHtml(ing, klasse) {
       const naam = typeof ing === 'object' ? ing.naam : ing;
       const hoeveelheid = typeof ing === 'object' && ing.hoeveelheid ? ing.hoeveelheid : '';
+      // Extraheer getal en eenheid voor herberekening
+      const getalMatch = hoeveelheid.match(/^([\d.,]+)\s*(.*)$/);
+      const origGetal = getalMatch ? parseFloat(getalMatch[1].replace(',', '.')) : NaN;
+      const eenheid = getalMatch ? getalMatch[2].trim() : '';
+      const dataAttrs = !isNaN(origGetal)
+        ? `data-origineel="${origGetal}" data-eenheid="${eenheid}"`
+        : '';
       return `<li class="ingredient-item">
         <span class="ing-dot ${klasse}"></span>
         <span class="ingredient-naam">${naam}</span>
-        ${hoeveelheid ? `<span class="ingredient-hoeveelheid">${hoeveelheid}</span>` : ''}
+        ${hoeveelheid ? `<span class="ingredient-hoeveelheid ing-hoeveelheid" ${dataAttrs}>${hoeveelheid}</span>` : ''}
       </li>`;
     }
 
@@ -1341,7 +1367,14 @@
         <div class="overzicht-grid">
           <div class="overzicht-item"><div class="overzicht-label">Totale tijd</div><div class="overzicht-waarde">${s.bereidingstijd}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Actieve tijd</div><div class="overzicht-waarde">${s.actieveKooktijd && s.actieveKooktijd !== 'onbekend' ? s.actieveKooktijd : s.bereidingstijd}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Porties</div><div class="overzicht-waarde">${s.porties || state.personen}</div></div>
+          <div class="overzicht-item portie-selector-item">
+            <div class="overzicht-label">Porties</div>
+            <div class="portie-selector">
+              <button class="portie-btn" onclick="pasPortiesAan(${index}, -1)">−</button>
+              <span class="portie-waarde" id="portie-waarde-${index}">${s.porties || state.personen}</span>
+              <button class="portie-btn" onclick="pasPortiesAan(${index}, 1)">+</button>
+            </div>
+          </div>
           <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '±' + v.portieGewicht + 'g' : 'onbekend'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) && s.apparatuurGebruikt.length > 0 ? s.apparatuurGebruikt.join(', ') : 'kookplaat'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${(s.afwasNiveau || '').replace(/\+/g, 'en').replace(/\boven\b\s*(en\s*)?/gi, '').replace(/^\s*(en\s*)/gi, '').trim() || '—'}</div></div>
@@ -1356,7 +1389,7 @@
         </div>
 
         <!-- TAB: INGREDIËNTEN -->
-        <div id="tab-ing-${index}" class="tab-content active">
+        <div id="tab-ing-${index}" class="tab-content active" data-ing-container="${index}">
           <div class="ing-section">
             <div class="ing-section-title">In huis</div>
             <ul class="ingredient-list">${inHuis.map(i => ingHtml(i, 'in-huis')).join('')}</ul>
@@ -1639,9 +1672,11 @@
       if (bestaand) bestaand.remove();
       document.body.appendChild(overlay);
 
-      // Scherm wakker houden
+      // Scherm wakker houden (kookmodus)
       if ('wakeLock' in navigator) {
-        navigator.wakeLock.request('screen').catch(() => {});
+        navigator.wakeLock.request('screen')
+          .then(lock => { window._wakeLockKookmodus = lock; })
+          .catch(() => {});
       }
     }
 
@@ -1657,6 +1692,48 @@
       const overlay = document.getElementById('kookmodus-overlay');
       if (overlay) overlay.remove();
       kookmodusActief = false;
+      // Wake lock loslaten
+      if (window._wakeLockKookmodus) {
+        window._wakeLockKookmodus.release().catch(() => {});
+        window._wakeLockKookmodus = null;
+      }
+    }
+
+    // Portie state per recept bijhouden
+    const portieState = {};
+
+    function pasPortiesAan(index, delta) {
+      const s = state.suggesties[index];
+      if (!s) return;
+      const basisPorties = s.porties || state.personen || 2;
+      if (!portieState[index]) portieState[index] = basisPorties;
+      const nieuw = Math.max(1, Math.min(10, portieState[index] + delta));
+      portieState[index] = nieuw;
+
+      // Update weergave
+      const waardeEl = document.getElementById(`portie-waarde-${index}`);
+      if (waardeEl) waardeEl.textContent = nieuw;
+
+      // Herbereken ingrediënten
+      const factor = nieuw / basisPorties;
+      herbereken(index, factor);
+    }
+
+    function herbereken(index, factor) {
+      const container = document.querySelector(`[data-ing-container="${index}"]`);
+      if (!container) return;
+      const items = container.querySelectorAll('.ingredient-item');
+      items.forEach(item => {
+        const el = item.querySelector('.ing-hoeveelheid');
+        if (!el) return;
+        const orig = parseFloat(el.dataset.origineel);
+        if (isNaN(orig)) return;
+        const nieuw = orig * factor;
+        const eenheid = el.dataset.eenheid || '';
+        // Netjes afronden: boven 10 = heel getal, anders 1 decimaal
+        const afgerond = nieuw >= 10 ? Math.round(nieuw) : Math.round(nieuw * 10) / 10;
+        el.textContent = `${afgerond}${eenheid ? ' ' + eenheid : ''}`;
+      });
     }
 
     function resetTimer() {
