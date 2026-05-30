@@ -20,6 +20,7 @@
     body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;max-width:540px;margin:0 auto;padding-bottom:80px;}
     .screen{display:none;padding:0 20px 24px;}
     .screen.active{display:block;}
+    #screen-favorieten.active{display:flex;}
     .screen.fade-in{animation:fadeIn 0.25s ease both;}
     @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
     .screen.slide-up{animation:slideUp 0.28s cubic-bezier(0.22,1,0.36,1) both;}
@@ -360,7 +361,7 @@
     @keyframes hartjePop{0%{transform:scale(1)}40%{transform:scale(1.35)}70%{transform:scale(0.9)}100%{transform:scale(1)}}
     .hartje-btn.pop{animation:hartjePop 0.35s ease both;}
 
-    #screen-favorieten .fav-leeg{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px;text-align:center;gap:14px;color:var(--text2);}
+    #screen-favorieten .fav-leeg{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;color:var(--text2);}
     #screen-favorieten .fav-leeg-icon{font-size:48px;opacity:0.4;}
     #screen-favorieten .fav-leeg-tekst{font-size:15px;line-height:1.5;max-width:260px;}
     .fav-kaart{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;display:flex;align-items:stretch;min-height:80px;}
@@ -2068,12 +2069,12 @@
 
   </script>
   <!-- FAVORIETEN -->
-  <div id="screen-favorieten" class="screen">
+  <div id="screen-favorieten" class="screen" style="display:none;flex-direction:column;min-height:calc(100vh - 80px);padding:0 20px 24px;">
     <div style="padding-top:24px;">
       <div style="font-size:24px;font-weight:700;color:var(--accent);margin-bottom:4px;letter-spacing:-0.5px;">Favorieten</div>
       <div style="font-size:14px;color:var(--text2);margin-bottom:22px;">Recepten die je hebt opgeslagen.</div>
-      <div id="fav-lijst"></div>
     </div>
+    <div id="fav-lijst" style="flex:1;display:flex;flex-direction:column;"></div>
   </div>
 
   <!-- NAV BAR -->
