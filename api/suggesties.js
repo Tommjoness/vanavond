@@ -119,20 +119,27 @@ Gekozen filters (combineer als voorkeuren, niet als harde eisen): "${actieveFilt
 - "veel groente": minimaal 200g groente per portie, duidelijk aanwezig in recept
 Als recept NIET voldoet aan drempelwaarden van gekozen doel: verlaag matchScore met 20pt.
 
-FOTOZOEKTERM: Geef een Engelse zoekterm van max 2-3 woorden voor Pexels. ALTIJD Engels — Nederlandse termen geven 0 resultaten.
-Gebruik hoofdingrediënt + gerechtstype. Zo kort en specifiek mogelijk.
-- Kip + rijst: "chicken rice"
-- Gehakt + rijst: "minced beef rice"
-- Zalm + pasta: "salmon pasta"
-- Tonijn + pasta: "tuna pasta"
-- Ei + aardappel: "potato omelette"
-- Wrap met kip: "chicken tortilla wrap"
-- Kipsoep: "chicken soup"
-- Salade + kip: "chicken salad"
-- Roerbak groente: "vegetable stir fry"
-NOOIT de Nederlandse titel gebruiken. NOOIT meer dan 3 woorden.
-Veld 1: "fotoZoekterm": "salmon pasta"
-Veld 2: "pexels_zoekterm": "salmon pasta"  ← altijd hetzelfde als fotoZoekterm, beide invullen
+FOTOZOEKTERMEN: Genereer twee Engelstalige velden voor Pexels. ALTIJD Engels — Nederlandse termen geven 0 resultaten.
+
+Veld 1: "pexels_zoekterm" — primaire zoekterm
+- Max 3-4 woorden: hoofdingrediënt + vorm/stijl + sfeerbwoord
+- Voeg altijd een sfeerbwoord toe: "rustic", "plated", "bowl", "food photography"
+- Nooit de Nederlandse titel. Nooit te specifiek.
+- Voorbeelden:
+  * Kip met saus → "creamy chicken rustic"
+  * Wraps → "beef wrap food photography"
+  * Zalm ovenschotel → "baked salmon traybake"
+  * Pasta tonijn → "tuna pasta plated"
+  * Rijst + kip → "chicken rice bowl"
+  * Omelet → "omelette pan rustic"
+  * Soep → "vegetable soup bowl"
+
+Veld 2: "pexels_backup_zoekterm" — fallback op sfeer/ingrediënten
+- Als het specifieke gerecht niet bestaat op Pexels, gebruik dan een keukensfeerfoto
+- Richt zich op verse ingrediënten, snijplanken, flatlays of kookacties
+- Voorbeelden: "fresh ingredients kitchen", "chopping vegetables", "cooking pan sizzling", "mediterranean ingredients flatlay", "fresh herbs flatlay"
+
+Veld 3: "fotoZoekterm" — zelfde waarde als pexels_zoekterm (voor backwards compatibility)
 
 APPARATUUR: ${apparatuur.join(', ')}
 STRIKTE REGEL: Stel geen recept voor dat apparatuur gebruikt die niet in de lijst staat.
@@ -406,8 +413,9 @@ Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
   "restjes": {"idee": "string", "bewaren": "string", "invriezen": false},
   "badge": "gezond",
   "extraBadges": [],
-  "fotoZoekterm": "chicken rice",
-  "pexels_zoekterm": "chicken rice"
+  "fotoZoekterm": "chicken rice bowl",
+  "pexels_zoekterm": "chicken rice bowl",
+  "pexels_backup_zoekterm": "fresh ingredients kitchen"
 }]`;
 
   const gebruikersBericht = `Voorraad: ${ingredienten}
