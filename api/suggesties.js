@@ -64,7 +64,8 @@ export default async function handler(req, res) {
   const verfijnInstructie = verfijn ? `\nVERFIJNING: ${verfijn}` : '';
   const actieveFilters = Array.isArray(doelFilters) ? doelFilters : (doel ? [doel] : []);
   const wilMindaAfwas = (verfijn && verfijn.toLowerCase().includes('afwas')) || actieveFilters.includes('minder afwas');
-  const geenZinInRegel = Array.isArray(geenZinIn) && geenZinIn.length > 0 ? `\nGEEN ZIN IN (strikt vermijden): ${geenZinIn.join(', ')}` : '';
+  const geenZinInGefilterd = Array.isArray(geenZinIn) ? geenZinIn.filter(v => v !== 'alles mag') : [];
+  const geenZinInRegel = geenZinInGefilterd.length > 0 ? `\nGEEN ZIN IN (strikt vermijden): ${geenZinInGefilterd.join(', ')}` : '';
 
   const boodschappenRegel = boodschappen === 'nee' ? 'Geen ontbrekende hoofdingrediënten toegestaan. Alleen basisvoorraad.' :
     boodschappen === 'een' ? 'Maximaal 1 ontbrekend ingrediënt per recept.' :
@@ -454,7 +455,7 @@ Geef precies 5 suggesties als JSON array. GEEN tekst buiten JSON.
   const gebruikersBericht = `Voorraad: ${ingredienten}
 Tijd: ${tijd} min | Personen: ${personen} | Moeite: ${moeite} | Filters: ${actieveFilters.join(', ') || 'maakt niet uit'}
 Boodschappen: ${boodschappen || 'paar dingen oké'}
-Geen zin in: ${Array.isArray(geenZinIn) && geenZinIn.length > 0 ? geenZinIn.join(', ') : 'niets'}
+Geen zin in: ${geenZinInGefilterd.length > 0 ? geenZinInGefilterd.join(', ') : 'niets'}
 Allergieën: ${allergienen.join(', ') || 'geen'}
 Nooit: ${nooitGebruiken || 'niets'}
 Kookniveau: ${kookniveau}
