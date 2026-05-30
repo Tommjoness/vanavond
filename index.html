@@ -248,9 +248,9 @@
 
 
     /* SMART MODE & KOELKAST */
-    .btn-smart{width:100%;background:transparent;border:1px solid rgba(232,193,112,0.4);border-radius:var(--radius);padding:14px;font-size:15px;color:var(--accent);cursor:pointer;margin-top:10px;transition:all 0.2s;letter-spacing:-0.1px;font-weight:500;}
-    .btn-smart:hover{background:rgba(232,193,112,0.06);border-color:rgba(232,193,112,0.65);}
-    .btn-smart:active{background:rgba(232,193,112,0.1);}
+    .btn-smart{width:100%;background:var(--bg2);border:1px solid rgba(232,193,112,0.35);border-radius:var(--radius);padding:14px;font-size:15px;color:var(--accent);cursor:pointer;margin-top:10px;transition:all 0.2s;letter-spacing:-0.1px;font-weight:500;}
+    .btn-smart:hover{background:var(--bg3);border-color:rgba(232,193,112,0.6);}
+    .btn-smart:active{background:var(--bg4);}
     .koelkast-row{display:flex;gap:8px;margin-top:10px;}
     .btn-koelkast,.btn-koelkast-opslaan{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-size:12px;color:var(--text2);cursor:pointer;transition:all 0.15s;text-align:center;}
     .btn-koelkast:active,.btn-koelkast-opslaan:active{background:var(--bg4);}
@@ -547,7 +547,7 @@
   <!-- STICKY CTA — altijd zichtbaar boven nav-bar -->
   <div class="sticky-cta" id="sticky-cta">
     <button class="btn-primary" onclick="haalSuggesties()">Geef suggesties →</button>
-    <button class="btn-smart" onclick="smartMode()">🎲 Kies gewoon iets voor me</button>
+    <button class="btn-smart" onclick="smartMode()">🎲 Verras me!</button>
   </div>
 
   <!-- LADEN -->
