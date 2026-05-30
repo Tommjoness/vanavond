@@ -62,8 +62,7 @@
     .pill:hover{background:var(--bg3);color:#dde4ee;border-color:#505050;}
     .pill:active{transform:scale(0.96);}
     .pill.selected{background:var(--accent);border-color:var(--accent);color:#0f0f0f;font-weight:700;}
-    .pill[data-group="doel"][data-value="maakt niet uit"]{color:#7a8494;border-color:#2e2e2e;font-style:italic;}
-    .pill[data-group="doel"][data-value="maakt niet uit"].selected{background:var(--bg3);border-color:#505050;color:#a0a8b4;font-weight:500;font-style:normal;}
+    .pill[data-group="doel"][data-value="maakt niet uit"].selected{background:var(--accent);border-color:var(--accent);color:#0f0f0f;font-weight:700;}
 
     /* BUTTONS */
     .btn-primary{width:100%;background:var(--accent);color:#000;border:none;border-radius:var(--radius);padding:17px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s;}
@@ -471,7 +470,6 @@
           <div class="pill" data-group="doel" data-value="licht eten" data-multi="true">Licht</div>
           <div class="pill" data-group="doel" data-value="kindvriendelijk" data-multi="true">Kindvriendelijk</div>
           <div class="pill" data-group="doel" data-value="koolhydraatarm" data-multi="true">Koolhydraatarm</div>
-          <div class="pill" data-group="doel" data-value="restjes opmaken" data-multi="true">Restjes opmaken</div>
           <div class="pill" data-group="doel" data-value="minder afwas" data-multi="true">Minder afwas</div>
           <div class="pill" data-group="doel" data-value="snel klaar" data-multi="true">Snel klaar</div>
           <div class="pill" data-group="doel" data-value="veel groente" data-multi="true">Veel groente</div>
@@ -850,7 +848,6 @@
           'licht eten': 'Minder zwaar, veel groente, geen grote hoeveelheid vet.',
           'kindvriendelijk': 'Mild van smaak, herkenbaar, niet pittig.',
           'koolhydraatarm': 'Minder rijst, pasta, brood of aardappel.',
-          'restjes opmaken': 'Gebruikt zoveel mogelijk wat je al in huis hebt.',
           'minder afwas': 'Voorkeur voor 1 pan, ovenschaal of airfryer.',
           'snel klaar': 'Klaar in 20 minuten of minder.',
           'veel groente': 'Minimaal de helft van de maaltijd bestaat uit groente.',
