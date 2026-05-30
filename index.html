@@ -436,6 +436,15 @@
         <span class="profiel-toggle-label">Voorkeuren instellen (optioneel)</span>
         <span style="color:var(--accent);font-size:18px;">›</span>
       </div>
+    </div>
+
+    <!-- Voorkeuren Modal -->
+    <div class="voorkeuren-modal-overlay" id="voorkeuren-overlay" style="display:none;" onclick="sluitVoorkeurenBuitenKlik(event)">
+      <div class="voorkeuren-modal" id="voorkeuren-modal">
+        <div class="voorkeuren-modal-header">
+          <span class="voorkeuren-modal-titel">⚙️ Voorkeuren instellen</span>
+          <button class="voorkeuren-sluit" onclick="sluitVoorkeuren()">×</button>
+        </div>
 
         <div class="form-group">
           <div class="section-label">Boodschappen doen toegestaan?</div>
@@ -467,19 +476,8 @@
           <div class="helper-text">Deze ingrediënten gebruiken we nergens, ook niet als vervanging.</div>
         </div>
 
-        <div class="privacy-text">Je gegevens worden alleen gebruikt om recepten voor te stellen.</div>
-      <button class="voorkeuren-opslaan" onclick="sluitVoorkeuren()">Voorkeuren opslaan</button>
-    </div>
-  </div>
-
-    <!-- Voorkeuren Modal -->
-    <div class="voorkeuren-modal-overlay" id="voorkeuren-overlay" style="display:none;" onclick="sluitVoorkeurenBuitenKlik(event)">
-      <div class="voorkeuren-modal" id="voorkeuren-modal">
-        <div class="voorkeuren-modal-header">
-          <span class="voorkeuren-modal-titel">⚙️ Voorkeuren instellen</span>
-          <button class="voorkeuren-sluit" onclick="sluitVoorkeuren()">×</button>
-        </div>
-        <div id="voorkeuren-inhoud"></div>
+        <div class="privacy-text" style="margin-top:16px;">Je gegevens worden alleen gebruikt om recepten voor te stellen.</div>
+        <button class="voorkeuren-opslaan" onclick="sluitVoorkeuren()">Voorkeuren opslaan</button>
       </div>
     </div>
 
