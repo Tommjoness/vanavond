@@ -442,7 +442,7 @@
           <div class="pill-grid">
             <div class="pill" data-group="boodschappen" data-value="nee">Nee, alleen wat ik heb</div>
             <div class="pill" data-group="boodschappen" data-value="een">Max 1 ding kopen</div>
-            <div class="pill selected" data-group="boodschappen" data-value="paar">Paar dingen is oké</div>
+            <div class="pill" data-group="boodschappen" data-value="paar">Paar dingen is oké</div>
           </div>
         </div>
 
@@ -593,7 +593,7 @@
     document.addEventListener('DOMContentLoaded', initScrollBalken);
 
     const state = {
-      tijd:null, personen:null, moeite:null, doel:[], boodschappen:'paar',
+      tijd:null, personen:null, moeite:null, doel:[], boodschappen:null,
       apparatuur:['kookplaat'], allergienen:[], kookniveau:null, geenZinIn:[],
       ingredientChips:[], suggesties:[], lastRequest:null
     };
