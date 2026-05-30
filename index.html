@@ -882,15 +882,29 @@
 
     async function laadFotos(suggesties) {
       for (const s of suggesties) {
-        if (!s.fotoZoekterm) continue;
         const id = veiligId(s.naam);
         if (fotoCache[id]) continue;
+
+        // Prioriteit: pexels_zoekterm (Engels, door AI gegenereerd) > fotoZoekterm > naam
+        const zoekterm = s.pexels_zoekterm || s.fotoZoekterm || null;
+        if (!zoekterm) continue;
+
         try {
-          const r = await fetch(`/api/foto?q=${encodeURIComponent(s.fotoZoekterm)}`);
-          if (!r.ok) { console.warn('Foto mislukt voor', s.naam, r.status); continue; }
-          const d = await r.json();
-          const url = d.urlSmall || d.url;
+          // Eerste poging: met specifieke zoekterm
+          let url = await haalFotoUrl(zoekterm);
+
+          // Fallback 1: kortere versie van de zoekterm (eerste woord)
+          if (!url && zoekterm.includes(' ')) {
+            url = await haalFotoUrl(zoekterm.split(' ')[0] + ' food');
+          }
+
+          // Fallback 2: generieke term
+          if (!url) {
+            url = await haalFotoUrl('homemade dinner');
+          }
+
           if (!url) continue;
+
           fotoCache[id] = url;
           const fotoEl = document.getElementById(`foto-${id}`);
           if (fotoEl) {
@@ -904,11 +918,21 @@
             };
             img.onerror = () => {
               fotoEl.classList.add('geladen');
-              fotoEl.innerHTML = '<div class="kaart-foto-placeholder"><span style="font-size:36px">🍽️</span></div>';
             };
             img.src = url;
           }
         } catch(e) { console.warn('Foto error:', e); }
+      }
+    }
+
+    async function haalFotoUrl(zoekterm) {
+      try {
+        const r = await fetch(`/api/foto?q=${encodeURIComponent(zoekterm)}`);
+        if (!r.ok) return null;
+        const d = await r.json();
+        return d.urlSmall || d.url || null;
+      } catch(e) {
+        return null;
       }
     }
 
