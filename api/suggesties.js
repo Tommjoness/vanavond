@@ -472,7 +472,8 @@ Beoordeel eerlijk. Geef JSON:
       const data = await response.json();
       const jsonMatch = data.content[0].text.trim().match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('Geen JSON');
-      return res.status(200).json({ beperktVoorraad: true, ...JSON.parse(jsonMatch[0]) });
+      const schoon = jsonMatch[0].replace(/[\u0000-\u001F\u007F-\u009F]/g, ' ');
+      return res.status(200).json({ beperktVoorraad: true, ...JSON.parse(schoon) });
     } catch (err) { /* Fallback naar normale flow */ }
   }
 
@@ -492,7 +493,41 @@ Beoordeel eerlijk. Geef JSON:
     const tekst = data.content[0].text.trim();
     const jsonMatch = tekst.match(/\[[\s\S]*\]/);
     if (!jsonMatch) throw new Error('Geen geldige JSON ontvangen');
-    const suggesties = JSON.parse(jsonMatch[0]);
+
+    // Robuust JSON parsen met reparatiepogingen
+    let suggesties;
+    const jsonTekst = jsonMatch[0];
+    try {
+      suggesties = JSON.parse(jsonTekst);
+    } catch(parseErr) {
+      // Poging 1: verwijder onzichtbare control characters
+      try {
+        const schoon = jsonTekst.replace(/[\u0000-\u001F\u007F-\u009F]/g, ' ');
+        suggesties = JSON.parse(schoon);
+      } catch {
+        // Poging 2: extraheer individuele objecten en herstel array
+        try {
+          const objecten = [];
+          let depth = 0, start = -1;
+          for (let i = 0; i < jsonTekst.length; i++) {
+            if (jsonTekst[i] === '{') { if (depth === 0) start = i; depth++; }
+            else if (jsonTekst[i] === '}') {
+              depth--;
+              if (depth === 0 && start >= 0) {
+                try { objecten.push(JSON.parse(jsonTekst.slice(start, i + 1))); } catch {}
+              }
+            }
+          }
+          if (objecten.length === 0) throw new Error('Geen objecten gevonden');
+          suggesties = objecten;
+        } catch {
+          return res.status(200).json({
+            teLite: true,
+            error: 'De recepten konden niet worden verwerkt. Probeer het opnieuw.'
+          });
+        }
+      }
+    }
 
     // ============================================================
     // CENTRALE RECEPT-VALIDATIE PIPELINE
