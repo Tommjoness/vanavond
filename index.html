@@ -115,7 +115,7 @@
     .rol-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;background:rgba(155,127,212,0.15);color:var(--purple);}
     .match-score{font-size:13px;font-weight:700;white-space:nowrap;margin-left:8px;flex-shrink:0;}
     .result-naam{font-size:18px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:5px;letter-spacing:-0.3px;}
-    .result-beschrijving{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px;}
+    .result-beschrijving{font-size:13px;color:#e8e8e8;line-height:1.6;margin-bottom:10px;}
     .kaart-mist{font-size:12px;color:var(--amber);margin-bottom:10px;background:rgba(232,168,56,0.08);padding:5px 10px;border-radius:var(--radius-xs);display:inline-block;}
     .result-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
     .result-btn{width:100%;background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);padding:11px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
@@ -1101,8 +1101,8 @@
             <span class="tag tag-gray">⏱ ${s.bereidingstijd}</span>
             <span class="tag tag-gray">🍳 ${s.afwasNiveau}</span>
             ${nog.length === 0 ? '<span class="tag tag-green">Alles in huis</span>' : `<span class="tag tag-amber">Nog ${nog.length} nodig</span>`}
-            ${badgeHtml(s.badge)}
-            ${voedingBadge}
+            ${kcal ? `<span class="tag tag-blue">±${kcal} kcal</span>` : ''}
+            ${eiwit ? `<span class="tag tag-blue">±${eiwit}g eiwit</span>` : ''}
             ${extra}
           </div>
           <button class="result-btn" onclick="toonDetail(${index})">Bekijk recept →</button>
@@ -1311,7 +1311,9 @@
       if (extra.length > 0) {
         const wrapper = document.createElement('div');
         const btn = document.createElement('button');
-        btn.className = 'extra-btn'; btn.textContent = 'Toon nog 2 opties';
+        btn.className = 'opnieuw-btn';
+        // Dynamische tekst op basis van werkelijk aantal extra recepten
+        btn.textContent = `Toon nog ${extra.length} ${extra.length === 1 ? 'optie' : 'opties'}`;
         btn.onclick = () => { btn.style.display = 'none'; kaarten.style.display = 'block'; };
         const kaarten = document.createElement('div'); kaarten.style.display = 'none';
         const lbl = document.createElement('div'); lbl.className = 'extra-label'; lbl.textContent = 'Nog meer ideeën';
