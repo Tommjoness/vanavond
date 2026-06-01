@@ -53,7 +53,11 @@
     .input-field::placeholder{color:var(--text3);}
 
     /* INGREDIENT CHIPS */
-    .chips-container{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:0;}
+    .snel-tags{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .snel-tags::-webkit-scrollbar{display:none;}
+    .snel-tag{flex-shrink:0;background:var(--bg2);border:1px solid var(--border2);border-radius:100px;padding:7px 12px;font-size:13px;color:var(--text2);cursor:pointer;transition:all 0.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;}
+    .snel-tag:active{transform:scale(0.95);}
+    .snel-tag.actief{background:rgba(232,193,112,0.15);border-color:var(--accent);color:var(--accent);font-weight:600;}
     .chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:100px;padding:5px 10px 5px 12px;font-size:13px;color:var(--text);}
     .chip-remove{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;line-height:1;padding:0;display:flex;align-items:center;}
     .chip-remove:hover{color:var(--red);}
@@ -467,6 +471,24 @@
 
     <div class="form-group">
       <div class="section-label">Wat heb je in huis?</div>
+      <div style="position:relative;">
+        <div class="snel-tags" id="snel-tags">
+          <button class="snel-tag" onclick="toggleSnelTag(this,'kipfilet')">🍗 Kipfilet</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'eieren')">🥚 Eieren</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'gehakt')">🥩 Gehakt</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'rijst')">🍚 Rijst</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'pasta')">🍝 Pasta</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'aardappelen')">🥔 Aardappelen</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'paprika')">🫑 Paprika</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'broccoli')">🥦 Broccoli</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'ui')">🧅 Ui</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'geraspte kaas')">🧀 Kaas</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'tomaten')">🍅 Tomaten</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'zalm')">🐟 Zalm</button>
+          <button class="snel-tag" onclick="toggleSnelTag(this,'wraps')">🫓 Wraps</button>
+        </div>
+        <div style="position:absolute;top:0;right:0;bottom:8px;width:40px;background:linear-gradient(to right,transparent,var(--bg));pointer-events:none;border-radius:0 8px 8px 0;"></div>
+      </div>
       <textarea id="ingredienten-input" class="input-field" rows="3" placeholder="Bijv. kipfilet, paprika, rijst, tomaten, eieren, kaas…" oninput="verwerkInvoer()"></textarea>
       <div class="helper-text">Typ wat je in huis hebt. Wij doen de rest.</div>
       <div class="helper-text" style="margin-top:4px;">Kruiden, olie en basisvoorraad tellen automatisch mee.</div>
@@ -545,9 +567,8 @@
     <div class="form-group">
       <div class="section-label">Extra boodschappen halen?</div>
       <div class="pill-grid">
-        <div class="pill" data-group="boodschappen" data-value="nee">Nee, alleen wat ik heb</div>
-        <div class="pill" data-group="boodschappen" data-value="een">Max 1 ding kopen</div>
-        <div class="pill" data-group="boodschappen" data-value="paar">Een paar dingen is oké</div>
+        <div class="pill" data-group="boodschappen" data-value="nee">Nee, alleen wat ik in huis heb</div>
+        <div class="pill" data-group="boodschappen" data-value="paar">Ja, dat is prima!</div>
       </div>
     </div>
 
@@ -774,6 +795,32 @@
     const tips = [...kookTips].sort(() => Math.random() - 0.5);
 
     // CHIP LOGICA
+    function toggleSnelTag(btn, ingredient) {
+      const isActief = btn.classList.contains('actief');
+      btn.classList.toggle('actief', !isActief);
+
+      const textarea = document.getElementById('ingredienten-input');
+      if (isActief) {
+        // Deselecteer: verwijder uit chips en textarea
+        state.ingredientChips = state.ingredientChips.filter(
+          c => c.toLowerCase() !== ingredient.toLowerCase()
+        );
+        // Verwijder uit textarea tekst
+        const huidige = textarea.value;
+        const regex = new RegExp(`,?\\s*${ingredient}\\s*,?`, 'gi');
+        textarea.value = huidige.replace(regex, ', ').replace(/^,\s*/, '').replace(/,\s*$/, '').replace(/,\s*,/g, ',').trim();
+      } else {
+        // Selecteer: voeg toe aan chips en textarea
+        if (!state.ingredientChips.map(c => c.toLowerCase()).includes(ingredient.toLowerCase())) {
+          state.ingredientChips.push(ingredient);
+        }
+        // Voeg toe aan textarea
+        const huidige = textarea.value.trim();
+        textarea.value = huidige ? huidige + ', ' + ingredient : ingredient;
+      }
+      renderChips();
+    }
+
     let chipTimer = null;
     function verwerkInvoer() {
       clearTimeout(chipTimer);
@@ -829,10 +876,18 @@
         el.innerHTML = `${chip}<button class="chip-remove" onclick="verwijderChip(${i})" title="Verwijder">×</button>`;
         container.appendChild(el);
       });
+      // Sync snel-tags met huidige chips
+      document.querySelectorAll('.snel-tag').forEach(btn => {
+        const ing = btn.getAttribute('onclick').match(/'([^']+)'\)$/)?.[1] || '';
+        btn.classList.toggle('actief', state.ingredientChips.some(c => c.toLowerCase() === ing.toLowerCase()));
+      });
     }
 
     function verwijderChip(index) {
       state.ingredientChips.splice(index, 1);
+      // Sync textarea
+      const textarea = document.getElementById('ingredienten-input');
+      textarea.value = state.ingredientChips.join(', ');
       renderChips();
     }
 
