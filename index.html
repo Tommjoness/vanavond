@@ -1097,7 +1097,11 @@
             url = await haalFotoUrl('homemade dinner');
           }
 
-          if (!url) continue;
+          // Poging 5: harde Unsplash fallback — nooit een lege kaart
+          const FALLBACK_URL = 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=1000';
+          if (!url) {
+            url = FALLBACK_URL;
+          }
 
           fotoCache[id] = url;
           const fotoEl = document.getElementById(`foto-${id}`);
@@ -1115,7 +1119,21 @@
             };
             img.src = url;
           }
-        } catch(e) { console.warn('Foto error:', e); }
+        } catch(e) {
+          console.warn('Foto error voor', s.naam, ':', e.message);
+          // Gebruik hard fallback zodat kaart nooit leeg blijft
+          const FALLBACK_URL = 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=1000';
+          const id2 = veiligId(s.naam);
+          fotoCache[id2] = FALLBACK_URL;
+          const fotoEl2 = document.getElementById(`foto-${id2}`);
+          if (fotoEl2) {
+            const ph = fotoEl2.querySelector('.kaart-foto-placeholder');
+            if (ph) ph.remove();
+            fotoEl2.style.backgroundImage = `url(${FALLBACK_URL})`;
+            fotoEl2.classList.remove('laden');
+            fotoEl2.classList.add('geladen');
+          }
+        }
       }
     }
 
