@@ -1975,6 +1975,10 @@
     }
 
     function kookmodusNavigeer(richting) {
+      if (timerLoopt) {
+        const bevestig = confirm('De timer loopt nog. Wil je toch doorgaan naar de volgende stap?');
+        if (!bevestig) return;
+      }
       clearInterval(timerInterval);
       timerLoopt = false;
       kookmodusStap = Math.max(0, Math.min(kookmodusStappen.length - 1, kookmodusStap + richting));
