@@ -47,9 +47,9 @@
     .helper-text{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.5;}
     .privacy-text{font-size:11px;color:var(--text3);margin-top:16px;text-align:center;line-height:1.5;}
     .form-group{margin-bottom:26px;}
-    .input-field{width:100%;background:#1e1e1e;border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius);padding:14px 16px;color:var(--text);font-size:15px;outline:none;resize:none;font-family:inherit;transition:border-color 0.2s;-webkit-appearance:none;line-height:1.5;}
-    .input-field:focus{border-color:rgba(255,255,255,0.22);background:#222;}
-    .input-field::placeholder{color:#6a7280;}
+    .input-field{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:14px 16px;color:var(--text);font-size:15px;outline:none;resize:none;font-family:inherit;transition:border-color 0.2s;-webkit-appearance:none;line-height:1.5;}
+    .input-field:focus{border-color:var(--accent);background:var(--bg3);}
+    .input-field::placeholder{color:var(--text3);}
 
     /* INGREDIENT CHIPS */
     .chips-container{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:0;}
@@ -406,8 +406,9 @@
     .nav-tab-icon{font-size:18px;line-height:1;}
     .nav-badge{position:absolute;top:5px;right:calc(50% - 16px);background:var(--accent);color:#000;font-size:9px;font-weight:700;border-radius:100px;padding:1px 5px;min-width:16px;text-align:center;}
     .sticky-cta{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:508px;z-index:99;padding-bottom:env(safe-area-inset-bottom,0px);}
-    .sticky-cta::before{content:'';position:absolute;bottom:100%;left:-16px;right:-16px;height:48px;background:linear-gradient(to top, rgba(15,15,15,0.95) 0%, transparent 100%);pointer-events:none;}
-    .sticky-cta .btn-primary{box-shadow:0 4px 24px rgba(0,0,0,0.5);}
+    .sticky-cta::before{content:'';position:absolute;bottom:100%;left:-16px;right:-16px;height:48px;background:linear-gradient(to top, var(--bg) 0%, transparent 100%);pointer-events:none;}
+    .sticky-cta .btn-primary{box-shadow:0 4px 24px rgba(0,0,0,0.2);}
+    .sticky-cta .btn-smart{margin-bottom:8px;}
   </style>
 </head>
 <body>
@@ -1484,17 +1485,18 @@
       toonScherm('screen-resultaten');
     }
 
-    function ingHtml(ing, klasse) {
+    function ingHtml(ing, klasse, ingIdx, receptIdx) {
       const naam = typeof ing === 'object' ? ing.naam : ing;
       const hoeveelheid = typeof ing === 'object' && ing.hoeveelheid ? ing.hoeveelheid : '';
-      // Extraheer getal en eenheid voor herberekening
       const getalMatch = hoeveelheid.match(/^([\d.,]+)\s*(.*)$/);
       const origGetal = getalMatch ? parseFloat(getalMatch[1].replace(',', '.')) : NaN;
       const eenheid = getalMatch ? getalMatch[2].trim() : '';
       const dataAttrs = !isNaN(origGetal)
         ? `data-origineel="${origGetal}" data-eenheid="${eenheid}"`
         : '';
-      return `<li class="ingredient-item">
+      const s = state.suggesties[receptIdx];
+      const isChecked = s?.ingredientenChecked?.[ingIdx] ? ' checked' : '';
+      return `<li class="ingredient-item${isChecked}" data-ing-index="${ingIdx}" data-recept-index="${receptIdx}">
         <span class="ing-dot ${klasse}"></span>
         <span class="ingredient-naam">${naam}</span>
         ${hoeveelheid ? `<span class="ingredient-hoeveelheid ing-hoeveelheid" ${dataAttrs}>${hoeveelheid}</span>` : ''}
@@ -1611,11 +1613,11 @@
         <div id="tab-ing-${index}" class="tab-content active" data-ing-container="${index}">
           <div class="ing-section">
             <div class="ing-section-title">In huis</div>
-            <ul class="ingredient-list">${inHuis.map(i => ingHtml(i, 'in-huis')).join('')}</ul>
+            <ul class="ingredient-list">${inHuis.map((i, n) => ingHtml(i, 'in-huis', n, index)).join('')}</ul>
           </div>
-          ${basis.length > 0 ? `<div class="ing-section"><div class="ing-section-title">Basisvoorraad</div><ul class="ingredient-list">${basis.map(i => ingHtml(i, 'basis')).join('')}</ul></div>` : ''}
-          ${nogNodig.length > 0 ? `<div class="ing-section"><div class="ing-section-title">Nog nodig</div><ul class="ingredient-list">${nogNodig.map(i => ingHtml(i, 'nog-nodig')).join('')}</ul></div>` : ''}
-          ${optioneel.length > 0 ? `<div class="ing-section"><div class="ing-section-title">Optioneel</div><ul class="ingredient-list">${optioneel.map(i => ingHtml(i, 'optioneel')).join('')}</ul></div>` : ''}
+          ${basis.length > 0 ? `<div class="ing-section"><div class="ing-section-title">Basisvoorraad</div><ul class="ingredient-list">${basis.map((i, n) => ingHtml(i, 'basis', inHuis.length + n, index)).join('')}</ul></div>` : ''}
+          ${nogNodig.length > 0 ? `<div class="ing-section"><div class="ing-section-title">Nog nodig</div><ul class="ingredient-list">${nogNodig.map((i, n) => ingHtml(i, 'nog-nodig', inHuis.length + basis.length + n, index)).join('')}</ul></div>` : ''}
+          ${optioneel.length > 0 ? `<div class="ing-section"><div class="ing-section-title">Optioneel</div><ul class="ingredient-list">${optioneel.map((i, n) => ingHtml(i, 'optioneel', inHuis.length + basis.length + nogNodig.length + n, index)).join('')}</ul></div>` : ''}
           ${nogNodig.length > 0 ? `<button class="boodschappen-btn" onclick="toonBoodschappen(${index})">🛒 Maak boodschappenlijst</button>` : ''}
         </div>
 
@@ -1937,12 +1939,20 @@
       herbereken(index, factor);
     }
 
-    // Ingredient items aanklikbaar maken (afstrepen)
+    // Ingredient items aanklikbaar via state (niet via directe DOM-manipulatie)
     document.addEventListener('click', function(e) {
-      const item = e.target.closest('.ingredient-item');
-      if (item && !e.target.closest('.ing-hoeveelheid')) {
-        item.classList.toggle('checked');
-      }
+      const item = e.target.closest('.ingredient-item[data-ing-index]');
+      if (!item || e.target.closest('.ing-hoeveelheid')) return;
+      const receptIdx = parseInt(item.dataset.receptIndex);
+      const ingIdx = parseInt(item.dataset.ingIndex);
+      if (isNaN(receptIdx) || isNaN(ingIdx)) return;
+      const s = state.suggesties[receptIdx];
+      if (!s) return;
+      if (!s.ingredientenChecked) s.ingredientenChecked = {};
+      const key = ingIdx;
+      s.ingredientenChecked[key] = !s.ingredientenChecked[key];
+      // Render alleen dit item opnieuw vanuit state
+      item.classList.toggle('checked', !!s.ingredientenChecked[key]);
     });
 
     function herbereken(index, factor) {
