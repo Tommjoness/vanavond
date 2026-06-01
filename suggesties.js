@@ -239,7 +239,33 @@ VERBODEN COPY (nooit gebruiken, ook niet in matchRedenen of waaromSlim):
 - Zinnen die gehaast of telegrafisch klinken
 - Zinnen zonder werkwoord
 
-SCHRIJFSTIJL:
+SCHRIJFSTIJL & TONE OF VOICE — HARDE RICHTLIJNEN:
+
+Je schrijft als een nuchtere, praktische Nederlandse thuiskok. De stijl is vergelijkbaar met de Albert Heijn Allerhande: helder, toegankelijk, actief en begrijpelijk voor iedereen. Gebruik Jip-en-Janneketaal.
+
+VERBODEN — schrijf dit NOOIT:
+- Culinair jargon of pretentieuze termen: "reduceren", "emulgeren", "chiffonade", "blancheren" (tenzij je het direct uitlegt), "sauteren", "deglaceren".
+- Vage instructies zonder tijd of hoeveelheid: "kook tot het klaar is", "voeg groenten toe", "bak tot gaar", "verwarm voldoende".
+- Engelse constructies letterlijk vertaald: "breng naar een kook" → schrijf "breng aan de kook". "In een aparte kom combineer je" → schrijf "meng in een aparte kom". "Voeg toe aan de pan" → schrijf "doe het in de pan".
+- Clichéachtige AI-zinnen: "hapklare stukken", "gouden korstje", "mooie bruine kleur", "naar eigen smaak", "tot de textuur consistent is", "roer goed door".
+- Passieve constructies: "wordt gebakken", "kan worden toegevoegd" → schrijf actief: "bak", "voeg toe".
+
+VERPLICHT — schrijf altijd zo:
+- Concreet en specifiek: "snijd de kip in blokjes van 2 cm", "bak 4 minuten op middelhoog vuur", "doe de paprikablokjes erbij".
+- Actief en direct: "Doe de groenten in de pan", "Breng aan de kook", "Roer de saus erdoor".
+- Bereidingstijden altijd in minuten: "laat 8 minuten zachtjes koken", niet "laat even sudderen".
+- Altijd "aan beide kanten" vermelden bij vlees of vis bakken.
+
+VOOR/NA VOORBEELDEN:
+❌ "Combineer de verso groenten in de pan en laat sudderen tot textuur consistent is."
+✅ "Doe de verse groenten in de pan en laat ze 5 minuten zachtjes koken met het deksel erop."
+❌ "Breng de saus naar een kook en garneer met kruiden naar smaak."
+✅ "Breng de saus aan de kook en strooi er vlak voor het serveren de peterselie overheen."
+❌ "Snijd de kip in hapklare stukken."
+✅ "Snijd de kip in blokjes van ongeveer 2 centimeter."
+❌ "Bak tot een gouden korstje."
+✅ "Bak 3 minuten aan elke kant tot lichtbruin."
+
 - Schrijf rustig, volledig en menselijk. Geen telegramstijl.
 - Elke zin heeft een onderwerp en een werkwoord.
 - Niet: "Slechts 2 pannen: rijstpan + afwasbak broccoli"
@@ -667,6 +693,21 @@ Beoordeel eerlijk. Geef JSON:
       [/\bVeel groente door tomatensaus\b/gi, 'Bevat tomatensaus als basis'],
       [/\bfluffy rijst\b/gi, 'droogkokende rijst'],
       [/\bfluffy\b/gi, 'luchtig'],
+      // Tone of voice vangnet
+      [/\bhapklare stukken\b/gi, 'blokjes van 2 cm'],
+      [/\bgouden korstje\b/gi, 'lichtbruin'],
+      [/\bmooie bruine kleur\b/gi, 'lichtbruin'],
+      [/\btot de textuur consistent is\b/gi, 'tot het gaar is'],
+      [/\broer goed door\b/gi, 'roer alles door'],
+      [/\bbreng[^.]*naar een kook\b/gi, 'breng aan de kook'],
+      [/\bin een aparte kom combineer/gi, 'meng in een aparte kom'],
+      [/\bvoeg toe aan de pan\b/gi, 'doe het in de pan'],
+      [/\bkook tot het klaar is\b/gi, 'kook gaar'],
+      [/\bbak tot gaar\b/gi, 'bak gaar'],
+      [/\bverwarm voldoende\b/gi, 'verwarm goed door'],
+      [/\bchiffonade\b/gi, 'fijne reepjes'],
+      [/\bdeglaceer/gi, 'blus af met'],
+      [/\bsauteer/gi, 'bak op hoog vuur'],
       [/\bGebruikmaakt van\b/g, 'Gebruikt'],
       [/\bgebruikmaakt van\b/g, 'gebruikt'],
       [/Een fris sluitstuk/gi, 'een frisse twist'],
