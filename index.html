@@ -15,12 +15,24 @@
       --green:#4caf7d;--amber:#e8a838;--red:#e05555;--blue:#5b9bd5;--purple:#9b7fd4;
       --radius:14px;--radius-sm:8px;
     }
+    body.light-mode {
+      --bg:#ffffff;--bg2:#f4f4f4;--bg3:#e8e8e8;--bg4:#d8d8d8;
+      --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.2);
+      --text:#111111;--text2:#444444;--text3:#888888;
+      --accent:#c8960a;--accent2:#a07208;
+      --green:#2e9e5b;--amber:#c87800;--red:#d03030;--blue:#2a6db5;--purple:#6b4db0;
+    }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
     html{background:var(--bg);}
     body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;max-width:540px;margin:0 auto;padding-bottom:160px;}
     .screen{display:none;padding:0 20px 24px;}
     .screen.active{display:block;}
     #screen-favorieten.active{display:flex;}
+    #screen-instellingen.active{display:flex;flex-direction:column;}
+    .inst-rij{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;}
+    .inst-rij:active{background:var(--bg3);}
+    .inst-label{font-size:15px;color:var(--text);font-weight:500;}
+    .inst-sub{font-size:12px;color:var(--text3);margin-top:2px;}
     .screen.fade-in{animation:fadeIn 0.25s ease both;}
     @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
     .screen.slide-up{animation:slideUp 0.28s cubic-bezier(0.22,1,0.36,1) both;}
@@ -31,9 +43,9 @@
     .app-name{font-size:30px;font-weight:700;letter-spacing:-0.5px;color:var(--accent);}
     .app-tagline{font-size:14px;color:var(--text2);margin-top:4px;line-height:1.5;}
     .app-sub{font-size:12px;color:var(--text3);margin-top:6px;}
-    .section-label{font-size:11px;font-weight:600;letter-spacing:0.04em;color:#a0a8b4;margin-bottom:10px;}
-    .helper-text{font-size:12px;color:#7a8494;margin-top:8px;line-height:1.5;}
-    .privacy-text{font-size:11px;color:#6a7280;margin-top:16px;text-align:center;line-height:1.5;}
+    .section-label{font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--text2);margin-bottom:10px;}
+    .helper-text{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.5;}
+    .privacy-text{font-size:11px;color:var(--text3);margin-top:16px;text-align:center;line-height:1.5;}
     .form-group{margin-bottom:26px;}
     .input-field{width:100%;background:#1e1e1e;border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius);padding:14px 16px;color:var(--text);font-size:15px;outline:none;resize:none;font-family:inherit;transition:border-color 0.2s;-webkit-appearance:none;line-height:1.5;}
     .input-field:focus{border-color:rgba(255,255,255,0.22);background:#222;}
@@ -51,17 +63,17 @@
     .filter-balk-wrapper{position:relative;margin-bottom:4px;}
     .filter-balk{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:2px;}
     .filter-balk .pill{white-space:nowrap;}
-    .filter-hint{font-size:10px;color:#565e6e;margin-top:6px;margin-bottom:4px;}
+    .filter-hint{font-size:10px;color:var(--text3);margin-top:6px;margin-bottom:4px;}
     /* Scroll pijlen */
     .scroll-pijl{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;background:rgba(26,26,26,0.92);border:1px solid rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;transition:opacity 0.2s,transform 0.15s;color:rgba(255,255,255,0.7);font-size:13px;line-height:1;pointer-events:auto;user-select:none;}
     .scroll-pijl:hover{background:rgba(40,40,40,0.98);color:#fff;transform:translateY(-50%) scale(1.08);}
     .scroll-pijl.links{left:-8px;}
     .scroll-pijl.rechts{right:-8px;}
     .scroll-pijl.verborgen{opacity:0;pointer-events:none;}
-    .pill{background:var(--bg2);border:1px solid #3d3d3d;border-radius:100px;padding:8px 15px;font-size:13px;color:#b8c0cc;cursor:pointer;transition:all 0.15s;user-select:none;display:inline-flex;align-items:center;justify-content:center;line-height:1.3;}
-    .pill:hover{background:var(--bg3);color:#dde4ee;border-color:#505050;}
+    .pill{background:var(--bg2);border:1px solid var(--border2);border-radius:100px;padding:8px 15px;font-size:13px;color:var(--text2);cursor:pointer;transition:all 0.15s;user-select:none;display:inline-flex;align-items:center;justify-content:center;line-height:1.3;}
+    .pill:hover{background:var(--bg3);color:var(--text);}
     .pill:active{transform:scale(0.96);}
-    .pill.selected{background:var(--accent);border-color:var(--accent);color:#0f0f0f;font-weight:700;}
+    .pill.selected{background:var(--accent);border-color:var(--accent);color:#ffffff;font-weight:700;}
     .pill[data-group="doel"][data-value="maakt niet uit"].selected{background:var(--accent);border-color:var(--accent);color:#0f0f0f;font-weight:700;}
 
     /* BUTTONS */
@@ -153,7 +165,7 @@
     .match-blok{background:#141820;border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);padding:16px;margin-bottom:20px;}
     .match-blok-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
     .match-score-groot{font-size:26px;font-weight:700;}
-    .match-label-tekst{font-size:13px;color:#c8cdd4;line-height:1.5;}
+    .match-label-tekst{font-size:13px;color:var(--text2);line-height:1.5;}
     .match-uitleg{font-size:13px;color:#c0c6ce;line-height:1.6;margin-bottom:10px;}
     .match-redenen{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
     .match-reden{font-size:13px;font-weight:600;color:#ffffff;background:#44536a;border:1px solid rgba(255,255,255,0.35);border-radius:8px;padding:9px 15px;line-height:1.4;}
@@ -183,8 +195,9 @@
     .ing-section{margin-bottom:20px;}
     .ing-section-title{font-size:11px;font-weight:600;letter-spacing:0.03em;color:var(--text3);margin-bottom:10px;}
     .ingredient-list{list-style:none;}
-    .ingredient-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;}
+    .ingredient-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer;transition:all 0.2s ease;}
     .ingredient-item:last-child{border-bottom:none;}
+    .ingredient-item.checked{text-decoration:line-through;color:var(--text3) !important;opacity:0.55;}
     .ingredient-naam{flex:1;color:var(--text);}
     .ingredient-hoeveelheid{font-size:13px;color:var(--text2);font-weight:500;}
     .ing-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
@@ -254,7 +267,7 @@
     .btn-koelkast:active,.btn-koelkast-opslaan:active{background:var(--bg4);}
 
     /* KOOKMODUS */
-    .kookmodus-overlay{position:fixed;inset:0;background:#0a0a0a;z-index:200;display:flex;flex-direction:column;animation:fadeIn 0.3s ease;}
+    .kookmodus-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;animation:fadeIn 0.3s ease;}
     .kookmodus-header{padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
     .kookmodus-titel{font-size:15px;font-weight:600;color:var(--text);}
     .kookmodus-stap-teller{font-size:13px;color:var(--text2);}
@@ -262,7 +275,7 @@
     .kookmodus-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px;overflow-y:auto;}
     .kookmodus-stap-num{width:48px;height:48px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#000;margin:0 auto 24px;}
     .kookmodus-stap-titel{font-size:22px;font-weight:700;color:var(--text);text-align:center;margin-bottom:16px;letter-spacing:-0.3px;}
-    .kookmodus-stap-uitleg{font-size:16px;color:#c8cdd4;line-height:1.8;text-align:center;max-width:400px;margin:0 auto;}
+    .kookmodus-stap-uitleg{font-size:16px;color:var(--text2);line-height:1.8;text-align:center;max-width:400px;margin:0 auto;}
     .kookmodus-timer{text-align:center;margin:28px 0;}
     .kookmodus-timer-display{font-size:48px;font-weight:700;color:var(--accent);letter-spacing:-1px;font-variant-numeric:tabular-nums;}
     .kookmodus-timer-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 20px;font-size:14px;color:var(--text2);cursor:pointer;margin-top:12px;}
@@ -346,9 +359,19 @@
     .info-box{background:rgba(91,155,213,0.1);border:1px solid rgba(91,155,213,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--blue);font-size:14px;margin-bottom:16px;line-height:1.5;}
 
     /* TOAST MELDING */
-    .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:#1e1e1e;border:1px solid rgba(224,85,85,0.5);color:#f87171;border-radius:10px;padding:12px 18px;font-size:14px;font-weight:500;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,0.5);transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s ease;opacity:0;max-width:320px;text-align:center;pointer-events:none;}
+    .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--bg2);border:1px solid rgba(224,85,85,0.5);color:var(--red);border-radius:10px;padding:12px 18px;font-size:14px;font-weight:500;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s ease;opacity:0;max-width:320px;text-align:center;pointer-events:none;}
     .toast.zichtbaar{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto;}
-    .toast.waarschuwing{border-color:rgba(232,168,56,0.5);color:#f0b429;}
+    .toast.waarschuwing{border-color:rgba(232,168,56,0.5);color:var(--amber);}
+    /* THEME TOGGLE */
+    .theme-toggle-rij{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:16px;}
+    .theme-toggle-label{font-size:14px;color:var(--text);font-weight:500;}
+    .toggle-switch{position:relative;width:44px;height:26px;flex-shrink:0;}
+    .toggle-switch input{opacity:0;width:0;height:0;}
+    .toggle-knop{position:absolute;inset:0;background:var(--bg4);border-radius:100px;cursor:pointer;transition:background 0.2s;}
+    .toggle-knop::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.3);}
+    .toggle-switch input:checked + .toggle-knop{background:var(--accent);}
+    .toggle-switch input:checked + .toggle-knop::before{transform:translateX(18px);}
+
     @keyframes emptyFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
     .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:380px;text-align:center;padding:32px 24px;animation:emptyFadeIn 0.35s ease both;}
     .empty-state-icon{width:72px;height:72px;background:var(--bg2);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:22px;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
@@ -376,12 +399,14 @@
     .fav-acties{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 12px 10px 0;}
     .fav-delete{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px;line-height:1;}
     .fav-delete:hover{color:var(--red);}
-    .nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;background:rgba(15,15,15,0.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;z-index:100;}
+    .nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;z-index:100;}
+    body:not(.light-mode) .nav-bar{background:rgba(15,15,15,0.95);}
     .nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 12px;cursor:pointer;background:none;border:none;color:var(--text3);font-size:9px;font-weight:500;transition:color 0.15s;position:relative;}
     .nav-tab.actief{color:var(--accent);}
     .nav-tab-icon{font-size:18px;line-height:1;}
     .nav-badge{position:absolute;top:5px;right:calc(50% - 16px);background:var(--accent);color:#000;font-size:9px;font-weight:700;border-radius:100px;padding:1px 5px;min-width:16px;text-align:center;}
     .sticky-cta{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:508px;z-index:99;padding-bottom:env(safe-area-inset-bottom,0px);}
+    .sticky-cta::before{content:'';position:absolute;bottom:100%;left:-16px;right:-16px;height:48px;background:linear-gradient(to top, rgba(15,15,15,0.95) 0%, transparent 100%);pointer-events:none;}
     .sticky-cta .btn-primary{box-shadow:0 4px 24px rgba(0,0,0,0.5);}
   </style>
 </head>
@@ -397,12 +422,11 @@
 
     <div class="form-group">
       <div class="section-label">Kookapparatuur</div>
-      <div class="pill-grid">
-        <div class="pill selected" data-group="apparatuur" data-value="kookplaat" data-multi="true">Kookplaat</div>
-        <div class="pill" data-group="apparatuur" data-value="oven" data-multi="true">Oven</div>
-        <div class="pill" data-group="apparatuur" data-value="airfryer" data-multi="true">Airfryer</div>
-        <div class="pill" data-group="apparatuur" data-value="magnetron" data-multi="true">Magnetron</div>
-        <div class="pill" data-group="apparatuur" data-value="bbq" data-multi="true">BBQ</div>
+      <div class="pill-grid" style="flex-wrap:nowrap;">
+        <div class="pill selected" data-group="apparatuur" data-value="kookplaat" data-multi="true" style="padding:8px 10px;font-size:12px;">Kookplaat</div>
+        <div class="pill" data-group="apparatuur" data-value="oven" data-multi="true" style="padding:8px 10px;font-size:12px;">Oven</div>
+        <div class="pill" data-group="apparatuur" data-value="airfryer" data-multi="true" style="padding:8px 10px;font-size:12px;">Airfryer</div>
+        <div class="pill" data-group="apparatuur" data-value="magnetron" data-multi="true" style="padding:8px 10px;font-size:12px;">Magnetron</div>
       </div>
     </div>
 
@@ -440,16 +464,12 @@
     </div>
 
     <div class="form-group">
-      <div class="section-label">Hoeveel moeite wil je doen?</div>
-      <div class="pill-grid">
+      <div class="section-label">Hoeveel moeite en ervaring?</div>
+      <div class="pill-grid" style="margin-bottom:8px;">
         <div class="pill" data-group="moeite" data-value="bijna niks">Bijna niks</div>
         <div class="pill" data-group="moeite" data-value="normaal">Normaal</div>
         <div class="pill" data-group="moeite" data-value="echt koken">Ik wil echt koken</div>
       </div>
-    </div>
-
-    <div class="form-group">
-      <div class="section-label">Kookniveau</div>
       <div class="pill-grid">
         <div class="pill" data-group="kookniveau" data-value="beginner">Beginner</div>
         <div class="pill" data-group="kookniveau" data-value="gemiddeld">Gemiddeld</div>
@@ -480,11 +500,11 @@
     </div>
 
     <div class="form-group">
-      <div class="section-label">Vandaag liever geen…</div>
+      <div class="section-label">Vandaag liever geen —</div>
       <div class="pill-grid">
         <div class="pill" data-group="geenZinIn" data-value="alles mag" data-exclusief="true">Maakt niet uit</div>
         <div class="pill" data-group="geenZinIn" data-value="geen oven" data-multi="true">Oven gebruiken</div>
-        <div class="pill" data-group="geenZinIn" data-value="geen snijwerk" data-multi="true">Snijwerk</div>
+        <div class="pill" data-group="geenZinIn" data-value="geen snijwerk" data-multi="true">Veel hakken en snijden</div>
         <div class="pill" data-group="geenZinIn" data-value="geen rijst" data-multi="true">Rijst</div>
         <div class="pill" data-group="geenZinIn" data-value="geen pasta" data-multi="true">Pasta</div>
         <div class="pill" data-group="geenZinIn" data-value="geen pittig" data-multi="true">Pittig eten</div>
@@ -494,7 +514,7 @@
 
     <div class="form-group">
       <div class="profiel-toggle" onclick="openVoorkeuren()">
-        <span class="profiel-toggle-label">Voorkeuren instellen (optioneel)</span>
+        <span class="profiel-toggle-label">Voorkeuren instellen</span>
         <span style="color:var(--accent);font-size:18px;">›</span>
       </div>
     </div>
@@ -508,7 +528,7 @@
         </div>
 
         <div class="form-group">
-          <div class="section-label">Boodschappen doen toegestaan?</div>
+          <div class="section-label">Extra boodschappen halen?</div>
           <div class="pill-grid">
             <div class="pill" data-group="boodschappen" data-value="nee">Nee, alleen wat ik heb</div>
             <div class="pill" data-group="boodschappen" data-value="een">Max 1 ding kopen</div>
@@ -517,7 +537,7 @@
         </div>
 
         <div class="form-group">
-          <div class="section-label">Dieet / allergieën</div>
+          <div class="section-label">Dieet en allergieën</div>
           <div class="pill-grid">
             <div class="pill" data-group="allergienen" data-value="vegetarisch" data-multi="true">Vegetarisch</div>
             <div class="pill" data-group="allergienen" data-value="veganistisch" data-multi="true">Veganistisch</div>
@@ -532,7 +552,7 @@
         </div>
 
         <div class="form-group">
-          <div class="section-label">Nooit gebruiken</div>
+          <div class="section-label">Ik eet nooit…</div>
           <input type="text" id="nooitGebruiken" class="input-field" placeholder="bijv. koriander, champignons, tonijn…">
           <div class="helper-text">Deze ingrediënten gebruiken we nergens, ook niet als vervanging.</div>
         </div>
@@ -931,6 +951,7 @@
       if (!state.tijd) { toonToast('Geef aan hoeveel tijd je hebt.'); return; }
       if (!state.personen) { toonToast('Geef aan voor hoeveel personen je kookt.'); return; }
       if (!state.moeite) { toonToast('Kies hoeveel moeite je wilt doen.'); return; }
+      if (!state.kookniveau) { toonToast('Kies je kookniveau.'); return; }
       if (!state.doel || state.doel.length === 0) { toonToast('Kies wat je vanavond wilt.'); return; }
       if (!state.geenZinIn || state.geenZinIn.length === 0) { toonToast('Geef aan wat je vanavond liever niet wilt, of kies "Maakt niet uit".'); return; }
 
@@ -1573,8 +1594,8 @@
               <button class="portie-btn" onclick="pasPortiesAan(${index}, 1)">+</button>
             </div>
           </div>
-          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '±' + v.portieGewicht + 'g' : 'onbekend'}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) && s.apparatuurGebruikt.length > 0 ? s.apparatuurGebruikt.join(', ') : 'kookplaat'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">${v.portieGewicht ? '± ' + v.portieGewicht + ' g' : 'onbekend'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Apparatuur</div><div class="overzicht-waarde">${Array.isArray(s.apparatuurGebruikt) && s.apparatuurGebruikt.length > 0 ? s.apparatuurGebruikt.map(a => a.charAt(0).toUpperCase() + a.slice(1)).join(', ') : 'Kookplaat'}</div></div>
           <div class="overzicht-item"><div class="overzicht-label">Afwas</div><div class="overzicht-waarde">${formatAfwas(s.afwasNiveau)}</div></div>
         </div>
 
@@ -1618,8 +1639,8 @@
           <div class="voeding-disclaimer">Voedingswaarden zijn schattingen op basis van standaardproducten.</div>
           ${v.totaalGewicht ? `
           <div class="overzicht-grid" style="margin-bottom:16px;">
-            <div class="overzicht-item"><div class="overzicht-label">Totaalgewicht</div><div class="overzicht-waarde">±${v.totaalGewicht}g</div></div>
-            <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">±${v.portieGewicht}g</div></div>
+            <div class="overzicht-item"><div class="overzicht-label">Totaalgewicht</div><div class="overzicht-waarde">± ${v.totaalGewicht} g</div></div>
+            <div class="overzicht-item"><div class="overzicht-label">Portiegrootte</div><div class="overzicht-waarde">± ${v.portieGewicht} g</div></div>
           </div>` : ''}
           <div class="voeding-tabs">
             <div class="voeding-tab active" onclick="wisselVoeding(${index}, 'portie', event)">Per portie</div>
@@ -1916,6 +1937,14 @@
       herbereken(index, factor);
     }
 
+    // Ingredient items aanklikbaar maken (afstrepen)
+    document.addEventListener('click', function(e) {
+      const item = e.target.closest('.ingredient-item');
+      if (item && !e.target.closest('.ing-hoeveelheid')) {
+        item.classList.toggle('checked');
+      }
+    });
+
     function herbereken(index, factor) {
       const container = document.querySelector(`[data-ing-container="${index}"]`);
       if (!container) return;
@@ -2084,23 +2113,84 @@
       const cta = document.getElementById('sticky-cta');
       if (cta) cta.style.display = id === 'screen-invoer' ? '' : 'none';
       // Markeer juiste nav-tab
-      const map = { 'screen-invoer': 'nav-zoek', 'screen-resultaten': 'nav-zoek', 'screen-beperkt': 'nav-zoek', 'screen-favorieten': 'nav-fav' };
+      const map = { 'screen-invoer': 'nav-zoek', 'screen-resultaten': 'nav-zoek', 'screen-beperkt': 'nav-zoek', 'screen-favorieten': 'nav-fav', 'screen-instellingen': 'nav-inst' };
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('actief'));
       const actief = map[id];
       if (actief) document.getElementById(actief)?.classList.add('actief');
     };
 
+    // ============================================================
+    // THEMA
+    // ============================================================
+
+    function wisselThema(licht) {
+      document.body.classList.toggle('light-mode', licht);
+      localStorage.setItem('vanavond_thema', licht ? 'licht' : 'donker');
+      // Update meta theme-color
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.content = licht ? '#f5f4f0' : '#0f0f0f';
+    }
+
+    function initThema() {
+      const opgeslagen = localStorage.getItem('vanavond_thema');
+      const licht = opgeslagen === 'licht';
+      document.body.classList.toggle('light-mode', licht);
+      const toggle = document.getElementById('theme-toggle');
+      if (toggle) toggle.checked = licht;
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.content = licht ? '#f5f4f0' : '#0f0f0f';
+    }
+
     // Init
+    initThema();
     updateFavBadge();
 
   </script>
   <!-- FAVORIETEN -->
   <div id="screen-favorieten" class="screen" style="flex-direction:column;min-height:calc(100vh - 80px);padding:0 20px 24px;">
-    <div style="padding-top:24px;">
+    <div style="padding-top:24px;text-align:center;">
       <div style="font-size:24px;font-weight:700;color:var(--accent);margin-bottom:4px;letter-spacing:-0.5px;">Favorieten</div>
       <div style="font-size:14px;color:var(--text2);margin-bottom:22px;">Recepten die je hebt opgeslagen.</div>
     </div>
     <div id="fav-lijst" style="flex:1;display:flex;flex-direction:column;"></div>
+  </div>
+
+  <!-- INSTELLINGEN -->
+  <div id="screen-instellingen" class="screen" style="flex-direction:column;min-height:calc(100vh - 80px);padding:0 20px 24px;">
+    <div style="padding-top:24px;text-align:center;margin-bottom:28px;">
+      <div style="font-size:24px;font-weight:700;color:var(--accent);margin-bottom:4px;letter-spacing:-0.5px;">Instellingen</div>
+      <div style="font-size:14px;color:var(--text2);">Pas de app naar je wens aan.</div>
+    </div>
+
+    <!-- Weergave -->
+    <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;color:#a0a8b4;margin-bottom:10px;">WEERGAVE</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;">
+      <div class="inst-rij">
+        <div>
+          <div class="inst-label">Lichte modus</div>
+          <div class="inst-sub">Schakel over naar een licht kleurenschema</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="theme-toggle" onchange="wisselThema(this.checked)">
+          <span class="toggle-knop"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Over -->
+    <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;color:#a0a8b4;margin-bottom:10px;">OVER</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;">
+      <div class="inst-rij" style="cursor:default;">
+        <div class="inst-label">Versie</div>
+        <div style="font-size:13px;color:var(--text3);">1.0</div>
+      </div>
+      <div class="inst-rij" style="border-top:1px solid var(--border);cursor:default;">
+        <div class="inst-label">Gemaakt door</div>
+        <div style="font-size:13px;color:var(--text3);">Vanavond</div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:var(--text3);text-align:center;line-height:1.6;">Jij opent de koelkast.<br>Wij bedenken de rest.</div>
   </div>
 
   <!-- TOAST -->
@@ -2116,6 +2206,10 @@
       <span class="nav-tab-icon">♥</span>
       <span>Favorieten</span>
       <span class="nav-badge" id="fav-badge" style="display:none;"></span>
+    </button>
+    <button class="nav-tab" id="nav-inst" onclick="navNaar('screen-instellingen','nav-inst')">
+      <span class="nav-tab-icon">⚙️</span>
+      <span>Instellingen</span>
     </button>
   </nav>
 
