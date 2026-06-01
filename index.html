@@ -877,14 +877,32 @@
           }
         }
 
-        if (isMulti) {
-          pill.classList.toggle('selected');
-          if (!state[group]) state[group] = [];
-          if (pill.classList.contains('selected')) { if (!state[group].includes(value)) state[group].push(value); }
-          else { state[group] = state[group].filter(v => v !== value); }
-        } else {
+        if (isExclusief) {
+          // Exclusief: deselecteer alle andere in deze groep, sla op als array met één waarde
           document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('selected'));
-          pill.classList.add('selected'); state[group] = value;
+          pill.classList.add('selected');
+          state[group] = [value];
+        } else if (isMulti) {
+          // Multi: deselecteer exclusieve pills eerst
+          document.querySelectorAll(`.pill[data-group="${group}"][data-exclusief="true"]`).forEach(p => {
+            p.classList.remove('selected');
+          });
+          if (!Array.isArray(state[group])) state[group] = [];
+          state[group] = state[group].filter(v => {
+            const excl = document.querySelector(`.pill[data-group="${group}"][data-value="${v}"][data-exclusief="true"]`);
+            return !excl;
+          });
+          pill.classList.toggle('selected');
+          if (pill.classList.contains('selected')) {
+            if (!state[group].includes(value)) state[group].push(value);
+          } else {
+            state[group] = state[group].filter(v => v !== value);
+          }
+        } else {
+          // Enkelvoudig (geen multi, geen exclusief): sla op als scalar
+          document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('selected'));
+          pill.classList.add('selected');
+          state[group] = value;
         }
       });
     });
@@ -947,7 +965,8 @@
       if (!state.personen) { toonToast('Geef aan voor hoeveel personen je kookt.'); return; }
       if (!state.kookniveau) { toonToast('Kies je kookniveau.'); return; }
       if (!state.doel || state.doel.length === 0) { toonToast('Kies wat je vanavond wilt.'); return; }
-      if (!state.geenZinIn || state.geenZinIn.length === 0) { toonToast('Geef aan wat je vanavond liever niet wilt, of kies "Maakt niet uit".'); return; }
+      const geenZinInLijst = Array.isArray(state.geenZinIn) ? state.geenZinIn : (state.geenZinIn ? [state.geenZinIn] : []);
+      if (geenZinInLijst.length === 0) { toonToast('Geef aan wat je vanavond liever niet wilt, of kies "Maakt niet uit".'); return; }
 
       resetLoadingSteps(); toonScherm('screen-laden');
       const interval = animeerLoadingSteps();
@@ -957,7 +976,7 @@
         ingredientLijst: state.ingredientChips.length > 0 ? state.ingredientChips : null,
         tijd: state.tijd, personen: state.personen, moeite: state.moeite, doel: Array.isArray(state.doel) ? state.doel.join(', ') : state.doel, doelFilters: state.doel,
         boodschappen: state.boodschappen || 'paar',
-        geenZinIn: state.geenZinIn,
+        geenZinIn: geenZinInLijst,
         profiel: {
           apparatuur: state.apparatuur, allergienen: state.allergienen,
           kookniveau: state.kookniveau || 'gemiddeld',
