@@ -299,6 +299,9 @@ VERBODEN ZINNEN EN CONSTRUCTIES (nooit gebruiken):
 - VERBODEN: "minced", "prep", "cook", "medium heat", "serve", "ready", "heat", "add", "stir", "garnish", "topping", "meal prep", "matchsticks", "fluffy"
 - GOED: "fijngehakt", "voorbereiden", "koken", "middelhoog vuur", "serveren", "klaar", "verhit", "voeg toe", "roer", "werk af met", "bestrooi met", "dunne reepjes", "droogkokende rijst"
 - AFWAS: schrijf ALTIJD volledig Nederlands met lidwoord. NOOIT telegramstijl. Fout: "2 pannen en snijplank". Goed: "2 pannen en een snijplank". Fout: "1 pan, kom". Goed: "1 pan en een kom".
+- AFWAS SPELLING: controleer meervouden nauwkeurig. "1 pan" → correct. "2 pannen" → correct (dubbel-n). NOOIT "2 pann" of "2 pans". Schrijf altijd het volledige woord.
+- TYPOS VERBODEN: controleer elk woord vóór output. "verso groente" bestaat niet — schrijf "verse groente". Typos zijn absoluut niet toegestaan in zichtbare tekstvelden.
+- PASSATA/SAUZEN ZIJN GEEN GROENTEN: Ingrediënten zoals passata, tomatensaus, bouillon, ketjap, sojasaus, worcestersaus zijn sauzen of smaakmakers. Noem ze NOOIT "groente". Schrijf bij tags of beschrijvingen ALLEEN de échte groenten (zoals broccoli, ui, paprika). Fout: "Veel groente door passata". Goed: "Bevat broccoli en ui".
 - HOOFDLETTERS APPARATUUR: de waarde voor het veld "apparatuurGebruikt" begint ALTIJD met een hoofdletter. "Kookplaat", "Oven", "Airfryer". Nooit "kookplaat".
 - EENHEDEN: gebruik ALTIJD een spatie tussen getal en eenheid, én schrijf het ±-teken met spatie erna. Goed: "± 450 g". Fout: "±450g" of "450g".
 - VERBODEN: "Gebruikmaakt van" — schrijf actief: "Dit gerecht gebruikt..."
@@ -648,7 +651,11 @@ Beoordeel eerlijk. Geef JSON:
       [/bestrooi met bosui en paprika/gi, 'verdeel de bosui en paprika erover'],
       [/bestrooi met bosui/gi, 'verdeel de bosui erover'],
       // Nieuwe taalregels
-      [/\bmatchsticks\b/gi, 'dunne reepjes'],
+      [/\bverso groente\b/gi, 'verse groente'],
+      [/\bverso groenten\b/gi, 'verse groenten'],
+      [/\b2 pann\b/gi, '2 pannen'],
+      [/\bVeel groente door passata\b/gi, 'Bevat passata als smaakmaker'],
+      [/\bVeel groente door tomatensaus\b/gi, 'Bevat tomatensaus als basis'],
       [/\bfluffy rijst\b/gi, 'droogkokende rijst'],
       [/\bfluffy\b/gi, 'luchtig'],
       [/\bGebruikmaakt van\b/g, 'Gebruikt'],
