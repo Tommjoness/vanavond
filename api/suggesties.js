@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   const { ingredienten, ingredientLijst, tijd, personen, moeite, doel, doelFilters, boodschappen, geenZinIn, profiel, verfijn } = req.body;
 
-  if (!ingredienten || !tijd || !personen || !moeite || !doel) {
+  if (!ingredienten || !tijd || !personen || !doel) {
     return res.status(400).json({ error: 'Verplichte velden ontbreken' });
   }
 
