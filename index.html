@@ -399,13 +399,13 @@
     .fav-acties{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 12px 10px 0;}
     .fav-delete{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px;line-height:1;}
     .fav-delete:hover{color:var(--red);}
-    .nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;z-index:100;}
+    .nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom,8px);}
     body:not(.light-mode) .nav-bar{background:rgba(15,15,15,0.95);}
     .nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0 12px;cursor:pointer;background:none;border:none;color:var(--text3);font-size:9px;font-weight:500;transition:color 0.15s;position:relative;}
     .nav-tab.actief{color:var(--accent);}
     .nav-tab-icon{font-size:18px;line-height:1;}
     .nav-badge{position:absolute;top:5px;right:calc(50% - 16px);background:var(--accent);color:#000;font-size:9px;font-weight:700;border-radius:100px;padding:1px 5px;min-width:16px;text-align:center;}
-    .sticky-cta{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:508px;z-index:99;padding-bottom:env(safe-area-inset-bottom,0px);}
+    .sticky-cta{position:fixed;bottom:calc(56px + env(safe-area-inset-bottom, 8px));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:508px;z-index:99;}
     .sticky-cta::before{content:'';position:absolute;bottom:100%;left:-16px;right:-16px;height:48px;background:linear-gradient(to top, var(--bg) 0%, transparent 100%);pointer-events:none;}
     .sticky-cta .btn-primary{box-shadow:0 4px 24px rgba(0,0,0,0.2);}
     .sticky-cta .btn-smart{margin-bottom:8px;}
@@ -465,12 +465,7 @@
     </div>
 
     <div class="form-group">
-      <div class="section-label">Hoeveel moeite en ervaring?</div>
-      <div class="pill-grid" style="margin-bottom:8px;">
-        <div class="pill" data-group="moeite" data-value="bijna niks">Bijna niks</div>
-        <div class="pill" data-group="moeite" data-value="normaal">Normaal</div>
-        <div class="pill" data-group="moeite" data-value="echt koken">Ik wil echt koken</div>
-      </div>
+      <div class="section-label">Kookniveau</div>
       <div class="pill-grid">
         <div class="pill" data-group="kookniveau" data-value="beginner">Beginner</div>
         <div class="pill" data-group="kookniveau" data-value="gemiddeld">Gemiddeld</div>
@@ -951,7 +946,6 @@
       if (!ingredienten && state.ingredientChips.length === 0) { toonToast('Vul in wat je in huis hebt.'); return; }
       if (!state.tijd) { toonToast('Geef aan hoeveel tijd je hebt.'); return; }
       if (!state.personen) { toonToast('Geef aan voor hoeveel personen je kookt.'); return; }
-      if (!state.moeite) { toonToast('Kies hoeveel moeite je wilt doen.'); return; }
       if (!state.kookniveau) { toonToast('Kies je kookniveau.'); return; }
       if (!state.doel || state.doel.length === 0) { toonToast('Kies wat je vanavond wilt.'); return; }
       if (!state.geenZinIn || state.geenZinIn.length === 0) { toonToast('Geef aan wat je vanavond liever niet wilt, of kies "Maakt niet uit".'); return; }
@@ -1814,7 +1808,6 @@
       // Selecteer automatisch redelijke defaults
       if (!state.tijd) { document.querySelector('.pill[data-group="tijd"][data-value="30"]')?.click(); }
       if (!state.personen) { document.querySelector('.pill[data-group="personen"][data-value="2"]')?.click(); }
-      if (!state.moeite) { document.querySelector('.pill[data-group="moeite"][data-value="normaal"]')?.click(); }
       if (!state.doel) { document.querySelector('.pill[data-group="doel"][data-value="maakt niet uit"]')?.click(); }
       haalSuggesties('Geef de ultieme beste keuze voor vanavond op basis van de voorraad. Slechts 1 topkeuze als eerste suggestie, daarna 2 alternatieven.');
     }
