@@ -1041,12 +1041,18 @@
 
         _retryTeller = 0;
         // Eerst resultaten tonen, dan foto's laden (DOM moet bestaan)
-        toonResultaten();
+        try {
+          toonResultaten();
+        } catch (renderErr) {
+          console.error('Frontend render error:', renderErr, '\nSuggesties data:', JSON.stringify(state.suggesties?.slice(0,1), null, 2));
+          toonEmptyState('api_error');
+          return;
+        }
         setTimeout(() => laadFotos(data.suggesties), 100);
       } catch (err) {
+        console.error('Frontend fetch/parse error:', err);
         clearInterval(interval);
         if (window._tipInterval) { clearInterval(window._tipInterval); window._tipInterval = null; }
-        // Onderscheid netwerkfout (geen verbinding) van andere fouten
         const isNetwerkFout = err instanceof TypeError && err.message.toLowerCase().includes('fetch');
         toonEmptyState(isNetwerkFout ? 'network_error' : 'api_error');
       }
@@ -1185,6 +1191,7 @@
     }
 
     function maakKaart(s, index, isFirst) {
+      if (!s || !s.naam) { console.warn('maakKaart: ongeldig suggestie object op index', index, s); return document.createElement('div'); }
       const card = document.createElement('div');
       let cardClass = 'result-card';
       if (s.versProduct) cardClass += ' gebruik-eerst';
@@ -1197,15 +1204,14 @@
       const fotoKlasse = fotoCache[fotoKey] ? 'geladen' : '';
 
       const nog = Array.isArray(s.nogNodig) ? s.nogNodig : [];
-      const nogNamen = nog.map(i => typeof i === 'object' ? i.naam : i);
+      const nogNamen = nog.map(i => (typeof i === 'object' ? i?.naam : i) || '').filter(Boolean);
       const mistTekst = nog.length === 0 ? '' :
         nog.length === 1 ? `<div class="kaart-mist">Mist alleen: <strong>${nogNamen[0]}</strong></div>` :
         nog.length === 2 ? `<div class="kaart-mist">Mist: <strong>${nogNamen[0]} en ${nogNamen[1]}</strong></div>` :
         `<div class="kaart-mist">Mist: <strong>${nogNamen.slice(0,-1).join(', ')} en ${nogNamen[nogNamen.length-1]}</strong></div>`;
 
-      const kcal = s.voeding?.perPortie?.kcal;
-      const eiwit = s.voeding?.perPortie?.proteinen;
-      const voedingBadge = kcal ? `<span class="tag tag-blue">±${kcal} kcal</span>${eiwit ? `<span class="tag tag-blue">±${eiwit}g eiwit</span>` : ''}` : '';
+      const kcal = s.voeding?.perPortie?.kcal ?? s.voeding?.kcal ?? null;
+      const eiwit = s.voeding?.perPortie?.proteinen ?? s.voeding?.proteinen ?? null;
 
       const extra = Array.isArray(s.extraBadges) ? s.extraBadges.slice(0,1).map(b=>`<span class="tag tag-blue">${b}</span>`).join('') : '';
       const score = s.matchScore ? `<span class="match-score" style="color:${matchKleur(s.matchScore)}">Match ${s.matchScore}%</span>` : '';
@@ -1227,11 +1233,11 @@
           </div>
           <div class="result-naam">${s.naam}</div>
           ${s.slimmeReden ? `<div class="slimme-reden">${s.slimmeReden}</div>` : ''}
-          <div class="result-beschrijving">${s.korteBeschrijving}</div>
+          <div class="result-beschrijving">${s.korteBeschrijving || ''}</div>
           ${mistTekst}
           <div class="result-meta">
-            <span class="tag tag-gray">⏱ ${s.bereidingstijd}</span>
-            <span class="tag tag-gray">🍳 ${s.afwasNiveau}</span>
+            <span class="tag tag-gray">⏱ ${s.bereidingstijd || '?'}</span>
+            <span class="tag tag-gray">🍳 ${s.afwasNiveau || '?'}</span>
             ${nog.length === 0 ? '<span class="tag tag-green">Alles in huis</span>' : `<span class="tag tag-amber">Nog ${nog.length} nodig</span>`}
             ${kcal ? `<span class="tag tag-blue">±${kcal} kcal</span>` : ''}
             ${eiwit ? `<span class="tag tag-blue">±${eiwit}g eiwit</span>` : ''}
@@ -1466,10 +1472,11 @@
       }
 
       const container = document.getElementById('suggesties-container');
+      if (!container) { console.error('suggesties-container niet gevonden'); return; }
       container.innerHTML = '';
 
       // Filter: toon alleen suggesties met matchScore >= 60
-      const goeie = state.suggesties.filter(s => !s.matchScore || s.matchScore >= 60);
+      const goeie = (state.suggesties || []).filter(s => s && (!s.matchScore || s.matchScore >= 60));
       if (goeie.length === 0) {
         toonEmptyState('no_results');
         return;
