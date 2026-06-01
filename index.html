@@ -276,7 +276,12 @@
     .kookmodus-stap-num{width:48px;height:48px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#000;margin:0 auto 24px;}
     .kookmodus-stap-titel{font-size:22px;font-weight:700;color:var(--text);text-align:center;margin-bottom:16px;letter-spacing:-0.3px;}
     .kookmodus-stap-uitleg{font-size:16px;color:var(--text2);line-height:1.8;text-align:center;max-width:400px;margin:0 auto;}
-    .kookmodus-timer{text-align:center;margin:28px 0;}
+    .kookmodus-timer-mini{position:fixed;bottom:calc(60px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--accent);border-radius:100px;padding:10px 20px;display:flex;align-items:center;gap:12px;z-index:300;box-shadow:0 4px 20px rgba(0,0,0,0.4);cursor:pointer;animation:slideUp 0.3s ease;}
+    .kookmodus-timer-mini-tijd{font-size:18px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;min-width:48px;}
+    .kookmodus-timer-mini-label{font-size:12px;color:var(--text2);}
+    .kookmodus-timer-mini-btn{background:var(--accent);border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#000;font-size:13px;cursor:pointer;}
+    .kookmodus-timer-geminimaliseerd .kookmodus-body{display:none;}
+    .kookmodus-timer-geminimaliseerd .kookmodus-footer{display:none;}
     .kookmodus-timer-display{font-size:48px;font-weight:700;color:var(--accent);letter-spacing:-1px;font-variant-numeric:tabular-nums;}
     .kookmodus-timer-btn{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:8px 20px;font-size:14px;color:var(--text2);cursor:pointer;margin-top:12px;}
     .kookmodus-footer{padding:20px 24px;border-top:1px solid var(--border);display:flex;gap:12px;}
@@ -1895,6 +1900,7 @@
       kookmodusNaam = s.naam;
       kookmodusStap = 0;
       kookmodusActief = true;
+      vraagNotificatieToestemming();
       toonKookmodusStap();
     }
 
@@ -1924,19 +1930,26 @@
             <div class="kookmodus-titel">${kookmodusNaam}</div>
             <div class="kookmodus-stap-teller">Stap ${kookmodusStap + 1} van ${totaal}</div>
           </div>
-          <button class="kookmodus-sluit" onclick="sluitKookmodus()">×</button>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="kookmodus-sluit" onclick="minimaliseerKookmodus()" title="Minimaliseer" style="font-size:18px;">⌃</button>
+            <button class="kookmodus-sluit" onclick="sluitKookmodus()">×</button>
+          </div>
         </div>
         <div class="kookmodus-body">
           <div class="kookmodus-stap-num">${kookmodusStap + 1}</div>
           ${titel ? `<div class="kookmodus-stap-titel">${titel}</div>` : ''}
           <div class="kookmodus-stap-uitleg">${uitleg}</div>
           <div class="kookmodus-timer">
-            <div class="kookmodus-timer-display" id="km-timer">${stapMinuten > 0 ? stapMinuten + ":00" : "0:00"}</div>
+            <div class="kookmodus-timer-display" id="km-timer">${stapMinuten > 0 ? stapMinuten + ':00' : '0:00'}</div>
             <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;">
-              <button class="kookmodus-timer-btn" onclick="toggleTimer()" id="km-timer-btn">Timer starten</button>
-              <button class="kookmodus-timer-btn" onclick="resetTimer()" style="opacity:0.6;">↺ Reset</button>
+              ${stapMinuten > 0
+                ? `<button class="kookmodus-timer-btn" onclick="startAftelTimer(${stapMinuten})" id="km-timer-btn">▶ Start ${stapMinuten} min</button>`
+                : `<button class="kookmodus-timer-btn" onclick="toggleTimer()" id="km-timer-btn">Timer starten</button>`
+              }
+              <button class="kookmodus-timer-btn" onclick="resetTimer()" style="opacity:0.6;">↺</button>
+              <button class="kookmodus-timer-btn" onclick="minimaliseerKookmodus()" style="opacity:0.6;" title="Minimaliseer">⌃</button>
             </div>
-            ${stapMinuten > 0 ? `<div style='font-size:12px;color:var(--text3);margin-top:8px;'>Suggestie: ${stapMinuten} min</div>` : ''}
+            ${stapMinuten > 0 ? `<div style='font-size:12px;color:var(--text3);margin-top:8px;'>Telt af van ${stapMinuten} minuten</div>` : ''}
           </div>
         </div>
         <div class="kookmodus-footer">
@@ -2032,31 +2045,149 @@
       });
     }
 
+    // Timer doeltijd (voor aftellen)
+    let timerDoelSeconden = 0;
+    let timerIsAftellen = false;
+    let timerGeminimaliseerd = false;
+
+    function minimaliseerKookmodus() {
+      const overlay = document.getElementById('kookmodus-overlay');
+      if (!overlay) return;
+      timerGeminimaliseerd = true;
+      overlay.style.display = 'none';
+      // Maak mini-balk als die nog niet bestaat
+      if (!document.getElementById('timer-mini')) {
+        const mini = document.createElement('div');
+        mini.className = 'kookmodus-timer-mini';
+        mini.id = 'timer-mini';
+        mini.innerHTML = `
+          <div>
+            <div class="kookmodus-timer-mini-label">Stap ${kookmodusStap + 1} — ${kookmodusNaam}</div>
+            <div class="kookmodus-timer-mini-tijd" id="timer-mini-tijd">0:00</div>
+          </div>
+          <button class="kookmodus-timer-mini-btn" onclick="vergroot­KookmodusHerstel()" title="Herstel">↑</button>
+        `;
+        mini.onclick = (e) => { if (!e.target.closest('button')) vergrootKookmodus(); };
+        document.body.appendChild(mini);
+      }
+      updateMiniTimer();
+    }
+
+    function vergrootKookmodus() {
+      timerGeminimaliseerd = false;
+      const overlay = document.getElementById('kookmodus-overlay');
+      if (overlay) overlay.style.display = 'flex';
+      const mini = document.getElementById('timer-mini');
+      if (mini) mini.remove();
+    }
+
+    function updateMiniTimer() {
+      if (!timerGeminimaliseerd) return;
+      const el = document.getElementById('timer-mini-tijd');
+      if (!el) return;
+      if (timerIsAftellen) {
+        const rest = Math.max(0, timerDoelSeconden - timerSeconden);
+        const min = Math.floor(rest / 60);
+        const sec = rest % 60;
+        el.textContent = `${min}:${sec.toString().padStart(2,'0')}`;
+      } else {
+        const min = Math.floor(timerSeconden / 60);
+        const sec = timerSeconden % 60;
+        el.textContent = `${min}:${sec.toString().padStart(2,'0')}`;
+      }
+    }
+
     function resetTimer() {
       clearInterval(timerInterval);
       timerLoopt = false;
       timerSeconden = 0;
+      timerIsAftellen = false;
       const el = document.getElementById('km-timer');
       if (el) el.textContent = '0:00';
       const btn = document.getElementById('km-timer-btn');
       if (btn) btn.textContent = 'Timer starten';
+      document.title = 'Vanavond';
     }
 
     function toggleTimer() {
       if (timerLoopt) {
         clearInterval(timerInterval);
         timerLoopt = false;
-        document.getElementById('km-timer-btn').textContent = '▶ Hervat';
+        const btn = document.getElementById('km-timer-btn');
+        if (btn) btn.textContent = '▶ Hervat';
       } else {
         timerLoopt = true;
-        document.getElementById('km-timer-btn').textContent = '⏸ Pauzeer';
+        const btn = document.getElementById('km-timer-btn');
+        if (btn) btn.textContent = '⏸ Pauzeer';
         timerInterval = setInterval(() => {
           timerSeconden++;
-          const min = Math.floor(timerSeconden / 60);
-          const sec = timerSeconden % 60;
           const el = document.getElementById('km-timer');
-          if (el) el.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+
+          if (timerIsAftellen) {
+            // Aftellen
+            const rest = Math.max(0, timerDoelSeconden - timerSeconden);
+            const min = Math.floor(rest / 60);
+            const sec = rest % 60;
+            const tekst = `${min}:${sec.toString().padStart(2,'0')}`;
+            if (el) el.textContent = tekst;
+            document.title = `⏱ ${tekst} — Vanavond`;
+            updateMiniTimer();
+            if (rest === 0) {
+              clearInterval(timerInterval);
+              timerLoopt = false;
+              document.title = 'Vanavond ✅';
+              timerKlaar();
+            }
+          } else {
+            // Optellen
+            const min = Math.floor(timerSeconden / 60);
+            const sec = timerSeconden % 60;
+            const tekst = `${min}:${sec.toString().padStart(2,'0')}`;
+            if (el) el.textContent = tekst;
+            document.title = `⏱ ${tekst} — Vanavond`;
+            updateMiniTimer();
+          }
         }, 1000);
+      }
+    }
+
+    function startAftelTimer(minuten) {
+      timerDoelSeconden = minuten * 60;
+      timerSeconden = 0;
+      timerIsAftellen = true;
+      const el = document.getElementById('km-timer');
+      if (el) el.textContent = `${minuten}:00`;
+      // Auto-start
+      if (!timerLoopt) toggleTimer();
+    }
+
+    function timerKlaar() {
+      // Vibratie (werkt op mobiel)
+      if ('vibrate' in navigator) {
+        navigator.vibrate([500, 200, 500, 200, 500]);
+      }
+      // Web Notification (voor toekomstige PWA/App Store versie)
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('⏱ Timer klaar!', {
+          body: `Stap ${kookmodusStap + 1} van "${kookmodusNaam}" is klaar.`,
+          icon: '/icon-192.png',
+          tag: 'vanavond-timer',
+          renotify: true,
+        });
+      }
+      // Herstel overlay als geminimaliseerd
+      if (timerGeminimaliseerd) vergrootKookmodus();
+      // Visuele feedback
+      const el = document.getElementById('km-timer');
+      if (el) { el.textContent = '✅ Klaar!'; el.style.animation = 'hartjePop 0.4s ease'; }
+      const btn = document.getElementById('km-timer-btn');
+      if (btn) btn.textContent = 'Timer starten';
+    }
+
+    // Vraag notificatietoestemming bij starten kookmodus (voor PWA)
+    function vraagNotificatieToestemming() {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
       }
     }
     // ============================================================

@@ -86,6 +86,7 @@ De gebruiker typt snel en maakt spelfouten. Interpreteer de ingrediëntenlijst a
 WATERREGEL: Water nooit als ingrediënt. Alleen in bereidingsstappen: "Voeg X ml water toe."
 BASISVOORRAAD: Alleen olijfolie/olie, zout, peper mogen worden aangenomen.
 BOODSCHAPPENREGEL: ${boodschappenRegel}
+TIJDREGEL — HARDE LIMIET: De gebruiker heeft opgegeven maximaal ${tijd} minuten te willen koken. Dit is een HARDE grens. Genereer NOOIT een recept met een bereidingstijd boven de ${tijd} minuten. Als een recept structureel meer tijd nodig heeft, kies dan een ander gerecht. Geef dit getal ook terug in het veld "bereidingstijd" als "X minuten" waarbij X ≤ ${tijd}.
 
 ALLERGIEËN (ABSOLUUT, ook niet optioneel of als upgrade):
 ${allergienen.length > 0 ? allergienen.join(', ') : 'geen beperkingen'}
@@ -742,6 +743,21 @@ Beoordeel eerlijk. Geef JSON:
     }
 
     function verwerkRecept(s) {
+      // PORTIE-TIJDCORRECTIE: meer dan 4 personen kost meer tijd
+      const aantalPersonen = parseInt(req.body.personen) || 2;
+      if (s.bereidingstijd && aantalPersonen >= 5) {
+        const tijdMatch = s.bereidingstijd.match(/(\d+)/);
+        if (tijdMatch) {
+          const origMinuten = parseInt(tijdMatch[1]);
+          const extra = aantalPersonen >= 7 ? 20 : 10;
+          const nieuw = origMinuten + extra;
+          s.bereidingstijd = s.bereidingstijd.replace(/\d+/, nieuw);
+          // Voeg notitie toe aan korteBeschrijving als die er nog niet in zit
+          if (s.korteBeschrijving && !s.korteBeschrijving.includes('personen')) {
+            s._tijdCorrectieToegepast = true;
+          }
+        }
+      }
       // STAP 1: normaliseer alle tekstvelden
       if (s.naam) s.naam = normalizeerTekst(s.naam);
       if (s.korteBeschrijving) s.korteBeschrijving = metPunt(normalizeerTekst(s.korteBeschrijving));
@@ -906,7 +922,15 @@ Beoordeel eerlijk. Geef JSON:
         delete s.restjes;
       }
 
-      if (fouten.length > 0) {
+      // Tijdlimiet harde check
+      if (s.bereidingstijd && req.body.tijd) {
+        const maxMinuten = parseInt(req.body.tijd);
+        const receptMatch = s.bereidingstijd.match(/(\d+)/);
+        const receptMinuten = receptMatch ? parseInt(receptMatch[1]) : 0;
+        if (receptMinuten > maxMinuten + 5) { // +5 min tolerantie
+          fouten.push(`bereidingstijd ${receptMinuten} min overschrijdt limiet ${maxMinuten} min`);
+        }
+      }
         console.warn(`[QualityGate] Recept '${s.naam}' gefilterd:`, fouten.join(' | '));
         return false;
       }
