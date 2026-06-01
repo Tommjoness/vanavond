@@ -296,8 +296,18 @@ VERBODEN ZINNEN EN CONSTRUCTIES (nooit gebruiken):
 - Geen telegramstijl in matchUitleg of slimmeReden
 - slimmeReden mag nooit "0 pannen" of vage samenstellingen bevatten
 - Schrijf ALLEEN in het Nederlands. Geen Engelse woorden.
-- VERBODEN: "minced", "prep", "cook", "medium heat", "serve", "ready", "heat", "add", "stir", "garnish", "topping", "meal prep"
-- GOED: "fijngehakt", "voorbereiden", "koken", "middelhoog vuur", "serveren", "klaar", "verhit", "voeg toe", "roer", "werk af met", "bestrooi met"
+- VERBODEN: "minced", "prep", "cook", "medium heat", "serve", "ready", "heat", "add", "stir", "garnish", "topping", "meal prep", "matchsticks", "fluffy"
+- GOED: "fijngehakt", "voorbereiden", "koken", "middelhoog vuur", "serveren", "klaar", "verhit", "voeg toe", "roer", "werk af met", "bestrooi met", "dunne reepjes", "droogkokende rijst"
+- AFWAS: schrijf ALTIJD volledig Nederlands met lidwoord. NOOIT telegramstijl. Fout: "2 pannen en snijplank". Goed: "2 pannen en een snijplank". Fout: "1 pan, kom". Goed: "1 pan en een kom".
+- HOOFDLETTERS APPARATUUR: de waarde voor het veld "apparatuurGebruikt" begint ALTIJD met een hoofdletter. "Kookplaat", "Oven", "Airfryer". Nooit "kookplaat".
+- EENHEDEN: gebruik ALTIJD een spatie tussen getal en eenheid, én schrijf het ±-teken met spatie erna. Goed: "± 450 g". Fout: "±450g" of "450g".
+- VERBODEN: "Gebruikmaakt van" — schrijf actief: "Dit gerecht gebruikt..."
+- VERBODEN: "matchsticks" — schrijf "dunne reepjes"
+- VERBODEN: "fluffy rijst" — schrijf "droogkokende rijst"
+- VERBODEN: "Een fris sluitstuk" — schrijf "een frisse twist"
+- VERBODEN: "Meer rijkdom" — schrijf "voor een vollere smaak"
+- VERBODEN: "Gezonde groente erin" — schrijf "Bevat een ruime portie verse groenten"
+- MEERVOUD VERSE INGREDIËNTEN: als de houdbaarheidswaarschuwing maar 1 ingrediënt bevat, gebruik enkelvoud: "dit ingrediënt dat minder lang houdbaar is". Bij meerdere: "deze ingrediënten die minder lang houdbaar zijn".
 - FOUT: "Kip uit pan, even rustend." / "Zout en peper afmaken." / "gaar voelt" / "flinke snuf" / "bakken totdat bruin"
 CONSISTENTIE TITEL EN INGREDIËNTEN:
 - Noem een gerecht NOOIT "noodles" als je macaroni, penne, spaghetti of andere pasta gebruikt.
@@ -637,6 +647,18 @@ Beoordeel eerlijk. Geef JSON:
       [/0 pannen.*?[,\.]/gi, 'Minimale afwas.'],
       [/bestrooi met bosui en paprika/gi, 'verdeel de bosui en paprika erover'],
       [/bestrooi met bosui/gi, 'verdeel de bosui erover'],
+      // Nieuwe taalregels
+      [/\bmatchsticks\b/gi, 'dunne reepjes'],
+      [/\bfluffy rijst\b/gi, 'droogkokende rijst'],
+      [/\bfluffy\b/gi, 'luchtig'],
+      [/\bGebruikmaakt van\b/g, 'Gebruikt'],
+      [/\bgebruikmaakt van\b/g, 'gebruikt'],
+      [/Een fris sluitstuk/gi, 'een frisse twist'],
+      [/fris sluitstuk/gi, 'frisse twist'],
+      [/\bMeer rijkdom\b/gi, 'Voor een vollere smaak'],
+      [/\bmeer rijkdom\b/gi, 'voor een vollere smaak'],
+      [/Gezonde groente erin/gi, 'Bevat een ruime portie verse groenten'],
+      [/gezonde groente erin/gi, 'bevat een ruime portie verse groenten'],
     ];
 
     // Meervoud correctie voor hoeveelheden
