@@ -507,9 +507,19 @@
       </div>
     </div>
 
+
+    <div class="form-group">
+      <div class="section-label">Extra boodschappen halen?</div>
+      <div class="pill-grid">
+        <div class="pill" data-group="boodschappen" data-value="nee">Nee, alleen wat ik heb</div>
+        <div class="pill" data-group="boodschappen" data-value="een">Max 1 ding kopen</div>
+        <div class="pill" data-group="boodschappen" data-value="paar">Een paar dingen is oké</div>
+      </div>
+    </div>
+
     <div class="form-group">
       <div class="profiel-toggle" onclick="openVoorkeuren()">
-        <span class="profiel-toggle-label">Voorkeuren instellen</span>
+        <span class="profiel-toggle-label">Dieetwensen / allergieën</span>
         <span style="color:var(--accent);font-size:18px;">›</span>
       </div>
     </div>
@@ -518,17 +528,8 @@
     <div class="voorkeuren-modal-overlay" id="voorkeuren-overlay" style="display:none;" onclick="sluitVoorkeurenBuitenKlik(event)">
       <div class="voorkeuren-modal" id="voorkeuren-modal">
         <div class="voorkeuren-modal-header">
-          <span class="voorkeuren-modal-titel">⚙️ Voorkeuren instellen</span>
+          <span class="voorkeuren-modal-titel">🥗 Dieetwensen en allergieën</span>
           <button class="voorkeuren-sluit" onclick="sluitVoorkeuren()">×</button>
-        </div>
-
-        <div class="form-group">
-          <div class="section-label">Extra boodschappen halen?</div>
-          <div class="pill-grid">
-            <div class="pill" data-group="boodschappen" data-value="nee">Nee, alleen wat ik heb</div>
-            <div class="pill" data-group="boodschappen" data-value="een">Max 1 ding kopen</div>
-            <div class="pill" data-group="boodschappen" data-value="paar">Een paar dingen is oké</div>
-          </div>
         </div>
 
         <div class="form-group">
@@ -553,7 +554,7 @@
         </div>
 
         <div class="privacy-text" style="margin-top:16px;">Deze voorkeuren gebruiken we alleen voor receptsuggesties.</div>
-        <button class="voorkeuren-opslaan" onclick="sluitVoorkeuren()">Voorkeuren opslaan</button>
+        <button class="voorkeuren-opslaan" onclick="sluitVoorkeuren()">Opslaan</button>
       </div>
     </div>
 
@@ -964,6 +965,7 @@
       if (!state.tijd) { toonToast('Geef aan hoeveel tijd je hebt.'); return; }
       if (!state.personen) { toonToast('Geef aan voor hoeveel personen je kookt.'); return; }
       if (!state.kookniveau) { toonToast('Kies je kookniveau.'); return; }
+      if (!state.boodschappen) { toonToast('Geef aan of je extra boodschappen mag halen.'); return; }
       if (!state.doel || state.doel.length === 0) { toonToast('Kies wat je vanavond wilt.'); return; }
       const geenZinInLijst = Array.isArray(state.geenZinIn) ? state.geenZinIn : (state.geenZinIn ? [state.geenZinIn] : []);
       if (geenZinInLijst.length === 0) { toonToast('Geef aan wat je vanavond liever niet wilt, of kies "Maakt niet uit".'); return; }
@@ -1833,6 +1835,8 @@
       // Selecteer automatisch redelijke defaults
       if (!state.tijd) { document.querySelector('.pill[data-group="tijd"][data-value="30"]')?.click(); }
       if (!state.personen) { document.querySelector('.pill[data-group="personen"][data-value="2"]')?.click(); }
+      if (!state.kookniveau) { document.querySelector('.pill[data-group="kookniveau"][data-value="gemiddeld"]')?.click(); }
+      if (!state.boodschappen) { document.querySelector('.pill[data-group="boodschappen"][data-value="paar"]')?.click(); }
       if (!state.doel) { document.querySelector('.pill[data-group="doel"][data-value="maakt niet uit"]')?.click(); }
       haalSuggesties('Geef de ultieme beste keuze voor vanavond op basis van de voorraad. Slechts 1 topkeuze als eerste suggestie, daarna 2 alternatieven.');
     }
