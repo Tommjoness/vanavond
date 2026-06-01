@@ -427,6 +427,7 @@
     <div class="app-header">
       <div class="app-name">Vanavond</div>
       <div class="app-tagline">Jij opent de koelkast. Wij bedenken de rest.</div>
+      <div id="streak-badge" style="display:none;margin-top:10px;background:rgba(232,168,56,0.12);border:1px solid rgba(232,168,56,0.3);border-radius:100px;padding:5px 14px;font-size:13px;font-weight:600;color:var(--amber);"></div>
       <div class="app-sub">Binnen 30 seconden ideeën voor vanavond.</div>
     </div>
 
@@ -1851,12 +1852,92 @@
       document.body.appendChild(modal);
     }
 
-        function geefFeedback(btn, type, index) {
+    // ============================================================
+    // KOOK HISTORY & STREAK
+    // ============================================================
+
+    const HISTORY_KEY = 'vanavond_kookhistory';
+
+    function laadKookHistory() {
+      try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
+    }
+
+    function slaKookHistoryOp(lijst) {
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(lijst)); } catch {}
+    }
+
+    function voegGekooktToe(receptNaam) {
+      const history = laadKookHistory();
+      const vandaag = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      history.push({ naam: receptNaam, datum: vandaag, timestamp: Date.now() });
+      if (history.length > 200) history.shift();
+      slaKookHistoryOp(history);
+      updateStreakWeergave();
+    }
+
+    function berekenStreak() {
+      const history = laadKookHistory();
+      if (history.length === 0) return 0;
+
+      // Unieke kookdagen ophalen en sorteren
+      const dagen = [...new Set(history.map(h => h.datum))].sort().reverse();
+      if (dagen.length === 0) return 0;
+
+      const vandaag = new Date().toISOString().split('T')[0];
+      const gisteren = new Date(Date.now() - 864e5).toISOString().split('T')[0];
+
+      // Streak begint alleen als vandaag of gisteren gekookt is
+      if (dagen[0] !== vandaag && dagen[0] !== gisteren) return 0;
+
+      let streak = 1;
+      for (let i = 1; i < dagen.length; i++) {
+        const huidige = new Date(dagen[i - 1]);
+        const vorige = new Date(dagen[i]);
+        const verschil = (huidige - vorige) / 864e5;
+        if (verschil === 1) streak++;
+        else break;
+      }
+      return streak;
+    }
+
+    function updateStreakWeergave() {
+      const streak = berekenStreak();
+      const history = laadKookHistory();
+      const totaal = history.length;
+
+      // Streak badge op hoofdscherm
+      const badge = document.getElementById('streak-badge');
+      if (badge) {
+        if (streak > 0) {
+          badge.textContent = `🔥 ${streak} ${streak === 1 ? 'dag' : 'dagen'} streak`;
+          badge.style.display = 'inline-flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+
+      // Statistieken op instellingenpagina
+      const statTotaal = document.getElementById('stat-totaal');
+      if (statTotaal) statTotaal.textContent = totaal;
+      const statStreak = document.getElementById('stat-streak');
+      if (statStreak) statStreak.textContent = streak > 0 ? `🔥 ${streak} ${streak === 1 ? 'dag' : 'dagen'}` : '—';
+    }
+
+    function geefFeedback(btn, type, index) {
       document.querySelectorAll(`#feedback-grid-${index} .feedback-btn`).forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       const subfragen = document.getElementById(`feedback-sub-${index}`);
       if (type === 'smaak' && subfragen) subfragen.classList.add('active');
       else if (subfragen) subfragen.classList.remove('active');
+
+      // Gekookt: sla op in history + streak
+      if (type === 'gekookt') {
+        const naam = state.suggesties[index]?.naam || 'Onbekend recept';
+        voegGekooktToe(naam);
+        // Visueel bevestigingsbericht
+        toonToast('Gekookt! 🎉 Goed bezig — je streak groeit!', 'waarschuwing');
+      }
+
       try {
         const bestaand = JSON.parse(localStorage.getItem('vanavond_feedback') || '[]');
         bestaand.push({ type, timestamp: Date.now(), recept: state.suggesties[index]?.naam });
@@ -2373,6 +2454,7 @@
 
     function navNaar(schermId, tabId) {
       if (schermId === 'screen-favorieten') toonFavorietenScherm();
+      if (schermId === 'screen-instellingen') updateStreakWeergave();
       toonScherm(schermId);
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('actief'));
       const tab = document.getElementById(tabId);
@@ -2418,6 +2500,7 @@
     // Init
     initThema();
     updateFavBadge();
+    updateStreakWeergave();
 
   </script>
   <!-- FAVORIETEN -->
@@ -2434,6 +2517,25 @@
     <div style="padding-top:24px;text-align:center;margin-bottom:28px;">
       <div style="font-size:24px;font-weight:700;color:var(--accent);margin-bottom:4px;letter-spacing:-0.5px;">Instellingen</div>
       <div style="font-size:14px;color:var(--text2);">Pas de app naar je wens aan.</div>
+    </div>
+
+    <!-- Statistieken -->
+    <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;color:#a0a8b4;margin-bottom:10px;">JOUW KOOKPRESTATIES</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;">
+      <div class="inst-rij" style="cursor:default;">
+        <div>
+          <div class="inst-label">Keer gekookt</div>
+          <div class="inst-sub">Je hebt al <span id="stat-totaal">0</span>× voedselverspilling tegengegaan!</div>
+        </div>
+        <div style="font-size:22px;">🍳</div>
+      </div>
+      <div class="inst-rij" style="border-top:1px solid var(--border);cursor:default;">
+        <div>
+          <div class="inst-label">Huidige streak</div>
+          <div class="inst-sub">Dagelijkse kook-reeks</div>
+        </div>
+        <div id="stat-streak" style="font-size:15px;font-weight:700;color:var(--amber);">—</div>
+      </div>
     </div>
 
     <!-- Weergave -->
