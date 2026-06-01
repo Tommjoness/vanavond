@@ -1253,7 +1253,7 @@
           <div class="result-card-top">
             <div class="result-badges-top">
               ${s.versProduct ? '<span class="gebruik-eerst-badge">Versproduct • beperkt houdbaar</span>' : ''}
-              ${s.rol ? `<span class="rol-badge">${s.rol}</span>` : ''}
+              ${s.rol && !['extra', 'hoofd', 'main', 'bonus'].includes(s.rol.toLowerCase()) ? `<span class="rol-badge">${s.rol}</span>` : ''}
             </div>
             ${score}
           </div>
@@ -1613,7 +1613,7 @@
         ${fotoCache[veiligId(s.naam)] ? `<div style="width:100%;height:240px;background-image:url(${fotoCache[veiligId(s.naam)]});background-size:cover;background-position:center;border-radius:var(--radius);margin-bottom:24px;position:relative;overflow:hidden;"><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(15,15,15,0.8) 100%);"></div></div>` : ''}
         <div style="margin-bottom:8px;">
           ${s.versProduct ? '<span class="gebruik-eerst-badge" style="display:inline-flex;margin-bottom:6px;">Versproduct • beperkt houdbaar</span>' : ''}
-          ${s.rol ? `<span class="rol-badge" style="display:inline-flex;margin-bottom:6px;">${s.rol}</span>` : ''}
+          ${s.rol && !['extra', 'hoofd', 'main', 'bonus'].includes(s.rol.toLowerCase()) ? `<span class="rol-badge" style="display:inline-flex;margin-bottom:6px;">${s.rol}</span>` : ''}
         </div>
         <div class="detail-naam">${s.naam}</div>
         <div class="detail-beschrijving">${s.korteBeschrijving || ''}</div>
@@ -1939,18 +1939,19 @@
           <div class="kookmodus-stap-num">${kookmodusStap + 1}</div>
           ${titel ? `<div class="kookmodus-stap-titel">${titel}</div>` : ''}
           <div class="kookmodus-stap-uitleg">${uitleg}</div>
+          ${stapMinuten > 0 ? `
           <div class="kookmodus-timer">
-            <div class="kookmodus-timer-display" id="km-timer">${stapMinuten > 0 ? stapMinuten + ':00' : '0:00'}</div>
+            <div class="kookmodus-timer-display" id="km-timer">${stapMinuten}:00</div>
             <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;">
-              ${stapMinuten > 0
-                ? `<button class="kookmodus-timer-btn" onclick="startAftelTimer(${stapMinuten})" id="km-timer-btn">▶ Start ${stapMinuten} min</button>`
-                : `<button class="kookmodus-timer-btn" onclick="toggleTimer()" id="km-timer-btn">Timer starten</button>`
-              }
+              <button class="kookmodus-timer-btn" onclick="startAftelTimer(${stapMinuten})" id="km-timer-btn">▶ Start ${stapMinuten} min</button>
               <button class="kookmodus-timer-btn" onclick="resetTimer()" style="opacity:0.6;">↺</button>
               <button class="kookmodus-timer-btn" onclick="minimaliseerKookmodus()" style="opacity:0.6;" title="Minimaliseer">⌃</button>
             </div>
-            ${stapMinuten > 0 ? `<div style='font-size:12px;color:var(--text3);margin-top:8px;'>Telt af van ${stapMinuten} minuten</div>` : ''}
-          </div>
+            <div style='font-size:12px;color:var(--text3);margin-top:8px;'>Telt af van ${stapMinuten} minuten</div>
+          </div>` : `
+          <div class="kookmodus-timer" style="opacity:0.35;">
+            <div style="font-size:13px;color:var(--text3);text-align:center;">Geen timer nodig voor deze stap</div>
+          </div>`}
         </div>
         <div class="kookmodus-footer">
           ${kookmodusStap > 0 ? `<button class="kookmodus-vorige" onclick="kookmodusNavigeer(-1)">←</button>` : ''}

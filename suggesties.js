@@ -811,7 +811,10 @@ Beoordeel eerlijk. Geef JSON:
           s.slimmeReden = '';
         }
       }
-      const waarom = s.waaromPast || s.waaromSlim || [];
+      // Verwijder interne rol-labels die nooit zichtbaar mogen zijn
+      if (s.rol && ['extra', 'hoofd', 'main', 'bonus', 'primary', 'secondary'].includes(s.rol.toLowerCase())) {
+        delete s.rol;
+      }
       if (s.restjes?.idee) s.restjes.idee = metPunt(normalizeerTekst(s.restjes.idee));
       if (s.restjes?.bewaren) s.restjes.bewaren = metPunt(normalizeerTekst(s.restjes.bewaren));
       if (Array.isArray(s.smaakUpgrades)) s.smaakUpgrades = s.smaakUpgrades.map(u => metPunt(normalizeerTekst(u))).filter(Boolean);
