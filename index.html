@@ -1799,11 +1799,21 @@
       modal.className = 'boodschappen-modal';
       modal.onclick = (e) => { if (e.target === modal) document.body.removeChild(modal); };
       const checks = nog.map(() => false);
+
+      function maakDeelTekst() {
+        const items = nog.map(ing => {
+          const naam = typeof ing === 'object' ? ing.naam : ing;
+          const hoeveelheid = typeof ing === 'object' && ing.hoeveelheid ? ` (${ing.hoeveelheid})` : '';
+          return `• ${naam}${hoeveelheid}`;
+        }).join('\n');
+        return `Kun je dit meenemen voor vanavond?\n\n${items}\n\nVoor: ${s.naam}\n\nVia Vanavond App`;
+      }
+
       function render() {
         modal.innerHTML = `<div class="boodschappen-sheet">
           <div class="boodschappen-header">
             <div class="boodschappen-naam">🛒 Boodschappenlijst</div>
-            <button class="boodschappen-sluit" onclick="document.body.removeChild(document.querySelector('.boodschappen-modal'))">×</button>
+            <button class="boodschappen-sluit" onclick="document.body.removeChild(document.querySelector(\'.boodschappen-modal\'))">×</button>
           </div>
           <ul class="boodschappen-lijst">
             ${nog.map((ing, i) => {
@@ -1818,13 +1828,30 @@
               </li>`;
             }).join('')}
           </ul>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--border);">
+            <div style="font-size:11px;color:var(--text3);text-align:center;">Stuur door via</div>
+            <div style="display:flex;gap:10px;">
+              <button onclick="deelViaWhatsApp()" style="flex:1;background:#25D366;border:none;border-radius:var(--radius);padding:13px;font-size:14px;font-weight:600;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">📱 WhatsApp</button>
+              <button onclick="deelViaSms()" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:13px;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;">💬 Sms</button>
+            </div>
+          </div>
         </div>`;
       }
+
       window.toggleCheck = (i) => { checks[i] = !checks[i]; render(); };
-      render(); document.body.appendChild(modal);
+      window.deelViaWhatsApp = () => {
+        const tekst = encodeURIComponent(maakDeelTekst());
+        window.open(`https://wa.me/?text=${tekst}`, '_blank');
+      };
+      window.deelViaSms = () => {
+        const tekst = encodeURIComponent(maakDeelTekst());
+        window.open(`sms:?body=${tekst}`, '_blank');
+      };
+      render();
+      document.body.appendChild(modal);
     }
 
-    function geefFeedback(btn, type, index) {
+        function geefFeedback(btn, type, index) {
       document.querySelectorAll(`#feedback-grid-${index} .feedback-btn`).forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       const subfragen = document.getElementById(`feedback-sub-${index}`);
