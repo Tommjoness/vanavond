@@ -74,7 +74,7 @@
     .pill:hover{background:var(--bg3);color:var(--text);}
     .pill:active{transform:scale(0.96);}
     .pill.selected{background:var(--accent);border-color:var(--accent);color:#ffffff;font-weight:700;}
-    .pill[data-group="doel"][data-value="maakt niet uit"].selected{background:var(--accent);border-color:var(--accent);color:#0f0f0f;font-weight:700;}
+    .pill[data-group="doel"][data-value="maakt niet uit"].selected{background:var(--accent);border-color:var(--accent);color:#ffffff;font-weight:700;}
 
     /* BUTTONS */
     .btn-primary{width:100%;background:var(--accent);color:#000;border:none;border-radius:var(--radius);padding:17px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s;}
@@ -618,7 +618,8 @@
     <button class="scroll-pijl rechts" id="verfijn-pijl-rechts" onclick="scrollBalk('verfijn-balk','rechts')" aria-label="Scroll naar rechts">›</button>
     </div>
     <div id="suggesties-container"></div>
-    <button class="opnieuw-btn" onclick="toonScherm('screen-invoer')">↺ Opnieuw zoeken</button>
+    <div style="text-align:center;padding:16px 8px 4px;font-size:13px;color:var(--text3);line-height:1.6;">Niet gevonden waar je zin in hebt? Druk gerust nog eens op de knop voor gloednieuwe ideeën!</div>
+    <button class="opnieuw-btn" onclick="haalSuggesties()" style="margin-top:8px;">Andere suggesties genereren 🔄</button>
   </div>
 
   <!-- DETAIL -->
@@ -1483,26 +1484,45 @@
         toonEmptyState('no_results');
         return;
       }
-      // Vervang state.suggesties tijdelijk met gefilterde versie voor de kaarten
-      const origineel = state.suggesties;
-      state.suggesties = goeie;
-      const hoofd = state.suggesties.filter(s => !s.isExtra);
-      const extra = state.suggesties.filter(s => s.isExtra);
-      hoofd.forEach((s, i) => container.appendChild(maakKaart(s, state.suggesties.indexOf(s), i === 0)));
-      if (extra.length > 0) {
+
+      // Splits in hoofd en extra — gebruik stabiele indices gebaseerd op originele state
+      const hoofd = goeie.filter(s => !s.isExtra);
+      const extra = goeie.filter(s => s.isExtra);
+
+      // Render hoofdrecepten met stabiele index in originele state.suggesties
+      hoofd.forEach((s, i) => {
+        const origIdx = state.suggesties.indexOf(s);
+        container.appendChild(maakKaart(s, origIdx >= 0 ? origIdx : i, i === 0));
+      });
+
+      // Render extra recepten alleen als er ook hoofd-recepten zijn
+      if (extra.length > 0 && hoofd.length > 0) {
         const wrapper = document.createElement('div');
         const btn = document.createElement('button');
         btn.className = 'opnieuw-btn';
-        // Dynamische tekst op basis van werkelijk aantal extra recepten
         btn.textContent = `Toon nog ${extra.length} ${extra.length === 1 ? 'optie' : 'opties'}`;
+        const kaarten = document.createElement('div');
+        kaarten.style.display = 'none';
         btn.onclick = () => { btn.style.display = 'none'; kaarten.style.display = 'block'; };
-        const kaarten = document.createElement('div'); kaarten.style.display = 'none';
-        const lbl = document.createElement('div'); lbl.className = 'extra-label'; lbl.textContent = 'Nog meer ideeën';
+        const lbl = document.createElement('div');
+        lbl.className = 'extra-label';
+        lbl.textContent = 'Nog meer ideeën';
         kaarten.appendChild(lbl);
-        extra.forEach(s => kaarten.appendChild(maakKaart(s, state.suggesties.indexOf(s), false)));
-        wrapper.appendChild(btn); wrapper.appendChild(kaarten); container.appendChild(wrapper);
+        extra.forEach(s => {
+          const origIdx = state.suggesties.indexOf(s);
+          kaarten.appendChild(maakKaart(s, origIdx >= 0 ? origIdx : state.suggesties.length, false));
+        });
+        wrapper.appendChild(btn);
+        wrapper.appendChild(kaarten);
+        container.appendChild(wrapper);
+      } else if (extra.length > 0 && hoofd.length === 0) {
+        // Geen hoofd: toon extra gewoon als hoofd
+        extra.forEach((s, i) => {
+          const origIdx = state.suggesties.indexOf(s);
+          container.appendChild(maakKaart(s, origIdx >= 0 ? origIdx : i, i === 0));
+        });
       }
-      state.suggesties = origineel;
+
       toonScherm('screen-resultaten');
     }
 
@@ -1573,10 +1593,10 @@
           ${s.rol ? `<span class="rol-badge" style="display:inline-flex;margin-bottom:6px;">${s.rol}</span>` : ''}
         </div>
         <div class="detail-naam">${s.naam}</div>
-        <div class="detail-beschrijving">${s.korteBeschrijving}</div>
+        <div class="detail-beschrijving">${s.korteBeschrijving || ''}</div>
         <div class="detail-badges">
-          <span class="tag tag-gray">⏱ ${s.bereidingstijd}</span>
-          <span class="tag tag-gray">🍳 ${s.afwasNiveau}</span>
+          <span class="tag tag-gray">⏱ ${s.bereidingstijd || '?'}</span>
+          <span class="tag tag-gray">🍳 ${s.afwasNiveau || '?'}</span>
           <span class="tag tag-gray">👤 ${s.porties || state.personen} pers.</span>
           ${nogNodig.length === 0 ? '<span class="tag tag-green">Alles in huis</span>' : `<span class="tag tag-amber">Nog ${nogNodig.length} nodig</span>`}
           ${badgeHtml(s.badge)}
@@ -1607,8 +1627,8 @@
 
         <!-- OVERZICHT GRID -->
         <div class="overzicht-grid">
-          <div class="overzicht-item"><div class="overzicht-label">Totale tijd</div><div class="overzicht-waarde">${s.bereidingstijd}</div></div>
-          <div class="overzicht-item"><div class="overzicht-label">Actieve tijd</div><div class="overzicht-waarde">${s.actieveKooktijd && s.actieveKooktijd !== 'onbekend' ? s.actieveKooktijd : s.bereidingstijd}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Totale tijd</div><div class="overzicht-waarde">${s.bereidingstijd || '?'}</div></div>
+          <div class="overzicht-item"><div class="overzicht-label">Actieve tijd</div><div class="overzicht-waarde">${s.actieveKooktijd && s.actieveKooktijd !== 'onbekend' ? s.actieveKooktijd : (s.bereidingstijd || '?')}</div></div>
           <div class="overzicht-item portie-selector-item">
             <div class="overzicht-label">Porties</div>
             <div class="portie-selector">
