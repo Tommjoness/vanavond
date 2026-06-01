@@ -677,6 +677,42 @@ Beoordeel eerlijk. Geef JSON:
       return r.replace(/\s+/g, ' ').trim();
     }
 
+    // ============================================================
+    // CLEANUP RECIPE DATA — recursieve JSON-walker
+    // Normaliseert ALLE stringvelden in het recept-object vóór state-update.
+    // Werkt op geneste objecten, arrays en primitieven.
+    // ============================================================
+    const VELDEN_OVERSLAAN = ['pexels_zoekterm', 'pexels_backup_zoekterm', 'fotoUrl', 'fotograaf', 'pexelsUrl'];
+
+    function cleanupRecipeData(node, diepte) {
+      if (diepte === undefined) diepte = 0;
+      if (diepte > 12) return node; // Maximale recursie
+
+      if (typeof node === 'string') {
+        return normalizeerTekst(node);
+      }
+
+      if (Array.isArray(node)) {
+        return node.map(item => cleanupRecipeData(item, diepte + 1));
+      }
+
+      if (node !== null && typeof node === 'object') {
+        const result = {};
+        for (const [key, value] of Object.entries(node)) {
+          if (VELDEN_OVERSLAAN.includes(key)) {
+            result[key] = value; // Niet normaliseren
+          } else if (typeof value === 'string') {
+            result[key] = normalizeerTekst(value);
+          } else {
+            result[key] = cleanupRecipeData(value, diepte + 1);
+          }
+        }
+        return result;
+      }
+
+      return node; // Getal, boolean, null — ongewijzigd
+    }
+
     function dedupIngredients(items) {
       if (!Array.isArray(items)) return items;
       const namen = items.map(i => (typeof i === 'object' ? i.naam : i).toLowerCase().trim());
@@ -863,14 +899,14 @@ Beoordeel eerlijk. Geef JSON:
     }
 
     const verwerkteSuggesties = suggesties
-      .map(verwerkRecept)
+      .map(s => cleanupRecipeData(s))  // Stap 1: recursieve cleanup van alle stringvelden
+      .map(verwerkRecept)               // Stap 2: validatie, dedup, afwas-logica
       .filter(s => s.matchScore >= 60)
       .filter(finalQualityGate);
 
     // Retry-limiet: als er 0 recepten door quality gate komen, terugvallen op gefilterde set zonder QG
-    // (liever iets tonen dan niets na 1 poging — retry is aan de client)
     const fallback = verwerkteSuggesties.length === 0
-      ? suggesties.map(verwerkRecept).filter(s => s.matchScore >= 60)
+      ? suggesties.map(s => cleanupRecipeData(s)).map(verwerkRecept).filter(s => s.matchScore >= 60)
       : verwerkteSuggesties;
 
     return res.status(200).json({ suggesties: fallback });
