@@ -372,6 +372,14 @@
     .warn-box{background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.25);border-radius:var(--radius);padding:16px 18px;color:#d4a843;font-size:14px;margin-bottom:16px;line-height:1.6;display:flex;align-items:flex-start;gap:4px;}
     .info-box{background:rgba(91,155,213,0.1);border:1px solid rgba(91,155,213,0.3);border-radius:var(--radius);padding:14px 16px;color:var(--blue);font-size:14px;margin-bottom:16px;line-height:1.5;}
 
+    /* KOELKAST AUTOPILOT UNDO-BALK */
+    .koelkast-undo-balk{position:fixed;bottom:calc(60px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:508px;background:#1a2a1a;border:1px solid rgba(76,175,125,0.4);border-radius:var(--radius);padding:13px 16px;display:flex;flex-direction:column;gap:8px;z-index:400;box-shadow:0 4px 20px rgba(0,0,0,0.5);animation:slideUp 0.3s cubic-bezier(0.22,1,0.36,1) both;}
+    .koelkast-undo-rij{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .koelkast-undo-tekst{font-size:13px;color:#a8e6c0;line-height:1.4;flex:1;}
+    .koelkast-undo-btn{background:rgba(76,175,125,0.2);border:1px solid rgba(76,175,125,0.4);border-radius:var(--radius-sm);padding:7px 12px;font-size:13px;font-weight:600;color:#4caf7d;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s;}
+    .koelkast-undo-btn:active{background:rgba(76,175,125,0.35);}
+    .koelkast-undo-timer-bar{height:2px;background:#4caf7d;border-radius:100px;width:100%;transition:width 5s linear;}
+
     /* TOAST MELDING */
     .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--bg2);border:1px solid rgba(224,85,85,0.5);color:var(--red);border-radius:10px;padding:12px 18px;font-size:14px;font-weight:500;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s ease;opacity:0;max-width:320px;text-align:center;pointer-events:none;}
     .toast.zichtbaar{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto;}
@@ -2000,6 +2008,139 @@
     // KOOK HISTORY & STREAK
     // ============================================================
 
+    // ============================================================
+    // KOELKAST AUTOPILOT
+    // ============================================================
+
+    const NORMALISATIE_MAP = {
+      'kip': ['kipfilet', 'kippendij', 'kippenvleugels', 'blokjes kip', 'gesneden kip'],
+      'gehakt': ['rundergehakt', 'varkensgehakt', 'half-om-half', 'gemengd gehakt'],
+      'tomaat': ['tomaten', 'cherrytomaten', 'pruimtomaten', 'trostomaten'],
+      'tomaten': ['tomaat', 'cherrytomaten', 'pruimtomaten'],
+      'ei': ['eieren', 'ei', 'losgeklopt ei'],
+      'eieren': ['ei', 'losgeklopt ei'],
+      'ui': ['uien', 'rode ui', 'witte ui', 'sjalot', 'sjalotten', 'lente-ui', 'lente-uien'],
+      'uien': ['ui', 'rode ui', 'witte ui'],
+      'knoflook': ['knoflookteen', 'knoflookteentje', 'teentje knoflook'],
+      'paprika': ['rode paprika', 'groene paprika', 'gele paprika', 'paprikablokjes'],
+      'kaas': ['geraspte kaas', 'cheddar', 'gouda', 'mozzarella', 'feta', 'parmezaan'],
+      'gehakte kaas': ['geraspte kaas', 'kaas'],
+      'bouillon': ['kippenbouillon', 'groentebouillon', 'runderbouillon', 'bouillonblokje'],
+      'zalm': ['zalmfilet', 'zalmsteak', 'gerookte zalm'],
+      'broccoli': ['broccoliroosjes', 'broccoli roosjes'],
+      'champignon': ['champignons', 'kastanjechampignons'],
+      'wortel': ['wortelen', 'winterwortel', 'worteltjes'],
+      'courgette': ['courgettes', 'courgetteplakken'],
+    };
+
+    function matchIngredient(chip, receptIngredient) {
+      const c = chip.toLowerCase().trim();
+      const r = receptIngredient.toLowerCase().trim();
+
+      // Laag 1: directe substring in beide richtingen
+      if (c.includes(r) || r.includes(c)) return true;
+
+      // Laag 2: normalisatie-map
+      const varianten = NORMALISATIE_MAP[c] || [];
+      if (varianten.some(v => r.includes(v) || v.includes(r))) return true;
+
+      // Omgekeerd: kijk of receptIngredient een genormaliseerde sleutel matcht
+      for (const [sleutel, vars] of Object.entries(NORMALISATIE_MAP)) {
+        if (r.includes(sleutel) || sleutel.includes(r)) {
+          if (vars.some(v => c.includes(v) || v.includes(c)) || c.includes(sleutel) || sleutel.includes(c)) return true;
+        }
+      }
+
+      return false;
+    }
+
+    let _undoTimer = null;
+
+    function toonKoelkastUndo(verwijderd) {
+      // Verwijder bestaande undo-balk als die er al is
+      const bestaand = document.getElementById('koelkast-undo-balk');
+      if (bestaand) bestaand.remove();
+      if (_undoTimer) clearTimeout(_undoTimer);
+
+      if (verwijderd.length === 0) return;
+
+      const namen = verwijderd.slice(0, 3).join(', ') + (verwijderd.length > 3 ? ` +${verwijderd.length - 3}` : '');
+
+      const balk = document.createElement('div');
+      balk.className = 'koelkast-undo-balk';
+      balk.id = 'koelkast-undo-balk';
+      balk.innerHTML = `
+        <div class="koelkast-undo-rij">
+          <div class="koelkast-undo-tekst">✅ Koelkast bijgewerkt — <strong>${namen}</strong> verwijderd.</div>
+          <button class="koelkast-undo-btn" onclick="undoKoelkast()">↩️ Ongedaan</button>
+        </div>
+        <div class="koelkast-undo-timer-bar" id="undo-timer-bar"></div>
+      `;
+      document.body.appendChild(balk);
+
+      // Start de timer-animatie (100ms delay zodat de CSS transitie pakt)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const bar = document.getElementById('undo-timer-bar');
+          if (bar) bar.style.width = '0%';
+        });
+      });
+
+      _undoTimer = setTimeout(() => {
+        const b = document.getElementById('koelkast-undo-balk');
+        if (b) { b.style.opacity = '0'; b.style.transition = 'opacity 0.3s'; setTimeout(() => b.remove(), 300); }
+      }, 5000);
+    }
+
+    function undoKoelkast() {
+      if (_undoTimer) clearTimeout(_undoTimer);
+      if (window._vorigeKoelkastState) {
+        state.ingredientChips = [...window._vorigeKoelkastState];
+        try { localStorage.setItem('vanavond_koelkast', state.ingredientChips.join(', ')); } catch {}
+        const textarea = document.getElementById('ingredienten-input');
+        if (textarea) textarea.value = state.ingredientChips.join(', ');
+        renderChips();
+        window._vorigeKoelkastState = null;
+      }
+      const balk = document.getElementById('koelkast-undo-balk');
+      if (balk) balk.remove();
+      toonToast('Koelkast hersteld.', 'waarschuwing');
+    }
+
+    function verwerkKoelkastAutopilot(receptIndex) {
+      const s = state.suggesties[receptIndex];
+      if (!s) return;
+
+      // Verzamel alle ingrediëntnamen uit het recept
+      const receptIngredients = [
+        ...(s.inHuis || []),
+        ...(s.basis || []),
+        ...(s.nogNodig || []),
+      ].map(i => (typeof i === 'object' ? i.naam : i) || '').filter(Boolean);
+
+      if (receptIngredients.length === 0 || state.ingredientChips.length === 0) return;
+
+      // Sla huidige staat op voor undo
+      window._vorigeKoelkastState = [...state.ingredientChips];
+
+      // Filter chips die matchen
+      const verwijderd = [];
+      const over = state.ingredientChips.filter(chip => {
+        const match = receptIngredients.some(ri => matchIngredient(chip, ri));
+        if (match) verwijderd.push(chip);
+        return !match;
+      });
+
+      if (verwijderd.length === 0) return; // Niets te verwijderen
+
+      state.ingredientChips = over;
+      try { localStorage.setItem('vanavond_koelkast', over.join(', ')); } catch {}
+      const textarea = document.getElementById('ingredienten-input');
+      if (textarea) textarea.value = over.join(', ');
+      renderChips();
+      toonKoelkastUndo(verwijderd);
+    }
+
     const HISTORY_KEY = 'vanavond_kookhistory';
 
     function laadKookHistory() {
@@ -2074,12 +2215,11 @@
       if (type === 'smaak' && subfragen) subfragen.classList.add('active');
       else if (subfragen) subfragen.classList.remove('active');
 
-      // Gekookt: sla op in history + streak
+      // Gekookt: sla op in history + streak + autopilot
       if (type === 'gekookt') {
         const naam = state.suggesties[index]?.naam || 'Onbekend recept';
         voegGekooktToe(naam);
-        // Visueel bevestigingsbericht
-        toonToast('Gekookt! 🎉 Goed bezig — je streak groeit!', 'waarschuwing');
+        verwerkKoelkastAutopilot(index);
       }
 
       try {
