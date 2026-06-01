@@ -394,7 +394,9 @@
     .week-boodschappen-btn{width:100%;background:var(--bg2);border:1px solid var(--amber);border-radius:var(--radius);padding:14px;font-size:14px;font-weight:600;color:var(--amber);cursor:pointer;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px;}
     .week-leeg-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:280px;text-align:center;gap:12px;color:var(--text3);}
     .week-leeg-icon{font-size:40px;opacity:0.4;}
-    .theme-toggle-rij{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:16px;}
+    .quick-tag{background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:7px 13px;font-size:13px;color:var(--text2);cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:5px;}
+    .quick-tag:hover{border-color:var(--accent);color:var(--text);}
+    .quick-tag.actief{background:rgba(232,193,112,0.15);border-color:var(--accent);color:var(--accent);font-weight:600;}
     .theme-toggle-label{font-size:14px;color:var(--text);font-weight:500;}
     .toggle-switch{position:relative;width:44px;height:26px;flex-shrink:0;}
     .toggle-switch input{opacity:0;width:0;height:0;}
@@ -563,6 +565,18 @@
           <span class="voorkeuren-modal-titel">🥗 Dieetwensen en allergieën</span>
           <button class="voorkeuren-sluit" onclick="sluitVoorkeuren()">×</button>
         </div>
+
+        <div style="margin-bottom:18px;">
+          <div class="section-label" style="margin-bottom:10px;">Veelgekozen — tik om snel te selecteren</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button onclick="snelSelecteer('glutenvrij')" class="quick-tag" id="qt-glutenvrij">🌾 Glutenvrij</button>
+            <button onclick="snelSelecteer('lactosevrij')" class="quick-tag" id="qt-lactosevrij">🥛 Lactosevrij</button>
+            <button onclick="snelSelecteer('notenallergie')" class="quick-tag" id="qt-notenallergie">🥜 Notenallergie</button>
+            <button onclick="snelSelecteer('vegetarisch')" class="quick-tag" id="qt-vegetarisch">🥦 Vegetarisch</button>
+            <button onclick="snelSelecteer('veganistisch')" class="quick-tag" id="qt-veganistisch">🌱 Veganistisch</button>
+          </div>
+        </div>
+        <div style="height:1px;background:var(--border);margin-bottom:18px;"></div>
 
         <div class="form-group">
           <div class="section-label">Dieet en allergieën</div>
@@ -854,6 +868,22 @@
       }
     }
 
+    function snelSelecteer(waarde) {
+      // Toggle de bijbehorende pill
+      const pill = document.querySelector(`.pill[data-group="allergienen"][data-value="${waarde}"]`);
+      if (pill) pill.click();
+      // Sync quick-tag visuele staat
+      syncQuickTags();
+    }
+
+    function syncQuickTags() {
+      const actief = Array.isArray(state.allergienen) ? state.allergienen : [];
+      ['glutenvrij','lactosevrij','notenallergie','vegetarisch','veganistisch'].forEach(w => {
+        const btn = document.getElementById(`qt-${w}`);
+        if (btn) btn.classList.toggle('actief', actief.includes(w));
+      });
+    }
+
     function openVoorkeuren() {
       const overlay = document.getElementById('voorkeuren-overlay');
       const inhoud = document.getElementById('voorkeuren-inhoud');
@@ -863,6 +893,7 @@
         while (bron.firstChild) inhoud.appendChild(bron.firstChild);
       }
       overlay.style.display = 'flex';
+      syncQuickTags();
       document.body.style.overflow = 'hidden';
     }
 

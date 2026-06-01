@@ -88,16 +88,51 @@ BASISVOORRAAD: Alleen olijfolie/olie, zout, peper mogen worden aangenomen.
 BOODSCHAPPENREGEL: ${boodschappenRegel}
 TIJDREGEL — HARDE LIMIET: De gebruiker heeft opgegeven maximaal ${tijd} minuten te willen koken. Dit is een HARDE grens. Genereer NOOIT een recept met een bereidingstijd boven de ${tijd} minuten. Als een recept structureel meer tijd nodig heeft, kies dan een ander gerecht. Geef dit getal ook terug in het veld "bereidingstijd" als "X minuten" waarbij X ≤ ${tijd}.
 
-ALLERGIEËN (ABSOLUUT, ook niet optioneel of als upgrade):
-${allergienen.length > 0 ? allergienen.join(', ') : 'geen beperkingen'}
-- vegetarisch: geen vlees/vis
-- veganistisch: geen dierlijke producten
-- halal: geen varken/alcohol
-- glutenvrij: geen pasta/brood/bloem
-- lactosevrij: geen melk/room/kaas/boter/yoghurt
-- notenallergie: geen noten/pinda's
-- soja-allergie: geen sojasaus/tofu/edamame
-- schaaldierenallergie: geen garnalen/kreeft/krab
+ALLERGIEËN & DIEETWENSEN — HARDE FOUTGRENS:
+${allergienen.length > 0 ? `De gebruiker heeft de volgende wensen/allergieën opgegeven: ${allergienen.join(', ')}.
+
+Dit zijn ABSOLUTE grenzen. Een fout hier is een veiligheidsrisico. Controleer ELK ingrediënt drievoudig.` : 'Geen beperkingen opgegeven.'}
+
+${allergienen.includes('glutenvrij') ? `GLUTENVRIJ — VERPLICHTE REGELS:
+- VERBODEN: tarwe, gerst, rogge, spelt, kamut, gewone bloem, brood, pasta, couscous, bulgur, seitan.
+- VERBORGEN GLUTEN VERBODEN: sojasaus (gebruik tamari), gewone bouillon (check etiket), ketjap, mosterd, sommige havermout.
+- TOEGESTAAN: rijst, maïs, aardappel, quinoa, boekweit, glutenvrije pasta/brood, tamari.
+- VERPLICHT in tips: vermeld EXPLICIET waarom dit gerecht glutenvrij is (bijv. "Volledig glutenvrij: rijst i.p.v. pasta, tamari i.p.v. sojasaus").` : ''}
+
+${allergienen.includes('lactosevrij') ? `LACTOSEVRIJ — VERPLICHTE REGELS:
+- VERBODEN: melk, room, boter, kaas, yoghurt, kwark, crème fraîche, slagroom.
+- TOEGESTAAN: plantaardige melk (haver, amandel, kokos), lactosevrije producten, olijfolie i.p.v. boter.
+- VERPLICHT in tips: benoem expliciet welke alternatieven gebruikt zijn.` : ''}
+
+${allergienen.includes('notenallergie') ? `NOTENALLERGIE — VERPLICHTE REGELS:
+- VERBODEN: alle noten (amandelen, cashews, walnoten, pecannoten, pistache, hazelnoten, macadamia, paranoten), pindas, pindakaas, notenmelk, amandelmelk.
+- VERBORGEN NOTEN VERBODEN: pestos, sommige sauzen, muesli, chocolade.
+- VERPLICHT in tips: bevestig dat het gerecht notenvrij is.` : ''}
+
+${allergienen.includes('soja-allergie') ? `SOJA-ALLERGIE — VERPLICHTE REGELS:
+- VERBODEN: sojasaus, tofu, tempeh, edamame, miso, sojamelk, soja-eiwit.
+- VERBORGEN SOJA VERBODEN: veel kant-en-klare sauzen en bouillons.` : ''}
+
+${allergienen.includes('schaaldierenallergie') ? `SCHAALDIERENALLERGIE — VERPLICHTE REGELS:
+- VERBODEN: garnalen, kreeft, krab, langoustine, crevetten, oesters.
+- VERBORGEN SCHAALDIEREN VERBODEN: sommige vissauzen, paella-basis.` : ''}
+
+${allergienen.includes('vegetarisch') ? `VEGETARISCH — VERPLICHTE REGELS:
+- VERBODEN: alle vlees (rund, varken, kip, lam, wild), vis, schaal- en schelpdieren.
+- VERBORGEN VLEES VERBODEN: gelatine, sommige bouillons, ansjovis in sauzen.
+- TOEGESTAAN: eieren, zuivel, kaas (niet-dierlijk stremsel prefereren).` : ''}
+
+${allergienen.includes('veganistisch') ? `VEGANISTISCH — VERPLICHTE REGELS:
+- VERBODEN: alle dierlijke producten — vlees, vis, eieren, zuivel, honing.
+- VERBORGEN DIERLIJKE PRODUCTEN VERBODEN: gelatine, melkpoeder, Wei-eiwit, sommige wijn/bier.
+- VERPLICHT in tips: benoem expliciet dat het gerecht 100% plantaardig is.` : ''}
+
+${allergienen.includes('halal') ? `HALAL — VERPLICHTE REGELS:
+- VERBODEN: varkensvlees en varkensproducten (ook in worst, gelatin, reuzel), alcohol (ook in wijn voor koken).
+- VERBORGEN VERBODEN: veel Europese worsten, gelatine, sommige sauzen met wijn.` : ''}
+
+${allergienen.length > 0 ? `VEILIGHEIDSVERKLARING VERPLICHT:
+Voeg in de tips ALTIJD een expliciete zin toe die bevestigt waarom dit recept veilig is voor de opgegeven allergie/dieetwens. Gebruik de template: "Veilig voor [allergie]: [concrete reden, bijv. gebruik van rijstnoedels i.p.v. tarwenoedels]."` : ''}` : ''}
 - ei-allergie: geen eieren
 INGREDIËNT INTELLIGENCE — begrijp varianten:
 - "geraspte kaas", "parmezaan", "cheddar" = kaas
@@ -966,7 +1001,35 @@ Beoordeel eerlijk. Geef JSON:
         delete s.restjes;
       }
 
-      // Tijdlimiet harde check
+      // Allergieën harde check — zichtbare tekst mag geen verboden ingrediënten bevatten
+      const activeAllergienen = req.body.profiel?.allergienen || [];
+      if (activeAllergienen.length > 0) {
+        const allesIngredient = [
+          ...(s.inHuis || []),
+          ...(s.nogNodig || []),
+          ...(s.optioneel || []),
+          ...(s.basis || []),
+        ].map(i => (typeof i === 'object' ? i.naam : i) || '').join(' ').toLowerCase();
+
+        const VERBODEN_MAP = {
+          'glutenvrij': ['sojasaus', 'tarwe', 'bloem', 'pasta', 'couscous', 'bulgur', 'seitan', 'brood', 'pita', 'tortilla', 'gerst', 'rogge'],
+          'lactosevrij': ['melk', 'room', 'boter', 'kaas', 'yoghurt', 'kwark', 'slagroom', 'crème fraîche'],
+          'notenallergie': ['noten', 'amandel', 'cashew', 'walnoot', 'pinda', 'pistache', 'hazelnoot', 'notenmelk', 'amandelmelk'],
+          'veganistisch': ['vlees', 'kip', 'rund', 'varken', 'vis', 'ei', 'melk', 'kaas', 'room', 'boter', 'honing'],
+          'vegetarisch': ['kip', 'rund', 'varken', 'lam', 'gehakt', 'spek', 'worst', 'garnaal', 'zalm', 'tonijn', 'vis'],
+          'soja-allergie': ['sojasaus', 'tofu', 'tempeh', 'edamame', 'miso'],
+          'schaaldierenallergie': ['garnaal', 'kreeft', 'krab', 'langoustine'],
+          'halal': ['varken', 'spek', 'ham', 'worst', 'bacon', 'wijn', 'bier'],
+        };
+
+        for (const allergie of activeAllergienen) {
+          const verboden = VERBODEN_MAP[allergie] || [];
+          const gevonden = verboden.filter(v => allesIngredient.includes(v));
+          if (gevonden.length > 0) {
+            fouten.push(`Allergie-overtreding (${allergie}): ${gevonden.join(', ')} gevonden in ingrediënten`);
+          }
+        }
+      }
       if (s.bereidingstijd && req.body.tijd) {
         const maxMinuten = parseInt(req.body.tijd);
         const receptMatch = s.bereidingstijd.match(/(\d+)/);
